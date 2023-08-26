@@ -13,7 +13,7 @@ To install the chart with the release name `my-release`:
 ```
 helm repo add perses https://perses.github.io/perses
 helm repo update
-helm install my-release perses
+helm install my-release perses/perses
 ```
 
 ## Uninstalling the Chart

@@ -7,12 +7,20 @@
 
 ## Installing the Chart
 
-To install the chart with the release name `perses`:
+To install the chart with the release name `my-release`:
 
 ```
 helm repo add perses https://perses.github.io/perses
 helm repo update
-helm install perses perses
+helm install my-release perses/perses
+```
+
+## Uninstalling the Chart
+
+To uninstall/delete the my-release deployment:
+
+```
+helm delete my-release
 ```
 
 {{ template "chart.requirementsSection" . }}
