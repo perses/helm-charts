@@ -11,7 +11,7 @@ Perses helm chart
 To install the chart with the release name `my-release`:
 
 ```
-helm repo add perses https://perses.github.io/perses
+helm repo add perses https://perses.github.io/helm-charts
 helm repo update
 helm install my-release perses/perses
 ```

@@ -11,7 +11,7 @@ annotations:
   "artifacthub.io/license": Apache-2.0
   "artifacthub.io/links": |
     - name: Chart Source
-      url: https://github.com/perses/perses/tree/main/charts/perses
+      url: https://github.com/perses/helm-charts
     - name: Upstream Project
       url: https://github.com/perses/perses
 keywords:
