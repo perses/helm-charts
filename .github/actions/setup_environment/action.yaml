@@ -1,0 +1,15 @@
+name: "Setup environment"
+description: "Setup GO or NPM environment"
+runs:
+  using: composite
+  steps:
+    - name: Install Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: 1.21.x
+    - uses: actions/cache@v3
+      with:
+        path: ~/go/pkg/mod
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-

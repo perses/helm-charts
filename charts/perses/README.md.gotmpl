@@ -1,0 +1,30 @@
+<!-- Any change to the README file must be must be done on README.md.gotmpl file -->
+
+{{ template "chart.header" . }}
+{{ template "chart.description" . }}
+
+{{ template "chart.versionBadge" . }}{{ template "chart.typeBadge" . }}{{ template "chart.appVersionBadge" . }}
+
+## Installing the Chart
+
+To install the chart with the release name `my-release`:
+
+```
+helm repo add perses https://perses.github.io/perses
+helm repo update
+helm install my-release perses/perses
+```
+
+## Uninstalling the Chart
+
+To uninstall/delete the my-release deployment:
+
+```
+helm delete my-release
+```
+
+{{ template "chart.requirementsSection" . }}
+
+{{ template "chart.valuesSection" . }}
+
+{{ template "helm-docs.versionFooter" . }}
