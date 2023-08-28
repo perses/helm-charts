@@ -134,7 +134,107 @@
               ]
             },
             "sql": {
-              "type": "object"
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "rejectReadOnly": {
+                  "type": "boolean"
+                },
+                "parseTime": {
+                  "type": "boolean"
+                },
+                "multiStatements": {
+                  "type": "boolean"
+                },
+                "interpolateParams": {
+                  "type": "boolean"
+                },
+                "columnsWithAlias": {
+                  "type": "boolean"
+                },
+                "clientFoundRows": {
+                  "type": "boolean"
+                },
+                "checkConnLiveness": {
+                  "type": "boolean"
+                },
+                "allowOldPasswords": {
+                  "type": "boolean"
+                },
+                "allowNativePasswords": {
+                  "type": "boolean"
+                },
+                "allowFallbackToPlaintext": {
+                  "type": "boolean"
+                },
+                "allowCleartextPasswords": {
+                  "type": "boolean"
+                },
+                "allowAllFiles": {
+                  "type": "boolean"
+                },
+                "writeTimeout": {
+                  "type": "string"
+                },
+                "readTimeout": {
+                  "type": "string"
+                },
+                "serverPubKey": {
+                  "type": "string"
+                },
+                "maxAllowedPacket": {
+                  "type": "integer"
+                },
+                "loc": {
+                  "type": "string"
+                },
+                "collation": {
+                  "type": "string"
+                },
+                "dbName": {
+                  "type": "string"
+                },
+                "addr": {
+                  "type": "string"
+                },
+                "net": {
+                  "type": "string"
+                },
+                "passwordFile": {
+                  "type": "string"
+                },
+                "user": {
+                  "type": "string"
+                },
+                "tlsConfig": {
+                  "properties": {
+                    "ca": {
+                      "type": "string"
+                    },
+                    "cert": {
+                      "type": "string"
+                    },
+                    "key": {
+                      "type": "string"
+                    },
+                    "caFile": {
+                      "type": "string"
+                    },
+                    "certFile": {
+                      "type": "string"
+                    },
+                    "keyFile": {
+                      "type": "string"
+                    },
+                    "serverName": {
+                      "type": "string"
+                    },
+                    "insecureSkipVerify": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
             }
           },
           "required": [
