@@ -313,6 +313,12 @@
         "timeoutSeconds"
       ]
     },
+    "volumes": {
+      "type": "array"
+    },
+    "volumeMounts": {
+      "type": "array"
+    },
     "readinessProbe": {
       "type": "object",
       "additionalProperties": false,
