@@ -32,6 +32,9 @@ spec:
           - --log.level={{ .Values.logLevel }}
           - --log.method-trace=true
         volumeMounts:
+          {{- if .Values.volumeMounts }}
+          {{- tpl (toYaml .Values.volumeMounts | nindent 10) . }}
+          {{- end }}
           - name: config
             mountPath: "/perses/config"
           - name: data
@@ -64,6 +67,9 @@ spec:
           {{- toYaml . | nindent 10 }}
         {{- end }}
       volumes:
+        {{- if .Values.volumes }}
+        {{- tpl (toYaml .Values.volumes | nindent 8) . }}
+        {{- end }}
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
