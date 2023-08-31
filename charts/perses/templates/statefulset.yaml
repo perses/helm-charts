@@ -18,6 +18,8 @@ spec:
     metadata:
       labels:
         {{- include "perses.selectorLabels" . | nindent 8 }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
     spec:
       serviceAccountName: {{ include "perses.serviceAccountName" . }}
       containers:
@@ -78,5 +80,5 @@ spec:
           emptyDir: {}
           {{- end }}
         - name: config
-          secret:
-            secretName: {{ include "perses.fullname" . }}
+          configMap:
+            name: {{ include "perses.fullname" . }}

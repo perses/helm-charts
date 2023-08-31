@@ -88,7 +88,7 @@ resources: {}
 # -- Perses configuration file
 # ref: https://github.com/perses/perses/blob/main/docs/configuration.md
 config:
-  # -- Annotations for config secret
+  # -- Annotations for config
   annotations: {}
 
   # -- Configure Perses instance as readonly
