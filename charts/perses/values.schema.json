@@ -80,6 +80,9 @@
     "annotations": {
       "type": "object"
     },
+    "globalDatasources": {
+      "type": "array"
+    },
     "config": {
       "type": "object",
       "additionalProperties": false,

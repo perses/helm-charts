@@ -85,6 +85,20 @@ volumeMounts: []
 # ref: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
 resources: {}
 
+# -- Configure global datasources
+# ref: https://github.com/perses/perses/blob/90beed356243208f14cf2249bebb6f6222cb77ae/docs/datasource.md
+globalDatasources:
+  []
+  # - kind: GlobalDatasource
+  #   metadata:
+  #     name: PrometheusDemoBrowser
+  #   spec:
+  #     default: true
+  #     plugin:
+  #       kind: PrometheusDatasource
+  #       spec:
+  #         direct_url: https://prometheus.demo.do.prometheus.io
+
 # -- Perses configuration file
 # ref: https://github.com/perses/perses/blob/main/docs/configuration.md
 config:
@@ -112,7 +126,7 @@ config:
     # -- file system configs
     file:
       folder: /etc/perses/storage
-      extension: yaml
+      extension: json
     # -- SQL Config
     sql:
       {}
