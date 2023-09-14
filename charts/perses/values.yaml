@@ -39,6 +39,8 @@ service:
   labels: {}
   # -- Service Type
   type: "ClusterIP"
+  # -- Service Port Name
+  portName: http
   # -- Service Port
   port: 8080
   # -- Perses running port
