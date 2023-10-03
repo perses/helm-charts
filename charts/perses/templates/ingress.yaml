@@ -23,5 +23,5 @@ spec:
           service:
             name: {{ include "perses.fullname" . }}
             port:
-              name: {{ .Values.service.port }}
+              name: {{ .Values.service.portName }}
 {{- end }}

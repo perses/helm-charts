@@ -1,0 +1,51 @@
+{{- if .Values.datasources }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "perses.fullname" . }}-datasource-provisioner
+  labels:
+    {{- include "perses.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+spec:
+  backoffLimit: {{ .Values.datasourceProvisioner.backoffLimit }} 
+  template:
+    metadata:
+      name: {{ include "perses.fullname" . }}-datasource-provisioner
+      labels:
+        {{- include "perses.selectorLabels" . | nindent 8 }}
+    spec:
+      restartPolicy: {{ .Values.datasourceProvisioner.restartPolicy }}
+      initContainers:
+      - name: wait-for-perses
+        image: busybox
+        command: 
+          - "/bin/sh" 
+          - "-c"
+          - "while ! wget --quiet --spider {{ include "perses.dns" . }}/metrics; do sleep {{ .Values.readinessProbe.periodSeconds }}; done"
+      containers:
+        - name: {{ .Chart.Name }}-cli
+          image: "{{ .Values.image.name }}:v{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - /bin/percli 
+          args:
+            - --percliconfig
+            - /etc/percli/config.json
+            - apply
+            - -d
+            - /etc/perses/datasources
+          volumeMounts:
+            - name: datasources
+              mountPath: /etc/perses/datasources
+            - name: percliconfig
+              mountPath: /etc/percli
+      volumes:
+        - name: datasources
+          configMap:
+            name: {{ include "perses.fullname" . }}-datasources
+        - name: percliconfig
+          configMap:
+            name: {{ include "perses.fullname" . }}-cli-config
+{{- end }}

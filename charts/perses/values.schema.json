@@ -50,6 +50,9 @@
             "ExternalName"
           ]
         },
+        "portName": {
+          "type": "string"
+        },
         "port": {
           "type": "integer"
         },
@@ -59,6 +62,7 @@
       },
       "required": [
         "port",
+        "portName",
         "targetPort",
         "type"
       ]
@@ -80,7 +84,7 @@
     "annotations": {
       "type": "object"
     },
-    "globalDatasources": {
+    "datasources": {
       "type": "array"
     },
     "config": {
@@ -442,6 +446,23 @@
               "type": "string"
             }
           }
+        }
+      }
+    },
+    "datasourceProvisioner": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "backoffLimit": {
+          "type": "integer"
+        },
+        "restartPolicy": {
+          "type": "string",
+          "enum": [
+            "Always",
+            "OnFailure",
+            "Never"
+          ]
         }
       }
     }

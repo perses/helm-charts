@@ -20,8 +20,8 @@ spec:
         {{- include "perses.selectorLabels" . | nindent 8 }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
-        {{- if .Values.globalDatasources }}
-        checksum/config: {{ include (print $.Template.BasePath "/globaldatasources.yaml") . | sha256sum }}
+        {{- if .Values.datasources }}
+        checksum/config: {{ include (print $.Template.BasePath "/datasources.yaml") . | sha256sum }}
         {{- end }}
     spec:
       serviceAccountName: {{ include "perses.serviceAccountName" . }}
@@ -45,10 +45,6 @@ spec:
           {{- if .Values.config.database.file }}
           - name: data
             mountPath: {{ .Values.config.database.file.folder }}
-          {{- if .Values.globalDatasources }}
-          - name: global-datasources
-            mountPath: {{ .Values.config.database.file.folder }}/globaldatasources
-          {{- end }}
           {{- end }}
         ports:
           - name: http
@@ -89,11 +85,6 @@ spec:
           {{- else }}
           emptyDir: {}
           {{- end }}
-        {{- if .Values.globalDatasources }}
-        - name: global-datasources
-          configMap:
-            name: {{ include "perses.fullname" . }}-global-datasources
-        {{- end }}
         {{- end }}
         - name: config
           configMap:

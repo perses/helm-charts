@@ -1,12 +1,12 @@
-{{- if .Values.globalDatasources }}
+{{- if .Values.datasources }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "perses.fullname" . }}-global-datasources
+  name: {{ include "perses.fullname" . }}-datasources
   labels:
     {{- include "perses.labels" . | nindent 4 }}
 data:
-  {{- range $.Values.globalDatasources }}
+  {{- range $.Values.datasources }}
   {{ .metadata.name | lower }}.json: |-
     {{- tpl (toJson .) $ | nindent 4 }}
   {{- end }} 

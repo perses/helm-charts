@@ -39,6 +39,8 @@ service:
   labels: {}
   # -- Service Type
   type: "ClusterIP"
+  # -- Service Port Name
+  portName: http
   # -- Service Port
   port: 8080
   # -- Perses running port
@@ -84,20 +86,6 @@ volumeMounts: []
 # Update according to your own use case as these values might be too low for a typical deployment.
 # ref: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
 resources: {}
-
-# -- Configure global datasources
-# ref: https://github.com/perses/perses/blob/90beed356243208f14cf2249bebb6f6222cb77ae/docs/datasource.md
-globalDatasources:
-  []
-  # - kind: GlobalDatasource
-  #   metadata:
-  #     name: PrometheusDemoBrowser
-  #   spec:
-  #     default: true
-  #     plugin:
-  #       kind: PrometheusDatasource
-  #       spec:
-  #         direct_url: https://prometheus.demo.do.prometheus.io
 
 # -- Perses configuration file
 # ref: https://github.com/perses/perses/blob/main/docs/configuration.md
@@ -182,3 +170,25 @@ ingress:
 
   # -- Ingress path type
   pathType: Prefix
+
+# -- Configure datasources
+# ref: https://github.com/perses/perses/blob/90beed356243208f14cf2249bebb6f6222cb77ae/docs/datasource.md
+datasources:
+  []
+  # - kind: GlobalDatasource
+  #   metadata:
+  #     name: PrometheusDemoBrowser
+  #   spec:
+  #     default: true
+  #     plugin:
+  #       kind: PrometheusDatasource
+  #       spec:
+  #         directUrl: https://prometheus.demo.do.prometheus.io
+
+# -- Configure the Dashboard Provisioner job
+datasourceProvisioner:
+  # -- BackoffLimit is the number of retries before considering a Job as failed.
+  backoffLimit: 3
+
+  # -- Restart policy for the job avabile options are: Always, OnFailure, Never
+  restartPolicy: OnFailure
