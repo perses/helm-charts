@@ -1,0 +1,15 @@
+{{- if .Values.datasources }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "perses.fullname" . }}-cli-config
+  labels:
+    {{- include "perses.labels" . | nindent 4 }}
+data:
+  config.json: |-
+    {
+      "rest_client_config": {
+        "url": "{{ include "perses.dns" . }}"
+      }
+    }
+{{- end }}

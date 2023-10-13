@@ -60,3 +60,7 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{- define "perses.dns" -}}
+http://{{ include "perses.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.targetPort }}
+{{- end -}}

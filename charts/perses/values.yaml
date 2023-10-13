@@ -114,7 +114,7 @@ config:
     # -- file system configs
     file:
       folder: /etc/perses/storage
-      extension: yaml
+      extension: json
     # -- SQL Config
     sql:
       {}
@@ -170,3 +170,25 @@ ingress:
 
   # -- Ingress path type
   pathType: Prefix
+
+# -- Configure datasources
+# ref: https://github.com/perses/perses/blob/90beed356243208f14cf2249bebb6f6222cb77ae/docs/datasource.md
+datasources:
+  []
+  # - kind: GlobalDatasource
+  #   metadata:
+  #     name: PrometheusDemoBrowser
+  #   spec:
+  #     default: true
+  #     plugin:
+  #       kind: PrometheusDatasource
+  #       spec:
+  #         directUrl: https://prometheus.demo.do.prometheus.io
+
+# -- Configure the Dashboard Provisioner job
+datasourceProvisioner:
+  # -- BackoffLimit is the number of retries before considering a Job as failed.
+  backoffLimit: 3
+
+  # -- Restart policy for the job avabile options are: Always, OnFailure, Never
+  restartPolicy: OnFailure
