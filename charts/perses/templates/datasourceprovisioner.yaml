@@ -5,6 +5,7 @@ metadata:
   name: {{ include "perses.fullname" . }}-datasource-provisioner
   labels:
     {{- include "perses.labels" . | nindent 4 }}
+    app.kubernetes.io/component: job
   annotations:
     helm.sh/hook: post-install,post-upgrade
     helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
