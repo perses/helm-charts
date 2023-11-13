@@ -20,6 +20,9 @@ image:
   # -- Default image pull policy
   pullPolicy: IfNotPresent
 
+additionalLabels: {}
+  # app: perses
+
 # -- Service account for Perses to use.
 serviceAccount:
   # -- Specifies whether a service account should be created

@@ -5,6 +5,7 @@ metadata:
   name: {{ include "perses.fullname" . }}-cli-config
   labels:
     {{- include "perses.labels" . | nindent 4 }}
+    app.kubernetes.io/component: configuration
 data:
   config.json: |-
     {

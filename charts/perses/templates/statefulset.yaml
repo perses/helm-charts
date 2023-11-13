@@ -4,6 +4,7 @@ metadata:
   name: {{ include "perses.fullname" . }}
   labels:
     {{- include "perses.labels" . | nindent 4 }}
+    app.kubernetes.io/component: workload
   {{- with .Values.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}

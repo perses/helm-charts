@@ -31,6 +31,9 @@
         "pullPolicy"
       ]
     },
+    "additionalLabels": {
+      "type": "object"
+    },
     "service": {
       "type": "object",
       "additionalProperties": false,
