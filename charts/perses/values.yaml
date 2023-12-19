@@ -88,13 +88,16 @@ volumeMounts: []
 resources: {}
 
 # -- Perses configuration file
-# ref: https://github.com/perses/perses/blob/main/docs/configuration.md
+# ref: https://github.com/perses/perses/blob/main/docs/user-guides/configuration.md
 config:
   # -- Annotations for config
   annotations: {}
 
-  # -- Configure Perses instance as readonly
-  readOnly: false
+  security:
+    # -- Configure Perses instance as readonly
+    readOnly: false
+    # -- Enable Authentication
+    enableAuth: false
 
   # -- Schemas paths
   schemas:
@@ -113,7 +116,7 @@ config:
   database:
     # -- file system configs
     file:
-      folder: /etc/perses/storage
+      folder: /perses
       extension: json
     # -- SQL Config
     sql:
@@ -125,9 +128,14 @@ config:
       # db_name: "perses"
       # allow_native_passwords: true
 
+  # -- provisioning config
+  provisioning:
+    folders:
+    - /etc/perses/datasources
+
 # -- Persistence parameters
 persistence:
-  # -- If disabled it will use a emptydir volume
+  # -- If disabled, it will use a emptydir volume
   enabled: false
 
   # -- Specify the `storageClass` used to provision the volume
@@ -184,11 +192,3 @@ datasources:
   #       kind: PrometheusDatasource
   #       spec:
   #         directUrl: https://prometheus.demo.do.prometheus.io
-
-# -- Configure the Dashboard Provisioner job
-datasourceProvisioner:
-  # -- BackoffLimit is the number of retries before considering a Job as failed.
-  backoffLimit: 3
-
-  # -- Restart policy for the job avabile options are: Always, OnFailure, Never
-  restartPolicy: OnFailure

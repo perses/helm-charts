@@ -94,12 +94,117 @@
         "annotations": {
           "type": "object"
         },
-        "readOnly": {
-          "type": "boolean",
-          "default": false
+        "security": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "readOnly": {
+              "type": "boolean",
+              "default": false
+            },
+            "enableAuth": {
+              "type": "boolean",
+              "default": false
+            },
+            "authorization": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "check_latest_update_interval": {
+                  "type": "string",
+                  "default": "30s"
+                },
+                "guest_permissions": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "actions": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "read",
+                            "create",
+                            "update",
+                            "delete",
+                            "*"
+                          ]
+                        }
+                      },
+                      "scopes": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "Dashboard",
+                            "Datasource",
+                            "Folder",
+                            "GlobalDatasource",
+                            "GlobalRole",
+                            "GlobalRoleBinding",
+                            "GlobalVariable",
+                            "GlobalSecret",
+                            "Project",
+                            "Role",
+                            "RoleBinding",
+                            "User",
+                            "Variable",
+                            "*"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "authentication": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "access_token_ttl": {
+                  "type": "string",
+                  "default": "15m"
+                },
+                "refresh_token_ttl": {
+                  "type": "string",
+                  "default": "1d"
+                },
+                "disable_sign_up": {
+                  "type": "boolean",
+                  "default": false
+                }
+              }
+            }
+          }
         },
         "schemas": {
-          "type": "object"
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "panels_path": {
+              "type": "string",
+              "default": "/etc/perses/schemas/panels"
+            },
+            "queries_path": {
+              "type": "string",
+              "default": "/etc/perses/schemas/queries"
+            },
+            "datasources_path": {
+              "type": "string",
+              "default": "/etc/perses/schemas/datasources"
+            },
+            "variables_path": {
+              "type": "string",
+              "default": "/etc/perses/schemas/variables"
+            },
+            "interval": {
+              "type": "string",
+              "default": "5m"
+            }
+          }
         },
         "important_dashboards": {
           "type": "array",
@@ -248,12 +353,24 @@
             "file",
             "sql"
           ]
+        },
+        "provisioning": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "interval": {
+              "type": "string",
+              "default": "1h"
+            },
+            "folders": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
         }
-      },
-      "required": [
-        "database",
-        "schemas"
-      ]
+      }
     },
     "persistence": {
       "type": "object",
@@ -446,23 +563,6 @@
               "type": "string"
             }
           }
-        }
-      }
-    },
-    "datasourceProvisioner": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "backoffLimit": {
-          "type": "integer"
-        },
-        "restartPolicy": {
-          "type": "string",
-          "enum": [
-            "Always",
-            "OnFailure",
-            "Never"
-          ]
         }
       }
     }

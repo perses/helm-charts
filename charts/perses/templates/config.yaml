@@ -10,7 +10,9 @@ metadata:
   {{- end }}
 data:
   config.yaml: |-
-    readonly: {{ .Values.config.readOnly }}
+    security:
+      readonly: {{ .Values.config.security.readOnly }}
+      enable_auth: {{ .Values.config.security.enableAuth }}
 
     database:
       {{- with .Values.config.database.file }}
@@ -33,3 +35,7 @@ data:
       {{- toYaml . | nindent 6 }}
     {{- end }}
 
+    {{- with .Values.config.provisioning }}
+    provisioning:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
