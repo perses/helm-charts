@@ -30,7 +30,7 @@ spec:
         image: "{{ .Values.image.name }}:v{{ .Values.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         args:
-          - --config=/perses/config/config.yaml
+          - --config=/etc/perses/config/config.yaml
           - --web.listen-address=:{{ .Values.service.targetPort }}
           - --web.hide-port=false
           - --web.telemetry-path=/metrics
@@ -41,11 +41,13 @@ spec:
           {{- tpl (toYaml .Values.volumeMounts | nindent 10) . }}
           {{- end }}
           - name: config
-            mountPath: "/perses/config"
+            mountPath: "/etc/perses/config"
           {{- if .Values.config.database.file }}
           - name: data
             mountPath: {{ .Values.config.database.file.folder }}
           {{- end }}
+          - name: datasources
+            mountPath: /etc/perses/datasources
         ports:
           - name: http
             containerPort: {{ .Values.service.targetPort }}
@@ -89,3 +91,6 @@ spec:
         - name: config
           configMap:
             name: {{ include "perses.fullname" . }}
+        - name: datasources
+          configMap:
+            name: {{ include "perses.fullname" . }}-datasources
