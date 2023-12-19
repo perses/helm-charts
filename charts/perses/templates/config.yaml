@@ -35,3 +35,7 @@ data:
       {{- toYaml . | nindent 6 }}
     {{- end }}
 
+    {{- with .Values.config.provisioning }}
+    provisioning:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}

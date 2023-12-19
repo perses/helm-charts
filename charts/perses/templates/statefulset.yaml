@@ -46,8 +46,10 @@ spec:
           - name: data
             mountPath: {{ .Values.config.database.file.folder }}
           {{- end }}
+          {{- if .Values.datasources }}
           - name: datasources
             mountPath: /etc/perses/datasources
+          {{- end }}
         ports:
           - name: http
             containerPort: {{ .Values.service.targetPort }}
@@ -91,6 +93,8 @@ spec:
         - name: config
           configMap:
             name: {{ include "perses.fullname" . }}
+        {{- if .Values.datasources }}
         - name: datasources
           configMap:
             name: {{ include "perses.fullname" . }}-datasources
+        {{- end }}
