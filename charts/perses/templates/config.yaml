@@ -12,6 +12,11 @@ data:
   config.yaml: |-
     security:
       readonly: {{ .Values.config.security.readOnly }}
+      {{- if .Values.config.security.encryptionKeyFile }}
+      encryption_key_file: {{ .Values.config.security.encryptionKeyFile }}
+      {{- else }}
+      encryption_key: {{ .Values.config.security.encryptionKey }}
+      {{- end }}
       enable_auth: {{ .Values.config.security.enableAuth }}
 
     database:
@@ -24,12 +29,12 @@ data:
       sql:
         {{- tpl (toYaml .) $ | nindent 8 }}
       {{ end -}}
-    
+
     {{- with .Values.config.important_dashboards }}
     important_dashboards:
       {{- toYaml . | nindent 6 }}
     {{- end }}
-    
+
     {{- with .Values.config.schemas }}
     schemas:
       {{- toYaml . | nindent 6 }}

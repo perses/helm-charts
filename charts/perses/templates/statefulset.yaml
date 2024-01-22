@@ -50,6 +50,11 @@ spec:
           - name: datasources
             mountPath: /etc/perses/datasources
           {{- end }}
+          {{- if .Values.config.security.encryptionKeyFile }}
+          - name: encryptionKey
+            mountPath: {{ .Values.config.security.encryptionKeyFile }}
+            readOnly: true
+          {{- end }}
         ports:
           - name: http
             containerPort: {{ .Values.service.targetPort }}
@@ -97,4 +102,10 @@ spec:
         - name: datasources
           configMap:
             name: {{ include "perses.fullname" . }}-datasources
+        {{- end }}
+        {{- if .Values.config.security.encryptionKeyFile }}
+        - name: encryptionKey
+          secret:
+            secretName: {{ include "perses.fullname" . }}-encryption-key
+            items: encryption_key
         {{- end }}

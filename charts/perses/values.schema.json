@@ -102,6 +102,14 @@
               "type": "boolean",
               "default": false
             },
+            "encryptionKey": {
+              "type": "string",
+              "default": ""
+            },
+            "encryptionKeyFile": {
+              "type": "string",
+              "default": ""
+            },
             "enableAuth": {
               "type": "boolean",
               "default": false
@@ -175,6 +183,12 @@
                 "disable_sign_up": {
                   "type": "boolean",
                   "default": false
+                },
+                "providers": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                  }
                 }
               }
             }
