@@ -13,7 +13,7 @@ data:
     security:
       readonly: {{ .Values.config.security.readOnly }}
       {{- if .Values.config.security.encryptionKeyFile }}
-      encryption_key_file: {{ .Values.config.security.encryptionKeyFile }}
+      encryption_key_file: {{ printf "%s/key" (.Values.config.security.encryptionKeyFile | trimSuffix "/") }}
       {{- else }}
       encryption_key: {{ .Values.config.security.encryptionKey }}
       {{- end }}
