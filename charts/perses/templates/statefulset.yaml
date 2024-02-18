@@ -50,7 +50,7 @@ spec:
           - name: datasources
             mountPath: /etc/perses/datasources
           {{- end }}
-          {{- if .Values.config.security.encryptionKeyFile }}
+          {{- if and .Values.config.security.encryptionKeyFile .Values.config.security.encryptionKey }}
           - name: encryptionkey
             mountPath: {{ .Values.config.security.encryptionKeyFile }}
             readOnly: true
@@ -103,7 +103,7 @@ spec:
           configMap:
             name: {{ include "perses.fullname" . }}-datasources
         {{- end }}
-        {{- if .Values.config.security.encryptionKeyFile }}
+        {{- if and .Values.config.security.encryptionKeyFile .Values.config.security.encryptionKey }}
         - name: encryptionkey
           secret:
             secretName: {{ include "perses.fullname" . }}-encryption-key
