@@ -183,12 +183,6 @@
                 "disable_sign_up": {
                   "type": "boolean",
                   "default": false
-                },
-                "providers": {
-                  "type": "object",
-                  "additionalProperties": false,
-                  "properties": {
-                  }
                 }
               }
             }
