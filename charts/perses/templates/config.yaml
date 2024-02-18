@@ -12,9 +12,10 @@ data:
   config.yaml: |-
     security:
       readonly: {{ .Values.config.security.readOnly }}
-      {{- if and .Values.config.security.encryptionKeyFile .Values.config.security.encriptionKey }}
+      {{- if and .Values.config.security.encryptionKeyFile .Values.config.security.encryptionKey }}
       encryption_key_file: {{ printf "%s/key" (.Values.config.security.encryptionKeyFile | trimSuffix "/") }}
-      {{- else }}
+      {{- end }}
+      {{- if and (not .Values.config.security.encryptionKeyFile) .Values.config.security.encryptionKey }}
       encryption_key: {{ .Values.config.security.encryptionKey }}
       {{- end }}
       enable_auth: {{ .Values.config.security.enableAuth }}
