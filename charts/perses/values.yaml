@@ -82,6 +82,12 @@ volumes: []
 # -- Additional VolumeMounts on the output StatefulSet definition.
 volumeMounts: []
 
+
+# -- Mount encryption key with an existing secret
+existingEncryptionKeySecret:
+  secretName: ""
+  secretKey: ""
+
 # -- Resource limits & requests.
 # Update according to your own use case as these values might be too low for a typical deployment.
 # ref: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
@@ -97,9 +103,9 @@ config:
     # -- Configure Perses instance as readonly
     readOnly: false
     # -- Encryption key
-    encryptionKey: ""
+    encryptionKey: "111234123423411234123423412341234234"
     # -- Encryption key file path
-    encryptionKeyFile: ""
+    encryptionKeyFile: "/tmp/perses"
     # -- Enable Authentication
     enableAuth: false
 
