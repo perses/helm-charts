@@ -102,6 +102,14 @@
               "type": "boolean",
               "default": false
             },
+            "encryptionKey": {
+              "type": "string",
+              "default": ""
+            },
+            "encryptionKeyFile": {
+              "type": "string",
+              "default": ""
+            },
             "enableAuth": {
               "type": "boolean",
               "default": false
@@ -442,6 +450,20 @@
     },
     "volumeMounts": {
       "type": "array"
+    },
+    "existingEncryptionKeySecret": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "secretName": {
+          "type": "string",
+          "default": ""
+        },
+        "secretKey": {
+          "type": "string",
+          "default": "key"
+        }
+      }
     },
     "readinessProbe": {
       "type": "object",

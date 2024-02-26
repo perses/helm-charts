@@ -64,3 +64,46 @@ Create the name of the service account to use
 {{- define "perses.dns" -}}
 http://{{ include "perses.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.targetPort }}
 {{- end -}}
+
+{{/*
+TODO
+*/}}
+{{- define "perses.createEncryptionKeyFileSecret" -}}
+{{- if and .Values.config.security.encryptionKey .Values.config.security.encryptionKeyFile }}
+{{- printf "true" }}
+{{- else }}
+{{- printf "false" }}
+{{- end }}
+{{- end }}
+
+{{/*
+TODO
+*/}}
+{{- define "perses.mountEncryptionKeyFileSecret" -}}
+{{- if or (include "perses.createEncryptionKeyFileSecret" .) .Values.existingEncryptionKeySecret }}
+{{- printf "true" }}
+{{- else }}
+{{- printf "false" }}
+{{- end }}
+{{- end }}
+
+{{/*
+TODO
+*/}}
+{{- define "perses.encryptionKeyVolume" -}}
+- name: encryptionkey
+  secret:
+    secretName: {{ include "perses.fullname" . }}-encryption-key
+    items:
+      - key: key
+        path: "key"
+{{- end }}
+
+{{/*
+TODO
+*/}}
+{{- define "perses.encryptionKeyVolumeMount" -}}
+- name: encryptionkey
+  mountPath: {{ .Values.config.security.encryptionKeyFile }}
+  readOnly: true
+{{- end }}
