@@ -451,6 +451,20 @@
     "volumeMounts": {
       "type": "array"
     },
+    "overrideEncryptionKeySecret": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "secretName": {
+          "type": "string",
+          "default": ""
+        },
+        "secretKey": {
+          "type": "string",
+          "default": "key"
+        }
+      }
+    },
     "readinessProbe": {
       "type": "object",
       "additionalProperties": false,

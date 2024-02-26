@@ -50,10 +50,8 @@ spec:
           - name: datasources
             mountPath: /etc/perses/datasources
           {{- end }}
-          {{- if and .Values.config.security.encryptionKeyFile .Values.config.security.encryptionKey }}
-          - name: encryptionkey
-            mountPath: {{ .Values.config.security.encryptionKeyFile }}
-            readOnly: true
+          {{- if eq (include "perses.mountEncryptionKeyFileSecret" .) "true" }}
+          {{- include "perses.encryptionKeyVolumeMount" . | nindent 10 }}
           {{- end }}
         ports:
           - name: http
@@ -103,11 +101,6 @@ spec:
           configMap:
             name: {{ include "perses.fullname" . }}-datasources
         {{- end }}
-        {{- if and .Values.config.security.encryptionKeyFile .Values.config.security.encryptionKey }}
-        - name: encryptionkey
-          secret:
-            secretName: {{ include "perses.fullname" . }}-encryption-key
-            items:
-              - key: key
-                path: "key"
+        {{- if eq (include "perses.mountEncryptionKeyFileSecret" .) "true" }}
+        {{- include "perses.encryptionKeyVolume" . | nindent 8 }}
         {{- end }}
