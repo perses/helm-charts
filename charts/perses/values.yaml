@@ -96,6 +96,10 @@ config:
   security:
     # -- Configure Perses instance as readonly
     readOnly: false
+    # -- Encryption key
+    encryptionKey: ""
+    # -- Encryption key file path
+    encryptionKeyFile: ""
     # -- Enable Authentication
     enableAuth: false
 
