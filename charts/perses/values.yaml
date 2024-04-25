@@ -82,6 +82,14 @@ volumes: []
 # -- Additional VolumeMounts on the output StatefulSet definition.
 volumeMounts: []
 
+
+# -- Enable encryption with an existing secret.
+#    The key that holds that encryption key can also be provided with `secretKey`.
+#    If not set, `key` is assumed.
+overrideEncryptionKeySecret:
+  # -- SecretName is name of the K8s secret where the encryption key to be used is stored
+  secretName: ""
+
 # -- Resource limits & requests.
 # Update according to your own use case as these values might be too low for a typical deployment.
 # ref: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
@@ -96,6 +104,10 @@ config:
   security:
     # -- Configure Perses instance as readonly
     readOnly: false
+    # -- Encryption key
+    encryptionKey: ""
+    # -- Encryption key file path
+    encryptionKeyFile: ""
     # -- Enable Authentication
     enableAuth: false
 
