@@ -186,19 +186,19 @@
           "properties": {
             "panels_path": {
               "type": "string",
-              "default": "/etc/perses/schemas/panels"
+              "default": "/etc/perses/cue/schemas/panels"
             },
             "queries_path": {
               "type": "string",
-              "default": "/etc/perses/schemas/queries"
+              "default": "/etc/perses/cue/schemas/queries"
             },
             "datasources_path": {
               "type": "string",
-              "default": "/etc/perses/schemas/datasources"
+              "default": "/etc/perses/cue/schemas/datasources"
             },
             "variables_path": {
               "type": "string",
-              "default": "/etc/perses/schemas/variables"
+              "default": "/etc/perses/cue/schemas/variables"
             },
             "interval": {
               "type": "string",
