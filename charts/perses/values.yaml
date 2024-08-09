@@ -101,10 +101,11 @@ config:
 
   # -- Schemas paths
   schemas:
-    panels_path: "/etc/perses/schemas/panels"
-    queries_path: "/etc/perses/schemas/queries"
-    datasources_path: "/etc/perses/schemas/datasources"
-    variables_path: "/etc/perses/schemas/variables"
+    panels_path: "/etc/perses/cue/schemas/panels"
+    queries_path: "/etc/perses/cue/schemas/queries"
+    datasources_path: "/etc/perses/cue/schemas/datasources"
+    variables_path: "/etc/perses/cue/schemas/variables"
+    interval: "5m"
 
   # -- Important dashboards list
   important_dashboards:

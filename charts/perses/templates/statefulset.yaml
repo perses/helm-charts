@@ -27,7 +27,7 @@ spec:
       serviceAccountName: {{ include "perses.serviceAccountName" . }}
       containers:
       - name: {{ .Chart.Name }}
-        image: "{{ .Values.image.name }}:v{{ .Values.image.tag | default .Chart.AppVersion }}"
+        image: "{{ .Values.image.name }}:{{ .Values.image.version | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         args:
           - --config=/etc/perses/config/config.yaml
