@@ -4,7 +4,7 @@
 
 Perses helm chart
 
-![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.47.0](https://img.shields.io/badge/AppVersion-v0.47.0-informational?style=flat-square)
+![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.47.0](https://img.shields.io/badge/AppVersion-v0.47.0-informational?style=flat-square)
 
 ## Installing the Chart
 
@@ -29,17 +29,16 @@ helm delete my-release
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | annotations | object | `{}` | Statefulset Annotations |
-| config | object | `{"annotations":{},"database":{"file":{"extension":"json","folder":"/perses"},"sql":{}},"important_dashboards":[],"provisioning":{"folders":["/etc/perses/datasources"]},"schemas":{"datasources_path":"/etc/perses/cue/schemas/datasources","interval":"6h","panels_path":"/etc/perses/cue/schemas/panels","queries_path":"/etc/perses/cue/schemas/queries","variables_path":"/etc/perses/cue/schemas/variables"},"security":{"enableAuth":false,"readOnly":false}}` | Perses configuration file ref: https://github.com/perses/perses/blob/main/docs/user-guides/configuration.md |
+| config | object | `{"annotations":{},"database":{"file":{"extension":"json","folder":"/perses"},"sql":{}},"important_dashboards":[],"provisioning":{"folders":["/etc/perses/datasources"]},"schemas":{"datasources_path":"/etc/perses/cue/schemas/datasources","interval":"5m","panels_path":"/etc/perses/cue/schemas/panels","queries_path":"/etc/perses/cue/schemas/queries","variables_path":"/etc/perses/cue/schemas/variables"},"security":{"enableAuth":false,"readOnly":false}}` | Perses configuration file ref: https://github.com/perses/perses/blob/main/docs/user-guides/configuration.md |
 | config.annotations | object | `{}` | Annotations for config |
 | config.database | object | `{"file":{"extension":"json","folder":"/perses"},"sql":{}}` | Database config based on data base type |
 | config.database.file | object | `{"extension":"json","folder":"/perses"}` | file system configs |
 | config.database.sql | object | `{}` | SQL Config |
 | config.important_dashboards | list | `[]` | Important dashboards list |
 | config.provisioning | object | `{"folders":["/etc/perses/datasources"]}` | provisioning config |
-| config.schemas | object | `{"datasources_path":"/etc/perses/cue/schemas/datasources","interval":"6h","panels_path":"/etc/perses/cue/schemas/panels","queries_path":"/etc/perses/cue/schemas/queries","variables_path":"/etc/perses/cue/schemas/variables"}` | Schemas paths |
+| config.schemas | object | `{"datasources_path":"/etc/perses/cue/schemas/datasources","interval":"5m","panels_path":"/etc/perses/cue/schemas/panels","queries_path":"/etc/perses/cue/schemas/queries","variables_path":"/etc/perses/cue/schemas/variables"}` | Schemas paths |
 | config.security.enableAuth | bool | `false` | Enable Authentication |
 | config.security.readOnly | bool | `false` | Configure Perses instance as readonly |
-| datasources | list | `[{"kind":"Datasource","metadata":{"name":"PrometheusLocalhost","project":"perses"},"spec":{"default":true,"plugin":{"kind":"PrometheusDatasource","spec":{"directUrl":"http://localhost:9090","scrapeInterval":"15s"}}}}]` | Configure datasources ref: https://github.com/perses/perses/blob/90beed356243208f14cf2249bebb6f6222cb77ae/docs/datasource.md |
 | fullnameOverride | string | `""` | Override fully qualified app name |
 | image.name | string | `"persesdev/perses"` | Perses image repository and name |
 | image.pullPolicy | string | `"IfNotPresent"` | Default image pull policy |

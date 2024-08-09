@@ -105,7 +105,7 @@ config:
     queries_path: "/etc/perses/cue/schemas/queries"
     datasources_path: "/etc/perses/cue/schemas/datasources"
     variables_path: "/etc/perses/cue/schemas/variables"
-    interval: "6h"
+    interval: "5m"
 
   # -- Important dashboards list
   important_dashboards:
@@ -183,15 +183,13 @@ ingress:
 # -- Configure datasources
 # ref: https://github.com/perses/perses/blob/90beed356243208f14cf2249bebb6f6222cb77ae/docs/datasource.md
 datasources:
-  - kind: Datasource
-    metadata:
-      name: PrometheusLocalhost
-      project: perses
-    spec:
-      default: true
-      plugin:
-        kind: PrometheusDatasource
-        spec:
-          directUrl: http://localhost:9090
-          scrapeInterval: "15s"
- 
+  []
+  # - kind: GlobalDatasource
+  #   metadata:
+  #     name: PrometheusDemoBrowser
+  #   spec:
+  #     default: true
+  #     plugin:
+  #       kind: PrometheusDatasource
+  #       spec:
+  #         directUrl: https://prometheus.demo.do.prometheus.io
