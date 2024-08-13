@@ -98,6 +98,13 @@ config:
     readOnly: false
     # -- Enable Authentication
     enableAuth: false
+    # -- cookie config
+    cookie:
+      same_site: lax
+      secure: false
+      # [ same_site: < enum | possibleValue = 'strict' | 'lax' | 'none' > | default = lax ]
+      # Set to true if you host Perses behind HTTPS. Default is false
+      # [ secure: <boolean> | default = false ]
 
   # -- Schemas paths
   schemas:
