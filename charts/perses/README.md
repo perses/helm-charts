@@ -28,6 +28,7 @@ helm delete my-release
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| additionalLabels | object | `{}` |  |
 | annotations | object | `{}` | Statefulset Annotations |
 | config | object | `{"annotations":{},"database":{"file":{"extension":"json","folder":"/perses"},"sql":{}},"important_dashboards":[],"provisioning":{"folders":["/etc/perses/datasources"]},"schemas":{"datasources_path":"/etc/perses/cue/schemas/datasources","interval":"5m","panels_path":"/etc/perses/cue/schemas/panels","queries_path":"/etc/perses/cue/schemas/queries","variables_path":"/etc/perses/cue/schemas/variables"},"security":{"cookie":{"same_site":"lax","secure":false},"enableAuth":false,"readOnly":false}}` | Perses configuration file ref: https://github.com/perses/perses/blob/main/docs/user-guides/configuration.md |
 | config.annotations | object | `{}` | Annotations for config |
