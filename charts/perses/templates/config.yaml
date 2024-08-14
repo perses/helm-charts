@@ -13,6 +13,10 @@ data:
     security:
       readonly: {{ .Values.config.security.readOnly }}
       enable_auth: {{ .Values.config.security.enableAuth }}
+      {{- with .Values.config.security.cookie }}
+      cookie:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
 
     database:
       {{- with .Values.config.database.file }}

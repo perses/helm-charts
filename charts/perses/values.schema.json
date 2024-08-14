@@ -102,6 +102,23 @@
               "type": "boolean",
               "default": false
             },
+            "cookie": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "same_site": {
+                  "type": "string",
+                  "enum": [
+                    "strict",
+                    "lax",
+                    "none"
+                  ]
+                },
+                "secure": {
+                  "type": "boolean"
+                }
+              }
+            },
             "enableAuth": {
               "type": "boolean",
               "default": false
