@@ -5,6 +5,7 @@ metadata:
   name: {{ include "perses.fullname" . }}-datasources
   labels:
     {{- include "perses.labels" . | nindent 4 }}
+    app.kubernetes.io/component: configuration
 data:
   {{- range $.Values.datasources }}
   {{ .metadata.name | lower }}.json: |-
