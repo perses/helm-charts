@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/schema#",
+  "$schema": "https://json-schema.org/schema#",
   "type": "object",
   "title": "Values",
   "additionalProperties": false,
@@ -195,6 +195,147 @@
                 "disable_sign_up": {
                   "type": "boolean",
                   "default": false
+                },
+                "providers": {
+                  "type": "object",
+                  "properties": {
+                    "oidc": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "properties": {
+                          "slug_id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "client_id":{
+                            "type": "string"
+                          },
+                          "client_secret": {
+                            "type": "string"
+                          },
+                          "device_code": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "properties": {
+                              "client_id": {
+                                "type": "string"
+                              },
+                              "client_secret": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "redirect_uri": {
+                            "type": "string"
+                          },
+                          "scopes": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "issuer": {
+                            "type": "string"
+                          },
+                          "discovery_url": {
+                            "type": "string"
+                          },
+                          "disable_pkce": {
+                            "type":"boolean",
+                            "default": false
+                          },
+                          "url_params": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "oauth": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "properties": {
+                          "slug_id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "client_id": {
+                            "type": "string"
+                          },
+                          "client_secret": {
+                            "type": "string"
+                          },
+                          "device_code": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "properties": {
+                              "client_id": {
+                                "type": "string"
+                              },
+                              "client_secret": {
+                                "type": "string"
+                              },
+                              "scopes": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
+                          "client_credentials": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "properties": {
+                              "client_id": {
+                                "type": "string"
+                              },
+                              "client_secret": {
+                                "type": "string"
+                              },
+                              "scopes": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
+                          "redirect_url": {
+                            "type": "string"
+                          },
+                          "scopes": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "auth_url": {
+                            "type": "string"
+                          },
+                          "token_url": {
+                            "type": "string"
+                          },
+                          "user_infos_url": {
+                            "type": "string"
+                          },
+                          "device_auth_url": {
+                            "type": "string"
+                          },
+                          "custom_login_property": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
