@@ -18,7 +18,10 @@ data:
       cookie:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-
+      {{- with .Values.config.security.authentication }}
+      authentication:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     database:
       {{- with .Values.config.database.file }}
       file:
