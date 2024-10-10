@@ -20,9 +20,10 @@ spec:
       labels:
         {{- include "perses.selectorLabels" . | nindent 8 }}
       annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
         {{- if .Values.datasources }}
         checksum/config: {{ include (print $.Template.BasePath "/datasources.yaml") . | sha256sum }}
+        {{- else }}
+        checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
         {{- end }}
     spec:
       serviceAccountName: {{ include "perses.serviceAccountName" . }}
