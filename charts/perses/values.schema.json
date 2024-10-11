@@ -411,6 +411,15 @@
         "size": {
           "type": "string"
         },
+        "securityContext":{
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "fsGroup": {
+              "type": "integer"
+            }
+          }
+        },
         "labels": {
           "type": "object"
         },
