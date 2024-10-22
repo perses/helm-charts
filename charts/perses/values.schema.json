@@ -430,8 +430,7 @@
       "required": [
         "accessModes",
         "enabled",
-        "size",
-        "storageClass"
+        "size"
       ]
     },
     "livenessProbe": {
