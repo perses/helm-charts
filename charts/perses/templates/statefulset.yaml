@@ -26,6 +26,8 @@ spec:
         {{- end }}
     spec:
       serviceAccountName: {{ include "perses.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.persistence.securityContext | nindent 8 }}
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.name }}:{{ .Values.image.version | default .Chart.AppVersion }}"

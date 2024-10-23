@@ -149,8 +149,8 @@ persistence:
   # -- If disabled, it will use a emptydir volume
   enabled: false
 
-  # -- Specify the `storageClass` used to provision the volume
-  storageClass: ""
+  # -- Specify the `storageClass` to provision the volume for the PVC. If you don't specify a `storageClass`, a default `storageClass` will be used.
+  # storageClass: ""
 
   # -- PVC Access Modes for data volume
   accessModes:
@@ -158,6 +158,10 @@ persistence:
 
   # -- PVC Storage Request for data volume
   size: 8Gi
+
+  # -- Security context for the PVC when persistence is enabled
+  securityContext:
+    fsGroup: 2000
 
   # -- Labels for the PVC
   labels: {}
