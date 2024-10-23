@@ -175,7 +175,8 @@ ingress:
   enabled: false
 
   # -- Default host for the ingress resource
-  hostname: perses.local
+  hosts:
+  - perses.local
 
   # -- IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
   # This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
@@ -193,6 +194,11 @@ ingress:
 
   # -- Ingress path type
   pathType: Prefix
+
+  # -- Ingress TLS configuration
+  tls: []
+#    - secretName: ingress-cert
+#      hosts: []
 
 # -- Configure datasources
 # ref: https://github.com/perses/perses/blob/90beed356243208f14cf2249bebb6f6222cb77ae/docs/datasource.md

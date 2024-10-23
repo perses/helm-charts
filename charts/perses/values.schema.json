@@ -510,8 +510,11 @@
         "enabled": {
           "type": "boolean"
         },
-        "hostname": {
-          "type": "string"
+        "hosts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
         "ingressClassName": {
           "type": "string"
@@ -529,11 +532,32 @@
             "Prefix",
             "ImplementationSpecific"
           ]
+        },
+        "tls": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "hosts": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "secretName": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "hosts",
+              "secretName"
+            ]
+          }
         }
       },
       "required": [
-        "hostname",
-        "ingressClassName",
+        "hosts",
         "path",
         "pathType"
       ]
