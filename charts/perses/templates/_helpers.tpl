@@ -36,9 +36,7 @@ Common labels
 {{- define "perses.labels" -}}
 helm.sh/chart: {{ include "perses.chart" . }}
 {{ include "perses.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
+app.kubernetes.io/version: {{ default (.Chart.AppVersion | quote) .Values.image.version | quote }}
 app.kubernetes.io/part-of: {{ include "perses.name" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- if .Values.additionalLabels }}

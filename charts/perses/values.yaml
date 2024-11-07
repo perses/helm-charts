@@ -142,7 +142,16 @@ config:
   # -- provisioning config
   provisioning:
     folders:
-    - /etc/perses/datasources
+    - /etc/perses/provisioning
+    interval: 10s
+
+sidecar:
+  enabled: true
+  image: 
+    repository: kiwigrid/k8s-sidecar
+    tag: 1.28.0
+  label: "perses-resource"
+  labelValue: "true"
 
 # -- Persistence parameters
 persistence:
