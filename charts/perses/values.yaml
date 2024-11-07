@@ -145,12 +145,18 @@ config:
     - /etc/perses/provisioning
     interval: 10s
 
+# --  Sidecar configuration that watches for ConfigMaps with the specified label/labelValue and loads them into Perses provisioning
 sidecar:
+  # -- Enable the sidecar container for ConfigMap provisioning
   enabled: true
   image: 
+    # -- Container image repository for the sidecar
     repository: kiwigrid/k8s-sidecar
+    # -- Container image tag for the sidecar
     tag: 1.28.0
+  # -- Label key to watch for ConfigMaps containing Perses resources  
   label: "perses-resource"
+  # -- Label value to watch for ConfigMaps containing Perses resources
   labelValue: "true"
 
 # -- Persistence parameters
@@ -208,17 +214,3 @@ ingress:
   tls: []
 #    - secretName: ingress-cert
 #      hosts: []
-
-# -- Configure datasources
-# ref: https://github.com/perses/perses/blob/90beed356243208f14cf2249bebb6f6222cb77ae/docs/datasource.md
-datasources:
-  []
-  # - kind: GlobalDatasource
-  #   metadata:
-  #     name: PrometheusDemoBrowser
-  #   spec:
-  #     default: true
-  #     plugin:
-  #       kind: PrometheusDatasource
-  #       spec:
-  #         directUrl: https://prometheus.demo.do.prometheus.io
