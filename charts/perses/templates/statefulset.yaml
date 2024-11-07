@@ -30,6 +30,20 @@ spec:
       securityContext:
         {{- toYaml .Values.persistence.securityContext | nindent 8 }}
       containers:
+      {{- if .Values.sidecar.enabled }}
+      - name: {{ .Chart.Name }}-provisioning-sidecar
+        image: "{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}"
+        volumeMounts:
+        - name: provisioning
+          mountPath: {{ .Values.config.provisioning.folders | first }}
+        env: 
+          - name: LABEL
+            value: {{ .Values.sidecar.label }}
+          - name: LABEL_VALUE
+            value: {{ .Values.sidecar.labelValue | quote }}
+          - name: FOLDER
+            value: {{ .Values.config.provisioning.folders | first }}
+      {{- end }}
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.name }}:{{ .Values.image.version | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -50,9 +64,9 @@ spec:
           - name: data
             mountPath: {{ .Values.config.database.file.folder }}
           {{- end }}
-          {{- if .Values.datasources }}
-          - name: datasources
-            mountPath: /etc/perses/datasources
+          {{- if .Values.sidecar.enabled }}
+          - name: provisioning
+            mountPath: {{ .Values.config.provisioning.folders | first }}
           {{- end }}
         ports:
           - name: http
@@ -97,8 +111,7 @@ spec:
         - name: config
           configMap:
             name: {{ include "perses.fullname" . }}
-        {{- if .Values.datasources }}
-        - name: datasources
-          configMap:
-            name: {{ include "perses.fullname" . }}-datasources
+        {{- if .Values.sidecar.enabled }}
+        - name: provisioning
+          emptyDir: {}
         {{- end }}

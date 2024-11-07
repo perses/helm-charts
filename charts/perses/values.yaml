@@ -142,7 +142,22 @@ config:
   # -- provisioning config
   provisioning:
     folders:
-    - /etc/perses/datasources
+    - /etc/perses/provisioning
+    interval: 10s
+
+# --  Sidecar configuration that watches for ConfigMaps with the specified label/labelValue and loads them into Perses provisioning
+sidecar:
+  # -- Enable the sidecar container for ConfigMap provisioning
+  enabled: false
+  image: 
+    # -- Container image repository for the sidecar
+    repository: kiwigrid/k8s-sidecar
+    # -- Container image tag for the sidecar
+    tag: 1.28.0
+  # -- Label key to watch for ConfigMaps containing Perses resources  
+  label: "perses.dev/resource"
+  # -- Label value to watch for ConfigMaps containing Perses resources
+  labelValue: "true"
 
 # -- Persistence parameters
 persistence:

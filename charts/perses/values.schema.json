@@ -533,6 +533,35 @@
         }
       }
     },
+    "sidecar": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "image": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "repository": {
+              "type": "string"
+            },
+            "tag": {
+              "type": "string"
+            }
+          },
+          "required": ["repository", "tag"]
+        },
+        "label": {
+          "type": "string"
+        },
+        "labelValue": {
+          "type": "string"
+        }
+      },
+      "required": ["enabled", "image", "label", "labelValue"]
+    },
     "persistence": {
       "type": "object",
       "additionalProperties": false,
