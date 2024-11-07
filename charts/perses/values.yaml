@@ -148,7 +148,7 @@ config:
 # --  Sidecar configuration that watches for ConfigMaps with the specified label/labelValue and loads them into Perses provisioning
 sidecar:
   # -- Enable the sidecar container for ConfigMap provisioning
-  enabled: true
+  enabled: false
   image: 
     # -- Container image repository for the sidecar
     repository: kiwigrid/k8s-sidecar
