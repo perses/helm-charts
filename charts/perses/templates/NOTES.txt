@@ -5,3 +5,12 @@
 {{- if and .Values.persistence.enabled (eq .Values.persistence.storageClass "") }}
 {{ fail "[ERROR] 'persistencen.storageClass' must be set." }}
 {{ end }}
+
+{{- if .Values.datasources }}
+#################################################################################
+######   WARNING: The 'datasources' configuration field is deprecated       #####
+######            and will be removed in the future version.                #####
+######            Please migrate to using the 'sidecar' configuration       #####
+######            for provisioning datasources.                             #####
+#################################################################################
+{{- end }}

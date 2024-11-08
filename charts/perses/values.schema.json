@@ -88,7 +88,9 @@
       "type": "object"
     },
     "datasources": {
-      "type": "array"
+      "type": "array",
+      "deprecated": true,
+      "description": "DEPRECATED: This field will be removed in the future release. Please use the 'sidecar' configuration instead to load datasources"
     },
     "config": {
       "type": "object",
