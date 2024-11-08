@@ -7,12 +7,10 @@
 {{ end }}
 
 {{- if .Values.datasources }}
-{{- if not (empty .Values.datasources) }}
 #################################################################################
 ######   WARNING: The 'datasources' configuration field is deprecated       #####
 ######            and will be removed in the future version.                #####
 ######            Please migrate to using the 'sidecar' configuration       #####
 ######            for provisioning datasources.                             #####
 #################################################################################
-{{- end }}
 {{- end }}
