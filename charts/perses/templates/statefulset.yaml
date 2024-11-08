@@ -64,6 +64,12 @@ spec:
           - name: data
             mountPath: {{ .Values.config.database.file.folder }}
           {{- end }}
+          {{- if .Values.datasources }}
+          {{- if not (empty .Values.datasources) }}
+          - name: datasources
+            mountPath: /etc/perses/datasources
+          {{- end }}
+          {{- end }}
           {{- if .Values.sidecar.enabled }}
           - name: provisioning
             mountPath: {{ .Values.config.provisioning.folders | first }}
@@ -111,6 +117,13 @@ spec:
         - name: config
           configMap:
             name: {{ include "perses.fullname" . }}
+        {{- if .Values.datasources }}
+        {{- if not (empty .Values.datasources) }}
+        - name: datasources
+          configMap:
+            name: {{ include "perses.fullname" . }}-datasources
+        {{- end }}
+        {{- end }}
         {{- if .Values.sidecar.enabled }}
         - name: provisioning
           emptyDir: {}
