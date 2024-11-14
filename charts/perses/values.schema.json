@@ -4,6 +4,11 @@
   "title": "Values",
   "additionalProperties": false,
   "properties": {
+    "global": {
+      "type": "object",
+      "description": "Global values applied to all resources.",
+      "default": {}
+    },
     "nameOverride": {
       "description": "Override name of the chart used in Kubernetes object names.",
       "type": "string"
