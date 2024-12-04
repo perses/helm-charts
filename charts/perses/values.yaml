@@ -191,7 +191,10 @@ ingress:
 
   # -- Default host for the ingress resource
   hosts:
-  - perses.local
+    - host: perses.local
+      paths:
+        - path: /
+          pathType: Prefix
 
   # -- IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
   # This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
@@ -203,12 +206,6 @@ ingress:
   # For a full list of possible ingress annotations, please see
   # ref: https://github.com/kubernetes/ingress-nginx/blob/master/docs/user-guide/nginx-configuration/annotations.md
   annotations: {}
-
-  # -- Ingress path
-  path: /
-
-  # -- Ingress path type
-  pathType: Prefix
 
   # -- Ingress TLS configuration
   tls: []
