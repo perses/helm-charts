@@ -690,7 +690,39 @@
         "hosts": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "object",
+            "properties": {
+              "host": {
+                "type": "string"
+              },
+              "paths": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "path": {
+                      "type": "string"
+                    },
+                    "pathType": {
+                      "type": "string",
+                      "enum": [
+                        "Exact",
+                        "Prefix",
+                        "ImplementationSpecific"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "path",
+                    "pathType"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "host",
+              "paths"
+            ]
           }
         },
         "ingressClassName": {
@@ -698,17 +730,6 @@
         },
         "annotations": {
           "type": "object"
-        },
-        "path": {
-          "type": "string"
-        },
-        "pathType": {
-          "type": "string",
-          "enum": [
-            "Exact",
-            "Prefix",
-            "ImplementationSpecific"
-          ]
         },
         "tls": {
           "type": "array",
@@ -734,9 +755,7 @@
         }
       },
       "required": [
-        "hosts",
-        "path",
-        "pathType"
+        "hosts"
       ]
     },
     "serviceAccount": {
