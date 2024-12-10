@@ -1,0 +1,40 @@
+{{- if .Values.testFramework.enabled -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-test
+  namespace: {{ .Release.Namespace }}
+  labels:
+    type: helm-chart-test
+  annotations:
+    "helm.sh/hook": test
+    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
+data:
+  run.sh: |-
+
+    #!/usr/bin/env bats
+    
+    load "/usr/lib/bats/bats-detik/utils"
+    load "/usr/lib/bats/bats-detik/detik"
+    
+    DETIK_CLIENT_NAME="kubectl"
+    
+    @test "Verify successful deployment and running status of the {{ .Release.Name }}-operator pod" {
+        verify "there is 1 statefulset named '{{ include "perses.fullname" . }}'"
+        try "at most 2 times every 5s to get pods named '{{ include "perses.fullname" . }}.*' and verify that '.status.phase' is 'running'" 
+    }
+
+    @test "Verify that there is a service named {{ include "perses.fullname" . }}" {
+        verify "there is 1 service named '^{{ include "perses.fullname" . }}$'"
+    }
+
+    @test "Verify that there is a configmap named {{ include "perses.fullname" . }}" {
+        verify "there is 1 configmap named '^{{ include "perses.fullname" . }}$'"
+    }
+
+    {{- if .Values.persistence.enabled }}
+    @test "Verify successful creation and bound status of {{ include "perses.fullname" . }} persistent volume claims" {
+        try "at most 3 times every 5s to get persistentvolumeclaims named '{{ include "perses.fullname" . }}.*' and verify that '.status.phase' is 'Bound'"
+    }
+    {{- end -}}
+{{- end -}}
