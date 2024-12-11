@@ -37,4 +37,10 @@ data:
         try "at most 3 times every 5s to get persistentvolumeclaims named '{{ include "perses.fullname" . }}.*' and verify that '.status.phase' is 'Bound'"
     }
     {{- end -}}
+
+    {{- if .Values.ingress.enabled }}
+    @test "Verify successful creation of ingress resource" {
+        verify "there is 1 ingress named '^{{ include "perses.fullname" . }}$'"
+    }
+    {{- end -}}
 {{- end -}}
