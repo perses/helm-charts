@@ -10,6 +10,31 @@ entries:
           url: https://github.com/perses/perses
     apiVersion: v2
     appVersion: v0.49.0
+    created: "2024-12-11T13:21:10.573454307Z"
+    description: Perses helm chart
+    digest: 92826699a63e01d5e1c6df99c7509cab21a429d5c5040e6d2adeba6afdeba1b2
+    icon: https://avatars.githubusercontent.com/u/77209215?s=200&v=4
+    keywords:
+    - monitoring
+    - metric
+    - dashboarding
+    - prometheus
+    name: perses
+    sources:
+    - https://github.com/perses/perses
+    type: application
+    urls:
+    - https://github.com/perses/helm-charts/releases/download/perses-0.7.4/perses-0.7.4.tgz
+    version: 0.7.4
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/perses/helm-charts
+        - name: Upstream Project
+          url: https://github.com/perses/perses
+    apiVersion: v2
+    appVersion: v0.49.0
     created: "2024-12-06T13:37:07.261220542Z"
     description: Perses helm chart
     digest: 4e197b82f549ecf4e581cb503fb239ecfa85558eca0b37362590f8f4b1ba52d4
@@ -376,4 +401,4 @@ entries:
     urls:
     - https://github.com/perses/helm-charts/releases/download/perses-0.1.0/perses-0.1.0.tgz
     version: 0.1.0
-generated: "2024-12-06T13:37:07.261340958Z"
+generated: "2024-12-11T13:21:10.573599088Z"
