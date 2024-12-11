@@ -226,3 +226,13 @@ datasources:
   #       kind: PrometheusDatasource
   #       spec:
   #         directUrl: https://prometheus.demo.do.prometheus.io
+
+
+testFramework:
+  enabled: true
+  image:
+    registry: ghcr.io
+    repository: cloudoperators/greenhouse-extensions-integration-test
+    tag: main
+  imagePullPolicy: IfNotPresent
+  
