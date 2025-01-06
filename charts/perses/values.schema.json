@@ -99,7 +99,7 @@
     },
     "config": {
       "type": "object",
-      "additionalProperties": false,
+      "additionalProperties": true,
       "properties": {
         "annotations": {
           "type": "object"
@@ -218,7 +218,7 @@
                           "name": {
                             "type": "string"
                           },
-                          "client_id":{
+                          "client_id": {
                             "type": "string"
                           },
                           "client_secret": {
@@ -252,7 +252,7 @@
                             "type": "string"
                           },
                           "disable_pkce": {
-                            "type":"boolean",
+                            "type": "boolean",
                             "default": false
                           },
                           "url_params": {
@@ -558,7 +558,10 @@
               "type": "string"
             }
           },
-          "required": ["repository", "tag"]
+          "required": [
+            "repository",
+            "tag"
+          ]
         },
         "label": {
           "type": "string"
@@ -567,7 +570,12 @@
           "type": "string"
         }
       },
-      "required": ["enabled", "image", "label", "labelValue"]
+      "required": [
+        "enabled",
+        "image",
+        "label",
+        "labelValue"
+      ]
     },
     "persistence": {
       "type": "object",
@@ -588,7 +596,7 @@
         "size": {
           "type": "string"
         },
-        "securityContext":{
+        "securityContext": {
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -835,13 +843,21 @@
               "type": "string"
             }
           },
-          "required": ["registry", "repository", "tag"]
+          "required": [
+            "registry",
+            "repository",
+            "tag"
+          ]
         },
         "imagePullPolicy": {
           "type": "string"
         }
       },
-      "required": ["enabled", "image", "imagePullPolicy"]
+      "required": [
+        "enabled",
+        "image",
+        "imagePullPolicy"
+      ]
     }
   }
 }
