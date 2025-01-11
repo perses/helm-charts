@@ -11,39 +11,7 @@ metadata:
   {{- end }}
 data:
   config.yaml: |-
-    security:
-      readonly: {{ .Values.config.security.readOnly }}
-      enable_auth: {{ .Values.config.security.enableAuth }}
-      {{- with .Values.config.security.cookie }}
-      cookie:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.config.security.authentication }}
-      authentication:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-    database:
-      {{- with .Values.config.database.file }}
-      file:
-        {{- toYaml . | nindent 8 }}
-      {{ end -}}
-
-      {{- with .Values.config.database.sql }}
-      sql:
-        {{- tpl (toYaml .) $ | nindent 8 }}
-      {{ end -}}
-    
-    {{- with .Values.config.important_dashboards }}
-    important_dashboards:
-      {{- toYaml . | nindent 6 }}
-    {{- end }}
-    
-    {{- with .Values.config.schemas }}
-    schemas:
-      {{- toYaml . | nindent 6 }}
-    {{- end }}
-
-    {{- with .Values.config.provisioning }}
-    provisioning:
-      {{- toYaml . | nindent 6 }}
+    {{ $config := unset .Values.config "annotations" }}
+    {{- with $config }}
+    {{- toYaml . | nindent 4 }}
     {{- end }}

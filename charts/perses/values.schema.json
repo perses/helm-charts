@@ -108,7 +108,7 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "readOnly": {
+            "readonly": {
               "type": "boolean",
               "default": false
             },
@@ -129,7 +129,7 @@
                 }
               }
             },
-            "enableAuth": {
+            "enable_auth": {
               "type": "boolean",
               "default": false
             },
@@ -516,11 +516,7 @@
                 }
               }
             }
-          },
-          "required": [
-            "file",
-            "sql"
-          ]
+          }
         },
         "provisioning": {
           "type": "object",
