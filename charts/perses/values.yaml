@@ -98,9 +98,9 @@ config:
 
   security:
     # -- Configure Perses instance as readonly
-    readOnly: false
+    readonly: false
     # -- Enable Authentication
-    enableAuth: false
+    enable_auth: false
     # -- cookie config
     cookie:
       same_site: lax
@@ -117,11 +117,13 @@ config:
     variables_path: "/etc/perses/cue/schemas/variables"
     interval: "5m"
 
-  # -- Important dashboards list
-  important_dashboards:
-    []
-    # - project: "perses"
-    #   dashboard: "Demo"
+  # -- Frontend configuration
+  frontend:
+    # -- Important dashboards list
+    important_dashboards:
+      []
+      # - project: "perses"
+      #   dashboard: "Demo"
 
   # -- Database config based on data base type
   database:
@@ -130,14 +132,13 @@ config:
       folder: /perses
       extension: json
     # -- SQL Config
-    sql:
-      {}
-      # user: "user"
-      # password: "password"
-      # net: "tcp"
-      # addr: "localhost:3306"
-      # db_name: "perses"
-      # allow_native_passwords: true
+    # sql:
+    ## user: "user"
+    ## password: "password"
+    ## net: "tcp"
+    ## addr: "localhost:3306"
+    ## db_name: "perses"
+    ## allow_native_passwords: true
 
   # -- provisioning config
   provisioning:
