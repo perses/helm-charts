@@ -96,6 +96,10 @@ config:
   # -- Annotations for config
   annotations: {}
 
+  # Use it in case you want to prefix the API path. By default the API is served with the path /api. 
+  # With this config, it will be served with the path <api_prefix>/api
+  # api_prefix: "/perses"
+
   security:
     # -- Configure Perses instance as readonly
     readonly: false
