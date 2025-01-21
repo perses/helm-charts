@@ -87,7 +87,7 @@ spec:
           failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
         livenessProbe:
           httpGet:
-            path: {{ .Values.config.api_prefix}}/metrics
+            path: {{ .Values.config.api_prefix }}/metrics
             port: http
             scheme: HTTP
           initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
