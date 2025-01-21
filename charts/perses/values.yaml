@@ -91,7 +91,7 @@ volumeMounts: []
 resources: {}
 
 # -- Perses configuration file
-# ref: https://github.com/perses/perses/blob/main/docs/user-guides/configuration.md
+# ref: https://github.com/perses/perses/blob/main/docs/configuration/configuration.md
 config:
   # -- Annotations for config
   annotations: {}
