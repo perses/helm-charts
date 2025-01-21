@@ -77,7 +77,7 @@ spec:
             containerPort: {{ .Values.service.targetPort }}
         readinessProbe:
           httpGet:
-            path: {{ .Values.config.api_prefix}}/metrics
+            path: {{ .Values.config.api_prefix }}/metrics
             port: http
             scheme: HTTP
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
