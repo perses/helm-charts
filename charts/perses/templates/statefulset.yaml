@@ -51,7 +51,7 @@ spec:
           - --config=/etc/perses/config/config.yaml
           - --web.listen-address=:{{ .Values.service.targetPort }}
           - --web.hide-port=false
-          - --web.telemetry-path=/metrics
+          - --web.telemetry-path={{ .Values.config.api_prefix }}/metrics
           - --log.level={{ .Values.logLevel }}
           - --log.method-trace=true
         volumeMounts:
@@ -77,7 +77,7 @@ spec:
             containerPort: {{ .Values.service.targetPort }}
         readinessProbe:
           httpGet:
-            path: /metrics
+            path: {{ .Values.config.api_prefix }}/metrics
             port: http
             scheme: HTTP
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
@@ -87,7 +87,7 @@ spec:
           failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
         livenessProbe:
           httpGet:
-            path: /metrics
+            path: {{ .Values.config.api_prefix }}/metrics
             port: http
             scheme: HTTP
           initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}

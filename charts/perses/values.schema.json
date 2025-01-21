@@ -104,6 +104,9 @@
         "annotations": {
           "type": "object"
         },
+        "api_prefix": {
+          "type": "string"
+        },
         "security": {
           "type": "object",
           "additionalProperties": false,
@@ -118,11 +121,7 @@
               "properties": {
                 "same_site": {
                   "type": "string",
-                  "enum": [
-                    "strict",
-                    "lax",
-                    "none"
-                  ]
+                  "enum": ["strict", "lax", "none"]
                 },
                 "secure": {
                   "type": "boolean"
@@ -151,13 +150,7 @@
                         "type": "array",
                         "items": {
                           "type": "string",
-                          "enum": [
-                            "read",
-                            "create",
-                            "update",
-                            "delete",
-                            "*"
-                          ]
+                          "enum": ["read", "create", "update", "delete", "*"]
                         }
                       },
                       "scopes": {
@@ -402,16 +395,10 @@
                 },
                 "extension": {
                   "type": "string",
-                  "enum": [
-                    "yaml",
-                    "json"
-                  ]
+                  "enum": ["yaml", "json"]
                 }
               },
-              "required": [
-                "extension",
-                "folder"
-              ]
+              "required": ["extension", "folder"]
             },
             "sql": {
               "type": "object",

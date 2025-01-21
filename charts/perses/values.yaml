@@ -91,10 +91,14 @@ volumeMounts: []
 resources: {}
 
 # -- Perses configuration file
-# ref: https://github.com/perses/perses/blob/main/docs/user-guides/configuration.md
+# ref: https://github.com/perses/perses/blob/main/docs/configuration/configuration.md
 config:
   # -- Annotations for config
   annotations: {}
+
+  # Use it in case you want to prefix the API path. By default the API is served with the path /api. 
+  # With this config, it will be served with the path <api_prefix>/api
+  # api_prefix: "/perses"
 
   security:
     # -- Configure Perses instance as readonly
