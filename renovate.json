@@ -17,6 +17,12 @@
         "major"
       ],
       "automerge": false
+    },
+    {
+      "matchPaths": [
+        "charts/**"
+      ],
+      "bumpVersion": "minor"
     }
   ],
   "postUpgradeTasks": {
