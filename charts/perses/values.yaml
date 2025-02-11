@@ -79,6 +79,11 @@ readinessProbe:
   successThreshold: 1
   failureThreshold: 5
 
+# -- Additional arguments to pass to perses.
+# Set to null for argumentless flags
+extraArgs: {}
+  # web.hide-port: null
+
 # -- Additional volumes on the output StatefulSet definition.
 volumes: []
 
@@ -96,7 +101,7 @@ config:
   # -- Annotations for config
   annotations: {}
 
-  # Use it in case you want to prefix the API path. By default the API is served with the path /api. 
+  # Use it in case you want to prefix the API path. By default the API is served with the path /api.
   # With this config, it will be served with the path <api_prefix>/api
   # api_prefix: "/perses"
 
@@ -154,12 +159,12 @@ config:
 sidecar:
   # -- Enable the sidecar container for ConfigMap provisioning
   enabled: false
-  image: 
+  image:
     # -- Container image repository for the sidecar
     repository: kiwigrid/k8s-sidecar
     # -- Container image tag for the sidecar
     tag: 1.30.0
-  # -- Label key to watch for ConfigMaps containing Perses resources  
+  # -- Label key to watch for ConfigMaps containing Perses resources
   label: "perses.dev/resource"
   # -- Label value to watch for ConfigMaps containing Perses resources
   labelValue: "true"
@@ -240,4 +245,3 @@ testFramework:
     repository: cloudoperators/greenhouse-extensions-integration-test
     tag: main
   imagePullPolicy: IfNotPresent
-  

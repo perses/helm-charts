@@ -633,6 +633,9 @@
         "timeoutSeconds"
       ]
     },
+    "extraArgs": {
+      "type": "object"
+    },
     "volumes": {
       "type": "array"
     },
