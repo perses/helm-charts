@@ -4,13 +4,22 @@
     "config:recommended"
   ],
   "dependencyDashboard": true,
-  "automerge": true,
-  "automergeType": "pr",
-  "platformAutomerge": true,
   "labels": [
     "dependencies"
   ],
   "prHourlyLimit": 2,
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "^charts/perses/Chart.yaml$"
+      ],
+      "matchStrings": [
+        "appVersion=\"(?<currentValue>.*?)\"\\n"
+      ],
+      "depNameTemplate": "perses/perses"
+    }
+  ],
   "packageRules": [
     {
       "matchUpdateTypes": [
