@@ -35,16 +35,5 @@
       ],
       "bumpVersion": "minor"
     }
-  ],
-  "allowedPostUpgradeCommands": [
-    "^make$"
-  ],
-  "postUpgradeTasks": {
-    "commands": [
-      "make"
-    ],
-    "fileFilters": [
-      "**/*"
-    ]
-  }
+  ]
 }
