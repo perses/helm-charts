@@ -27,6 +27,9 @@ jobs:
             echo "version_changed=false" >> $GITHUB_OUTPUT
           fi
 
+      - name: install mdox
+        run: go install github.com/bwplotka/mdox@latest
+
       - name: Run make command if version changed
         if: steps.check-version.outputs.version_changed == 'true'
         run: |
