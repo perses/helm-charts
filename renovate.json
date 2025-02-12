@@ -33,6 +33,9 @@
       "matchFileNames": [
         "charts/**"
       ],
+      "matchManagers": [
+        "regex"
+      ],
       "bumpVersion": "minor"
     }
   ]
