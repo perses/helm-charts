@@ -16,7 +16,7 @@
         "^charts/perses/Chart.yaml$"
       ],
       "matchStrings": [
-        "appVersion=\"(?<currentValue>.*?)\"\\n"
+        "appVersion: \"(?<currentValue>.*?)\"\\n"
       ],
       "depNameTemplate": "persesdev/perses",
       "datasourceTemplate": "docker"
