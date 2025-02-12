@@ -1,6 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
+    "mergeConfidence:all-badges",
     "config:recommended"
   ],
   "dependencyDashboard": true,
@@ -17,7 +18,7 @@
       "matchStrings": [
         "appVersion=\"(?<currentValue>.*?)\"\\n"
       ],
-      "depNameTemplate": "perses/perses",
+      "depNameTemplate": "persesdev/perses",
       "datasourceTemplate": "docker"
     }
   ],
@@ -29,7 +30,7 @@
       "automerge": false
     },
     {
-      "matchPaths": [
+      "matchFileNames": [
         "charts/**"
       ],
       "bumpVersion": "minor"
