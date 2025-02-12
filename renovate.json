@@ -17,7 +17,8 @@
       "matchStrings": [
         "appVersion=\"(?<currentValue>.*?)\"\\n"
       ],
-      "depNameTemplate": "perses/perses"
+      "depNameTemplate": "perses/perses",
+      "datasourceTemplate": "docker"
     }
   ],
   "packageRules": [
