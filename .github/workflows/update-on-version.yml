@@ -4,47 +4,80 @@ on:
   pull_request:
     paths:
       - "charts/perses/Chart.yaml"
+    types: [opened, labeled, synchronize]
 
 jobs:
-  check-version:
+  update-chart-version:
+    name: Update Chart Version
+    if: contains(github.event.pull_request.labels.*.name, 'dependencies')
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
           fetch-depth: 2
 
-      - name: Check for appVersion change
-        id: check-version
+      - name: Install yq for YAML processing
         run: |
-          if git diff HEAD^ HEAD -- charts/perses/Chart.yaml | grep '^[+-].*appVersion:'; then
+          wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
+          chmod +x /usr/local/bin/yq
+
+      - name: Process Chart version update
+        id: version-update
+        run: |
+          # Check if appVersion changed in the latest commit
+          if git diff HEAD^ HEAD -- charts/perses/Chart.yaml | grep -q '^[+-].*appVersion:'; then
+            echo "appVersion change detected - updating Chart version"
             echo "version_changed=true" >> $GITHUB_OUTPUT
+            
+            # Extract current version from Chart.yaml
+            current_version=$(yq e '.version' charts/perses/Chart.yaml)
+            echo "Current Chart version: $current_version"
+            
+            # Split version into components
+            IFS='.' read -r major minor patch <<< "$current_version"
+            
+            # Increment minor version and reset patch
+            new_version="${major}.$((minor + 1)).0"
+            echo "New Chart version will be: $new_version"
+            
+            # Update version in Chart.yaml
+            yq e ".version = \"$new_version\"" -i charts/perses/Chart.yaml
+            echo "Successfully updated Chart.yaml version"
           else
+            echo "No appVersion change detected - skipping version update"
             echo "version_changed=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: setup go lang
+      - name: Setup Go development environment
+        if: steps.version-update.outputs.version_changed == 'true'
         uses: ./.github/actions/setup_environment
         with:
           enable_go: true
 
-      - name: install mdox
+      - name: Install mdox documentation tool
+        if: steps.version-update.outputs.version_changed == 'true'
         run: go install github.com/bwplotka/mdox@latest
 
-      - name: Run make command if version changed
-        if: steps.check-version.outputs.version_changed == 'true'
-        run: |
-          make
+      - name: Generate documentation and assets
+        if: steps.version-update.outputs.version_changed == 'true'
+        run: make
 
-      - name: Commit changes
-        if: steps.check-version.outputs.version_changed == 'true'
+      - name: Commit and push changes
+        if: steps.version-update.outputs.version_changed == 'true'
         run: |
+          # Configure git user for commit
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
+
+          # Stage all changes
           git add .
-          git commit -m "Auto-update after appVersion change"
+
+          # Commit and push if there are changes
+          git commit -m "chore: bump chart version and update generated files" || echo "No changes to commit"
           git push
