@@ -1,4 +1,4 @@
-name: Update on Version Change
+name: update on version change
 
 on:
   pull_request:
@@ -26,6 +26,11 @@ jobs:
           else
             echo "version_changed=false" >> $GITHUB_OUTPUT
           fi
+
+      - name: setup go lang
+        uses: ./.github/actions/setup_environment
+        with:
+          enable_go: true
 
       - name: install mdox
         run: go install github.com/bwplotka/mdox@latest
