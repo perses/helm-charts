@@ -1,0 +1,42 @@
+name: Update on Version Change
+
+on:
+  pull_request:
+    paths:
+      - "charts/perses/Chart.yaml"
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 2
+
+      - name: Check for appVersion change
+        id: check-version
+        run: |
+          if git diff HEAD^ HEAD -- charts/perses/Chart.yaml | grep '^[+-].*appVersion:'; then
+            echo "version_changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "version_changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run make command if version changed
+        if: steps.check-version.outputs.version_changed == 'true'
+        run: |
+          make
+
+      - name: Commit changes
+        if: steps.check-version.outputs.version_changed == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git commit -m "Auto-update after appVersion change"
+          git push
