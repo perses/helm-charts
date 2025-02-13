@@ -36,7 +36,7 @@ spec:
         volumeMounts:
         - name: provisioning
           mountPath: {{ .Values.config.provisioning.folders | first }}
-        env: 
+        env:
           - name: LABEL
             value: {{ .Values.sidecar.label }}
           - name: LABEL_VALUE
@@ -54,6 +54,13 @@ spec:
           - --web.telemetry-path={{ .Values.config.api_prefix }}/metrics
           - --log.level={{ .Values.logLevel }}
           - --log.method-trace=true
+          {{- range $key, $value := .Values.extraArgs }}
+          {{- if $value }}
+          - --{{ $key }}={{ tpl ($value | toString) $ }}
+          {{- else }}
+          - --{{ $key }}
+          {{- end }}
+          {{- end }}
         volumeMounts:
           {{- if .Values.volumeMounts }}
           {{- tpl (toYaml .Values.volumeMounts | nindent 10) . }}
