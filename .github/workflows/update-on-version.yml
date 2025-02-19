@@ -66,7 +66,7 @@ jobs:
 
       - name: Generate documentation and assets
         if: steps.version-update.outputs.version_changed == 'true'
-        run: make
+        run: make update-helm-readme
 
       - name: Commit and push changes
         if: steps.version-update.outputs.version_changed == 'true'
