@@ -6,6 +6,12 @@
 {{ fail "[ERROR] 'persistencen.storageClass' must be set." }}
 {{ end }}
 
+{{- define "perses.validateDatabaseConfig" -}}
+  {{- if and .Values.config.database.file .Values.config.database.sql }}
+    {{- fail "[ERROR] Both 'config.database.file' and 'config.database.sql' cannot be set at the same time. Please configure only one of them." }}
+  {{- end }}
+{{- end }}
+
 {{- if .Values.datasources }}
 #################################################################################
 ######   WARNING: The 'datasources' configuration field is deprecated       #####
