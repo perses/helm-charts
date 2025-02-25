@@ -6,10 +6,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels: 
     type: helm-chart-test
-  annotations:
-    "helm.sh/hook": test
-    "helm.sh/hook-weight": "-5"
-    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
+    {{- include "perses.labels" . | nindent 4 }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -18,10 +15,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels: 
     type: helm-chart-test
-  annotations:
-    "helm.sh/hook": test
-    "helm.sh/hook-weight": "-5"
-    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
+    {{- include "perses.labels" . | nindent 4 }}
 rules:
   - apiGroups: ["apps"]
     resources: ["statefulsets","deployments"]
@@ -40,10 +34,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels: 
     type: helm-chart-test
-  annotations:
-    "helm.sh/hook": test
-    "helm.sh/hook-weight": "-5"
-    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
+    {{- include "perses.labels" . | nindent 4 }}
 subjects:
   - kind: ServiceAccount
     name: {{ .Release.Name }}-test
