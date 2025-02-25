@@ -404,61 +404,58 @@
               "type": "object",
               "additionalProperties": false,
               "properties": {
-                "rejectReadOnly": {
+                "reject_read_only": {
                   "type": "boolean"
                 },
-                "parseTime": {
+                "parse_time": {
                   "type": "boolean"
                 },
-                "multiStatements": {
+                "multi_statements": {
                   "type": "boolean"
                 },
-                "interpolateParams": {
+                "interpolate_params": {
                   "type": "boolean"
                 },
-                "columnsWithAlias": {
+                "columns_with_alias": {
                   "type": "boolean"
                 },
-                "clientFoundRows": {
+                "client_found_rows": {
                   "type": "boolean"
                 },
-                "checkConnLiveness": {
+                "check_conn_liveness": {
                   "type": "boolean"
                 },
-                "allowOldPasswords": {
+                "allow_old_passwords": {
                   "type": "boolean"
                 },
-                "allowNativePasswords": {
+                "allow_native_passwords": {
                   "type": "boolean"
                 },
-                "allowFallbackToPlaintext": {
+                "allow_fallback_to_plaintext": {
                   "type": "boolean"
                 },
-                "allowCleartextPasswords": {
+                "allow_cleartext_passwords": {
                   "type": "boolean"
                 },
-                "allowAllFiles": {
+                "allow_all_files": {
                   "type": "boolean"
                 },
-                "writeTimeout": {
+                "write_timeout": {
                   "type": "string"
                 },
-                "readTimeout": {
+                "read_timeout": {
                   "type": "string"
                 },
-                "serverPubKey": {
+                "server_pub_key": {
                   "type": "string"
                 },
-                "maxAllowedPacket": {
+                "max_allowed_packet": {
                   "type": "integer"
-                },
-                "loc": {
-                  "type": "string"
                 },
                 "collation": {
                   "type": "string"
                 },
-                "dbName": {
+                "db_name": {
                   "type": "string"
                 },
                 "addr": {
@@ -467,13 +464,16 @@
                 "net": {
                   "type": "string"
                 },
-                "passwordFile": {
+                "password_file": {
+                  "type": "string"
+                },
+                "password": {
                   "type": "string"
                 },
                 "user": {
                   "type": "string"
                 },
-                "tlsConfig": {
+                "tls_config": {
                   "properties": {
                     "ca": {
                       "type": "string"
@@ -484,19 +484,19 @@
                     "key": {
                       "type": "string"
                     },
-                    "caFile": {
+                    "ca_file": {
                       "type": "string"
                     },
-                    "certFile": {
+                    "cert_file": {
                       "type": "string"
                     },
-                    "keyFile": {
+                    "key_file": {
                       "type": "string"
                     },
-                    "serverName": {
+                    "server_name": {
                       "type": "string"
                     },
-                    "insecureSkipVerify": {
+                    "insecure_skip_verify": {
                       "type": "boolean"
                     }
                   }

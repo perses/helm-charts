@@ -20,7 +20,8 @@ image:
   # -- Default image pull policy
   pullPolicy: IfNotPresent
 
-additionalLabels: {}
+additionalLabels:
+  {}
   # app: perses
 
 # -- Service account for Perses to use.
@@ -81,7 +82,8 @@ readinessProbe:
 
 # -- Additional arguments to pass to perses.
 # Set to null for argumentless flags
-extraArgs: {}
+extraArgs:
+  {}
   # web.hide-port: null
 
 # -- Additional volumes on the output StatefulSet definition.
@@ -93,7 +95,15 @@ volumeMounts: []
 # -- Resource limits & requests.
 # Update according to your own use case as these values might be too low for a typical deployment.
 # ref: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
-resources: {}
+resources:
+  {}
+
+  #  limits:
+  #    cpu: 100m
+  #    memory: 128Mi
+  #  requests:
+  #    cpu: 100m
+  #    memory: 128Mi
 
 # -- Perses configuration file
 # ref: https://github.com/perses/perses/blob/main/docs/configuration/configuration.md
@@ -101,9 +111,9 @@ config:
   # -- Annotations for config
   annotations: {}
 
-  # Use it in case you want to prefix the API path. By default the API is served with the path /api.
+  # -- Use it in case you want to prefix the API path. By default the API is served with the path /api.
   # With this config, it will be served with the path <api_prefix>/api
-  # api_prefix: "/perses"
+  api_prefix: ""
 
   security:
     # -- Configure Perses instance as readonly
@@ -142,17 +152,17 @@ config:
       extension: json
     # -- SQL Config
     # sql:
-    ## user: "user"
-    ## password: "password"
-    ## net: "tcp"
-    ## addr: "localhost:3306"
-    ## db_name: "perses"
-    ## allow_native_passwords: true
+    #   user: "user"
+    #   password: "password"
+    #   net: "tcp"
+    #   addr: "localhost:3306"
+    #   db_name: "perses"
+    #   allow_native_passwords: true
 
   # -- provisioning config
   provisioning:
     folders:
-    - /etc/perses/provisioning
+      - /etc/perses/provisioning
     interval: 10s
 
 # --  Sidecar configuration that watches for ConfigMaps with the specified label/labelValue and loads them into Perses provisioning
@@ -236,7 +246,6 @@ datasources:
   #       kind: PrometheusDatasource
   #       spec:
   #         directUrl: https://prometheus.demo.do.prometheus.io
-
 
 testFramework:
   enabled: true

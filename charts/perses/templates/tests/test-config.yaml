@@ -18,11 +18,7 @@ data:
     load "/usr/lib/bats/bats-detik/detik"
     
     DETIK_CLIENT_NAME="kubectl"
-    
-    @test "Verify successful deployment and running status of the {{ .Release.Name }} pod" {
-        verify "there is 1 statefulset named '{{ include "perses.fullname" . }}'"
-        try "at most 3 times every 20s to get pods named '{{ include "perses.fullname" . }}.*' and verify that '.status.phase' is 'running'" 
-    }
+  
 
     @test "Verify that there is a service named {{ include "perses.fullname" . }}" {
         verify "there is 1 service named '^{{ include "perses.fullname" . }}$'"
@@ -31,6 +27,20 @@ data:
     @test "Verify that there is a configmap named {{ include "perses.fullname" . }}" {
         verify "there is 1 configmap named '^{{ include "perses.fullname" . }}$'"
     }
+
+    {{- if .Values.config.database.file }}
+    @test "Verify successful statefulset and running status of the {{ .Release.Name }} pod" {
+        verify "there is 1 statefulset named '{{ include "perses.fullname" . }}'"
+        try "at most 3 times every 20s to get pods named '{{ include "perses.fullname" . }}.*' and verify that '.status.phase' is 'running'" 
+    }
+    {{- end -}}
+
+    {{- if .Values.config.database.sql }}
+    @test "Verify successful deployment and running status of the {{ .Release.Name }} pod" {
+        verify "there is 1 deployment named '{{ include "perses.fullname" . }}'"
+        try "at most 3 times every 20s to get pods named '{{ include "perses.fullname" . }}.*' and verify that '.status.phase' is 'running'" 
+    }
+    {{- end -}}
 
     {{- if .Values.persistence.enabled }}
     @test "Verify successful creation and bound status of {{ include "perses.fullname" . }} persistent volume claims" {
