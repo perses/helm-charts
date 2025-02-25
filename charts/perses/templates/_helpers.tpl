@@ -66,9 +66,3 @@ Create the name of the service account to use
 {{- define "perses.dns" -}}
 http://{{ include "perses.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.targetPort }}
 {{- end -}}
-
-{{- define "perses.validateDatabaseConfig" -}}
-  {{- if and .Values.config.database.file .Values.config.database.sql }}
-    {{- fail "Both config.database.file and config.database.sql cannot be set at the same time. Please configure only one of them." }}
-  {{- end }}
-{{- end }}
