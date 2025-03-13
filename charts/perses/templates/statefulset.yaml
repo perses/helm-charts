@@ -46,6 +46,10 @@ spec:
             value: {{ .Values.sidecar.labelValue | quote }}
           - name: FOLDER
             value: {{ .Values.config.provisioning.folders | first }}
+          {{- if .Values.sidecar.all_namespaces}}
+          - name: NAMESPACE
+            value: all
+          {{- end }}
       {{- end }}
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.name }}:{{ .Values.image.version | default .Chart.AppVersion }}"
