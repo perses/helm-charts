@@ -178,6 +178,8 @@ sidecar:
   label: "perses.dev/resource"
   # -- Label value to watch for ConfigMaps containing Perses resources
   labelValue: "true"
+  # -- check for configmaps from all namespaces. When set to false, it will only check for configmaps in the same namespace as the Perses instance
+  allNamespaces: true
 
 # -- Persistence parameters
 persistence:
