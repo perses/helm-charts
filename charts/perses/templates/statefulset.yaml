@@ -48,7 +48,7 @@ spec:
             value: {{ .Values.config.provisioning.folders | first }}
           {{- if .Values.sidecar.allNamespaces}}
           - name: NAMESPACE
-            value: all
+            value: ALL
           {{- end }}
       {{- end }}
       - name: {{ .Chart.Name }}
