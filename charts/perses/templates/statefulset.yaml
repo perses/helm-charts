@@ -46,7 +46,7 @@ spec:
             value: {{ .Values.sidecar.labelValue | quote }}
           - name: FOLDER
             value: {{ .Values.config.provisioning.folders | first }}
-          {{- if .Values.sidecar.all_namespaces}}
+          {{- if .Values.sidecar.allNamespaces}}
           - name: NAMESPACE
             value: all
           {{- end }}

@@ -530,7 +530,7 @@
         "enabled": {
           "type": "boolean"
         },
-        "all_namespaces": {
+        "allNamespaces": {
           "type": "boolean"
         },
         "image": {
@@ -561,7 +561,7 @@
         "image",
         "label",
         "labelValue",
-        "all_namespaces"
+        "allNamespaces"
       ]
     },
     "persistence": {
