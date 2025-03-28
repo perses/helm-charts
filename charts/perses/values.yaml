@@ -138,6 +138,8 @@ config:
 
   # -- Frontend configuration
   frontend:
+    explorer:
+      enable: true
     # -- Important dashboards list
     important_dashboards:
       []
