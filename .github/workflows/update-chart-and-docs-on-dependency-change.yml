@@ -1,20 +1,17 @@
-name: update on version change
+name: update-chart-and-docs-on-dependency-change
 
 on:
   pull_request:
-    paths:
-      - "charts/perses/Chart.yaml"
     types: [opened, labeled, synchronize]
 
 jobs:
-  update-chart-version:
-    name: Update Chart Version
+  bump-chart-version:
+    name: Bump Chart Version
     if: contains(github.event.pull_request.labels.*.name, 'dependencies')
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -33,7 +30,6 @@ jobs:
           # Check if appVersion changed in the latest commit
           if git diff HEAD^ HEAD -- charts/perses/Chart.yaml | grep -q '^[+-].*appVersion:'; then
             echo "appVersion change detected - updating Chart version"
-            echo "version_changed=true" >> $GITHUB_OUTPUT
             
             # Extract current version from Chart.yaml
             current_version=$(yq e '.version' charts/perses/Chart.yaml)
@@ -51,33 +47,41 @@ jobs:
             echo "Successfully updated Chart.yaml version"
           else
             echo "No appVersion change detected - skipping version update"
-            echo "version_changed=false" >> $GITHUB_OUTPUT
           fi
 
+  update-docs:
+    name: Update Docs and Commit
+    needs: [bump-chart-version]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Setup Go development environment
-        if: steps.version-update.outputs.version_changed == 'true'
         uses: ./.github/actions/setup_environment
         with:
           enable_go: true
 
       - name: Install mdox documentation tool
-        if: steps.version-update.outputs.version_changed == 'true'
         run: go install github.com/bwplotka/mdox@latest
 
       - name: Generate documentation and assets
-        if: steps.version-update.outputs.version_changed == 'true'
         run: make update-helm-readme
 
       - name: Commit and push changes
-        if: steps.version-update.outputs.version_changed == 'true'
         run: |
           # Configure git user for commit
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
 
-          # Stage all changes
-          git add .
+          # Check if there are changes to commit
+          if [[ $(git status --porcelain) ]]; then
+            # Stage all changes
+            git add .
 
-          # Commit and push if there are changes
-          git commit -m "chore: bump chart version and update generated files" || echo "No changes to commit"
-          git push
+            # Commit and push
+            git commit -m "chore: bump chart version and update generated files"
+            git push
+          else
+            echo "No changes to commit"
+          fi
