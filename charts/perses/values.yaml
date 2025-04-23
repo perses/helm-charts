@@ -54,8 +54,8 @@ serviceMonitor:
   # -- Create a serviceMonitor for Perses
   selfMonitor: false
 
-  # -- Labels to add so that prometheus-operator can discover the perses serviceMonitor.
-  # This label should be same as the kind: spec.serviceMonitorSelector.matchLabels in the Prometheus CRD
+  # -- Labels to add to the ServiceMonitor so that Prometheus can discover it.
+  # These labels should match the 'serviceMonitorSelector.matchLabels' defined in your Prometheus CR.
   labels: {}
 
   # -- Interval for the serviceMonitor
