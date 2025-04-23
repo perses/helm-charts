@@ -50,6 +50,17 @@ service:
   # -- Perses running port
   targetPort: 8080
 
+serviceMonitor:
+  # -- Create a serviceMonitor for Perses
+  selfMonitor: false
+
+  # -- Labels to add so that prometheus-operator can discover the perses serviceMonitor.
+  # This label should be same as the kind: spec.serviceMonitorSelector.matchLabels in the Prometheus CRD
+  labels: {}
+
+  # -- Interval for the serviceMonitor
+  interval: 30s
+
 # -- Statefulset Annotations
 annotations: {}
 
@@ -207,7 +218,7 @@ persistence:
   # -- Annotations for the PVC
   annotations: {}
 
-# -- Configure the ingress resource that allows you to access Thanos Query Frontend
+# -- Configure the ingress resource that allows you to access Perses Frontend
 # ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
   # -- Enable ingress controller resource
