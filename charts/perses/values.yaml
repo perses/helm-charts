@@ -39,7 +39,7 @@ serviceAccount:
 service:
   # -- Annotations to add to the service
   annotations: {}
-  # -- Labeles to add to the service
+  # -- Labels to add to the service
   labels: {}
   # -- Service Type
   type: "ClusterIP"
