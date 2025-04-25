@@ -848,6 +848,38 @@
         "image",
         "imagePullPolicy"
       ]
+    },
+    "serviceMonitor": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "selfMonitor": {
+          "type": "boolean"
+        },
+        "labels": {
+          "type": "object"
+        },
+        "interval": {
+          "type": "string"
+        }
+      },
+      "required": ["selfMonitor", "labels", "interval"]
+    },
+    "frontend": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "explorer": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enable": {
+              "type": "boolean"
+            }
+          },
+          "required": ["enable"]
+        }
+      }
     }
   }
 }

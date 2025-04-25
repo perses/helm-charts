@@ -39,7 +39,7 @@ serviceAccount:
 service:
   # -- Annotations to add to the service
   annotations: {}
-  # -- Labeles to add to the service
+  # -- Labels to add to the service
   labels: {}
   # -- Service Type
   type: "ClusterIP"
@@ -49,6 +49,17 @@ service:
   port: 8080
   # -- Perses running port
   targetPort: 8080
+
+serviceMonitor:
+  # -- Create a serviceMonitor for Perses
+  selfMonitor: false
+
+  # -- Labels to add to the ServiceMonitor so that Prometheus can discover it.
+  # These labels should match the 'serviceMonitorSelector.matchLabels' defined in your Prometheus CR.
+  labels: {}
+
+  # -- Interval for the serviceMonitor
+  interval: 30s
 
 # -- Statefulset Annotations
 annotations: {}
@@ -207,7 +218,7 @@ persistence:
   # -- Annotations for the PVC
   annotations: {}
 
-# -- Configure the ingress resource that allows you to access Thanos Query Frontend
+# -- Configure the ingress resource that allows you to access Perses Frontend
 # ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
   # -- Enable ingress controller resource

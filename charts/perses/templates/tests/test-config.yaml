@@ -54,4 +54,10 @@ data:
         verify "there is 1 ingress named '^{{ include "perses.fullname" . }}$'"
     }
     {{- end -}}
+
+    {{ if .Values.serviceMonitor.selfMonitor }}
+    @test "Verify succesful creation of ServiceMonitor" {
+      verify "there is 1 servicemonitor named '^{{ include "perses.fullname" . }}$'"
+    }
+    {{ end }}
 {{- end -}}
