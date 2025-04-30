@@ -58,6 +58,11 @@ serviceMonitor:
   # These labels should match the 'serviceMonitorSelector.matchLabels' defined in your Prometheus CR.
   labels: {}
 
+  selector:
+    # -- Selector used by the ServiceMonitor to find which Perses service to scrape metrics from.
+    # These matchLabels should match the labels on your Perses service.
+    matchLabels: {}
+
   # -- Interval for the serviceMonitor
   interval: 30s
 
