@@ -39,7 +39,7 @@ helm.sh/chart: {{ include "perses.chart" . }}
 app.kubernetes.io/version: {{ default .Chart.AppVersion .Values.image.version }}
 app.kubernetes.io/part-of: {{ include "perses.name" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- if .Values.additionalLabels }}
+{{- if not (empty .Values.additionalLabels) }}
 {{ toYaml .Values.additionalLabels }}
 {{- end }}
 {{- end }}
