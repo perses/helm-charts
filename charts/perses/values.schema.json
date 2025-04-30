@@ -861,9 +861,17 @@
         },
         "interval": {
           "type": "string"
+        },
+        "selector": {
+          "type": "object",
+          "properties": {
+            "matchLabels": {
+              "type": "object"
+            }
+          }
         }
       },
-      "required": ["selfMonitor", "labels", "interval"]
+      "required": ["selfMonitor", "labels", "interval", "selector"]
     },
     "frontend": {
       "type": "object",
