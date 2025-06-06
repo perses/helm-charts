@@ -81,7 +81,7 @@ jobs:
 
             # Commit and push
             git commit -m "chore: bump chart version and update generated files"
-            git push
+            git push origin "${{ github.event.pull_request.head.ref }}"
           else
             echo "No changes to commit"
           fi
