@@ -56,6 +56,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 2
 
       - name: Setup Go development environment
         uses: ./.github/actions/setup_environment
@@ -81,7 +84,7 @@ jobs:
 
             # Commit and push
             git commit -m "chore: bump chart version and update generated files"
-            git push
+            git push origin "${{ github.event.pull_request.head.ref }}"
           else
             echo "No changes to commit"
           fi
