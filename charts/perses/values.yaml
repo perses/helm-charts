@@ -156,6 +156,8 @@ config:
   frontend:
     explorer:
       enable: true
+    # -- Information contains markdown content to be display on the home page
+    information: ""
     # -- Important dashboards list
     important_dashboards:
       []

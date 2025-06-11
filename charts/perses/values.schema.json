@@ -367,21 +367,6 @@
             }
           }
         },
-        "important_dashboards": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "project": {
-                "type": "string"
-              },
-              "dashboard": {
-                "type": "string"
-              }
-            }
-          }
-        },
         "database": {
           "type": "object",
           "additionalProperties": false,
@@ -886,6 +871,25 @@
             }
           },
           "required": ["enable"]
+        },
+        "information": {
+          "type": "string",
+          "description": "Markdown content to be displayed on the home page."
+        },
+        "important_dashboards": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "project": {
+                "type": "string"
+              },
+              "dashboard": {
+                "type": "string"
+              }
+            }
+          }
         }
       }
     }
