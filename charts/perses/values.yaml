@@ -200,6 +200,10 @@ sidecar:
   labelValue: "true"
   # -- check for configmaps from all namespaces. When set to false, it will only check for configmaps in the same namespace as the Perses instance
   allNamespaces: true
+  # -- add additional environment variables to sidecar container
+  additionalEnv: []
+    # - name: RESOURCE
+    #   value: both
 
 # -- Persistence parameters
 persistence:

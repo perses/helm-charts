@@ -518,6 +518,9 @@
         "allNamespaces": {
           "type": "boolean"
         },
+        "additionalEnv": {
+          "type": "array"
+        },
         "image": {
           "type": "object",
           "additionalProperties": false,

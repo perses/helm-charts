@@ -50,6 +50,9 @@ spec:
           - name: NAMESPACE
             value: ALL
           {{- end }}
+          {{- with .Values.sidecar.additionalEnv -}}
+          {{ toYaml . | nindent 10 }}
+          {{- end }}
       {{- end }}
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.name }}:{{ .Values.image.version | default .Chart.AppVersion }}"
