@@ -200,7 +200,7 @@ sidecar:
   labelValue: "true"
   # -- check for configmaps from all namespaces. When set to false, it will only check for configmaps in the same namespace as the Perses instance
   allNamespaces: true
-  # -- add additional environment variables to sidecar container
+  # -- add additional environment variables to sidecar container. you can look at the k8s-sidecar documentation for more information - https://github.com/kiwigrid/k8s-sidecar
   extraEnvVars: []
     # - name: RESOURCE
     #   value: both
