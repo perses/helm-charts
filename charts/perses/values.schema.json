@@ -518,7 +518,7 @@
         "allNamespaces": {
           "type": "boolean"
         },
-        "additionalEnv": {
+        "extraEnvVars": {
           "type": "array"
         },
         "image": {

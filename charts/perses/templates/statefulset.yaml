@@ -50,7 +50,7 @@ spec:
           - name: NAMESPACE
             value: ALL
           {{- end }}
-          {{- with .Values.sidecar.additionalEnv -}}
+          {{- with .Values.sidecar.extraEnvVars -}}
           {{ toYaml . | nindent 10 }}
           {{- end }}
       {{- end }}
