@@ -10,7 +10,12 @@ rules:
 - apiGroups: [""]
   resources: ["configmaps"]
   verbs: ["get", "watch", "list"]
----  
+{{- if .Values.sidecar.enableSecretAccess }}
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get", "watch", "list"]
+{{- end }}
+---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:

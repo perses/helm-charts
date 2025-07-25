@@ -49,6 +49,10 @@ spec:
           - name: NAMESPACE
             value: ALL
           {{- end }}
+          {{- if .Values.sidecar.enableSecretAccess}}
+          - name: RESOURCE
+            value: both
+          {{- end }}
           {{- with .Values.sidecar.extraEnvVars -}}
           {{ toYaml . | nindent 10 }}
           {{- end }}

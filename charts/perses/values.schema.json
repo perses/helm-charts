@@ -518,6 +518,9 @@
         "allNamespaces": {
           "type": "boolean"
         },
+        "enableSecretAccess": {
+          "type": "boolean"
+        },
         "extraEnvVars": {
           "type": "array"
         },

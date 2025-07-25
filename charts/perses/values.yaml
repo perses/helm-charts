@@ -204,6 +204,8 @@ sidecar:
   extraEnvVars: []
     # - name: RESOURCE
     #   value: both
+  # -- Enable secret access permissions in the cluster role. When enabled, the sidecar will have permissions to read secrets and use them.
+  enableSecretAccess: false
 
 # -- Persistence parameters
 persistence:
