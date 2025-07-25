@@ -518,6 +518,12 @@
         "allNamespaces": {
           "type": "boolean"
         },
+        "enableSecretAccess": {
+          "type": "boolean"
+        },
+        "extraEnvVars": {
+          "type": "array"
+        },
         "image": {
           "type": "object",
           "additionalProperties": false,

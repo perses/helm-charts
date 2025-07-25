@@ -26,7 +26,7 @@ spec:
         checksum/config: {{ include (print $.Template.BasePath "/datasources.yaml") . | sha256sum }}
         {{- else }}
         checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
-        {{- end }} 
+        {{- end }}
     spec:
       serviceAccountName: {{ include "perses.serviceAccountName" . }}
       securityContext:
@@ -45,6 +45,17 @@ spec:
             value: {{ .Values.sidecar.labelValue | quote }}
           - name: FOLDER
             value: {{ .Values.config.provisioning.folders | first }}
+          {{- if .Values.sidecar.allNamespaces}}
+          - name: NAMESPACE
+            value: ALL
+          {{- end }}
+          {{- if .Values.sidecar.enableSecretAccess}}
+          - name: RESOURCE
+            value: both
+          {{- end }}
+          {{- with .Values.sidecar.extraEnvVars -}}
+          {{ toYaml . | nindent 10 }}
+          {{- end }}
       {{- end }}
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.name }}:{{ .Values.image.version | default .Chart.AppVersion }}"
