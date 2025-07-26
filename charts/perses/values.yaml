@@ -108,6 +108,33 @@ volumes: []
 # -- Additional VolumeMounts on the output StatefulSet definition.
 volumeMounts: []
 
+# -- TLS configuration for mounting certificates from Kubernetes secrets
+tls:
+  # -- Enable TLS certificate mounting
+  enabled: false
+
+  # -- CA Certificate configuration
+  # Certificates will be mounted to the directory specified in mountPath
+  caCert:
+    # -- Enable CA certificate mounting
+    enabled: false
+    # -- Name of the Kubernetes secret containing the CA certificate
+    # Defaults to "release-name-tls" if not specified
+    secretName: ""
+    # -- Mount path for the CA certificate directory
+    mountPath: "/ca"
+
+  # -- Client Certificate configuration (contains both cert and key)
+  # Certificates will be mounted to the directory specified in mountPath
+  clientCert:
+    # -- Enable client certificate mounting
+    enabled: false
+    # -- Name of the Kubernetes secret containing the client certificate and key
+    # Defaults to "release-name-tls" if not specified
+    secretName: ""
+    # -- Mount path for the client certificate directory
+    mountPath: "/tls"
+
 # -- Resource limits & requests.
 # Update according to your own use case as these values might be too low for a typical deployment.
 # ref: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
@@ -201,7 +228,8 @@ sidecar:
   # -- check for configmaps from all namespaces. When set to false, it will only check for configmaps in the same namespace as the Perses instance
   allNamespaces: true
   # -- add additional environment variables to sidecar container. you can look at the k8s-sidecar documentation for more information - https://github.com/kiwigrid/k8s-sidecar
-  extraEnvVars: []
+  extraEnvVars:
+    []
     # - name: RESOURCE
     #   value: both
   # -- Enable secret access permissions in the cluster role. When enabled, the sidecar will have permissions to read secrets and use them.
