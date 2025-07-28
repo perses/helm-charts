@@ -93,6 +93,18 @@ spec:
           - name: provisioning
             mountPath: {{ .Values.config.provisioning.folders | first }}
           {{- end }}
+          {{- if .Values.tls.enabled }}
+          {{- if .Values.tls.caCert.enabled }}
+          - name: ca-cert
+            mountPath: {{ .Values.tls.caCert.mountPath }}
+            readOnly: true
+          {{- end }}
+          {{- if .Values.tls.clientCert.enabled }}
+          - name: client-cert
+            mountPath: {{ .Values.tls.clientCert.mountPath }}
+            readOnly: true
+          {{- end }}
+          {{- end }}
         ports:
           - name: http
             containerPort: {{ .Values.service.targetPort }}
@@ -144,5 +156,19 @@ spec:
         {{- if .Values.sidecar.enabled }}
         - name: provisioning
           emptyDir: {}
+        {{- end }}
+        {{- if .Values.tls.enabled }}
+        {{- if .Values.tls.caCert.enabled }}
+        - name: ca-cert
+          secret:
+            secretName: {{ .Values.tls.caCert.secretName | default (printf "%s-tls" (include "perses.fullname" .)) }}
+            defaultMode: 420
+        {{- end }}
+        {{- if .Values.tls.clientCert.enabled }}
+        - name: client-cert
+          secret:
+            secretName: {{ .Values.tls.clientCert.secretName | default (printf "%s-tls" (include "perses.fullname" .)) }}
+            defaultMode: 420
+        {{- end }}
         {{- end }}
 {{- end }}

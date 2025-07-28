@@ -898,6 +898,63 @@
           }
         }
       }
+    },
+    "tls": {
+      "type": "object",
+      "description": "TLS configuration for mounting certificates from Kubernetes secrets",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable TLS certificate mounting",
+          "default": false
+        },
+        "caCert": {
+          "type": "object",
+          "description": "CA Certificate configuration",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable CA certificate mounting",
+              "default": false
+            },
+            "secretName": {
+              "type": "string",
+              "description": "Name of the Kubernetes secret containing the CA certificate"
+            },
+            "mountPath": {
+              "type": "string",
+              "description": "Mount path for the CA certificate directory",
+              "default": "/ca"
+            }
+          },
+          "required": ["enabled"]
+        },
+        "clientCert": {
+          "type": "object",
+          "description": "Client Certificate configuration (contains both cert and key)",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable client certificate mounting",
+              "default": false
+            },
+            "secretName": {
+              "type": "string",
+              "description": "Name of the Kubernetes secret containing the client certificate and key"
+            },
+            "mountPath": {
+              "type": "string",
+              "description": "Mount path for the client certificate directory",
+              "default": "/tls"
+            }
+          },
+          "required": ["enabled"]
+        }
+      },
+      "required": ["enabled"]
     }
   }
 }
