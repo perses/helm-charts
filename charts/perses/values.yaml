@@ -171,14 +171,6 @@ config:
       # Set to true if you host Perses behind HTTPS. Default is false
       # [ secure: <boolean> | default = false ]
 
-  # -- Schemas paths
-  schemas:
-    panels_path: "/etc/perses/cue/schemas/panels"
-    queries_path: "/etc/perses/cue/schemas/queries"
-    datasources_path: "/etc/perses/cue/schemas/datasources"
-    variables_path: "/etc/perses/cue/schemas/variables"
-    interval: "5m"
-
   # -- Frontend configuration
   frontend:
     explorer:
@@ -220,7 +212,7 @@ sidecar:
     # -- Container image repository for the sidecar
     repository: kiwigrid/k8s-sidecar
     # -- Container image tag for the sidecar
-    tag: 1.30.6
+    tag: 1.30.7
   # -- Label key to watch for ConfigMaps containing Perses resources
   label: "perses.dev/resource"
   # -- Label value to watch for ConfigMaps containing Perses resources
@@ -312,7 +304,8 @@ testFramework:
   imagePullPolicy: IfNotPresent
 
 # -- Deploy extra K8s manifests
-extraObjects: []
+extraObjects:
+  []
   # - apiVersion: v1
   #   kind: ConfigMap
   #   metadata:
