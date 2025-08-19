@@ -579,7 +579,7 @@
         },
         "securityContext": {
           "type": "object",
-          "additionalProperties": false,
+          "additionalProperties": true,
           "properties": {
             "fsGroup": {
               "type": "integer"
