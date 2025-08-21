@@ -242,9 +242,20 @@ persistence:
   # -- PVC Storage Request for data volume
   size: 8Gi
 
-  # -- Security context for the PVC when persistence is enabled
+  # -- Pod-level security context applied to all containers
   securityContext:
+    # -- Group ID that owns mounted volumes (needed for file access when using persistent storage)
     fsGroup: 2000
+    # -- UID to run the entrypoint of the container process (e.g., 1000)
+    # runAsUser: 1000
+    # -- GID to run the entrypoint of the container process (e.g., 3000)
+    # runAsGroup: 3000
+    # -- Indicates that containers must run as a non-root user (true/false)
+    # runAsNonRoot: true
+    # -- How volume ownership and permissions are changed (OnRootMismatch/Always)
+    # fsGroupChangePolicy: OnRootMismatch
+    # -- List of additional groups for the first process in containers
+    # supplementalGroups: [2000, 3000]
 
   # -- Labels for the PVC
   labels: {}
