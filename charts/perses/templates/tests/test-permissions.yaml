@@ -1,10 +1,10 @@
 {{- if .Values.testFramework.enabled -}}
 apiVersion: v1
-kind: ServiceAccount 
+kind: ServiceAccount
 metadata:
   name: {{ .Release.Name }}-test
   namespace: {{ .Release.Namespace }}
-  labels: 
+  labels:
     type: helm-chart-test
     {{- include "perses.labels" . | nindent 4 }}
 ---
@@ -13,7 +13,7 @@ kind: Role
 metadata:
   name: {{ .Release.Name }}-test
   namespace: {{ .Release.Namespace }}
-  labels: 
+  labels:
     type: helm-chart-test
     {{- include "perses.labels" . | nindent 4 }}
 rules:
@@ -21,7 +21,7 @@ rules:
     resources: ["statefulsets","deployments"]
     verbs: ["get", "list"]
   - apiGroups: [""]
-    resources: ["pods", "persistentvolumeclaims", "services", "configmaps"]
+    resources: ["pods", "persistentvolumeclaims", "services", "configmaps", "secrets"]
     verbs: ["get", "list"]
   - apiGroups: ["networking.k8s.io"]
     resources: ["ingresses"]
@@ -37,7 +37,7 @@ kind: RoleBinding
 metadata:
   name: {{ .Release.Name }}-test
   namespace: {{ .Release.Namespace }}
-  labels: 
+  labels:
     type: helm-chart-test
     {{- include "perses.labels" . | nindent 4 }}
 subjects:
