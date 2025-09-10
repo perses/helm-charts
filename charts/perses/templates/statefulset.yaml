@@ -79,6 +79,13 @@ spec:
           {{- if .Values.volumeMounts }}
           {{- tpl (toYaml .Values.volumeMounts | nindent 10) . }}
           {{- end }}
+          {{- if .Values.imageVolume }}
+          - name: {{ .Values.imageVolume.name }}
+            mountPath: {{ .Values.imageVolume.mountPath }}
+            {{- if .Values.imageVolume.subPath }}
+            subPath: {{ .Values.imageVolume.subPath }}
+            {{- end }}
+          {{- end }}
           - name: config
             mountPath: "/etc/perses/config"
           {{- if .Values.config.database.file }}
@@ -135,6 +142,14 @@ spec:
       volumes:
         {{- if .Values.volumes }}
         {{- tpl (toYaml .Values.volumes | nindent 8) . }}
+        {{- end }}
+        {{- if .Values.imageVolume }}
+        - name: {{ .Values.imageVolume.name }}
+          image:
+            reference: {{ .Values.imageVolume.image.reference }}
+            {{- if .Values.imageVolume.image.pullPolicy }}
+            pullPolicy: {{ .Values.imageVolume.image.pullPolicy }}
+            {{- end }}
         {{- end }}
         {{- if .Values.config.database.file }}
         - name: data

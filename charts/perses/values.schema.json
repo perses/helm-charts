@@ -640,6 +640,43 @@
     "volumeMounts": {
       "type": "array"
     },
+    "imageVolume": {
+      "type": ["object", "null"],
+      "description": "Image volume configuration for mounting OCI image as volume",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the image volume"
+        },
+        "image": {
+          "type": "object",
+          "description": "Image configuration",
+          "additionalProperties": false,
+          "properties": {
+            "reference": {
+              "type": "string",
+              "description": "OCI image reference (registry/image:tag)"
+            },
+            "pullPolicy": {
+              "type": "string",
+              "description": "Image pull policy",
+              "enum": ["Always", "IfNotPresent", "Never"]
+            }
+          },
+          "required": ["reference"]
+        },
+        "mountPath": {
+          "type": "string",
+          "description": "Path where the image volume should be mounted in the container"
+        },
+        "subPath": {
+          "type": "string",
+          "description": "Optional: Mount specific path from image (Kubernetes v1.33+)"
+        }
+      },
+      "required": ["name", "image", "mountPath"]
+    },
     "readinessProbe": {
       "type": "object",
       "additionalProperties": false,
