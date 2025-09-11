@@ -640,14 +640,14 @@
     "volumeMounts": {
       "type": "array"
     },
-    "imageVolume": {
+    "ociArtifacts": {
       "type": ["object", "null"],
-      "description": "Image volume configuration for mounting OCI image as volume",
+      "description": "OCI artifacts configuration for mounting OCI images as volumes",
       "additionalProperties": false,
       "properties": {
         "name": {
           "type": "string",
-          "description": "Name of the image volume"
+          "description": "Name of the OCI artifact volume"
         },
         "image": {
           "type": "object",
@@ -668,7 +668,7 @@
         },
         "mountPath": {
           "type": "string",
-          "description": "Path where the image volume should be mounted in the container"
+          "description": "Path where the OCI artifact should be mounted in the container"
         },
         "subPath": {
           "type": "string",

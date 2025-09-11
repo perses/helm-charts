@@ -108,24 +108,24 @@ volumes: []
 # -- Additional VolumeMounts on the output StatefulSet definition.
 volumeMounts: []
 
-# -- Image volume configuration for mounting OCI image as volume.
+# -- OCI artifacts configuration for mounting OCI images as volumes.
 # This feature allows you to package Perses manifests (dashboards, datasources, projects, etc.)
-# as OCI images and mount them directly into the Perses container. The mounted content will be
+# as OCI images and mount them directly into the Perses container. The mounted manifests will be
 # automatically loaded by Perses provisioning system when mounted at the provisioning path.
 # 
 # Use cases:
 # - Distribute dashboards as versioned OCI images
-# - Deploy datasource configurations from container registries  
+# - Deploy datasource configurations from container registries
 # - Enable immutable configuration deployments with rollback capabilities
 #
 # Requirements: Kubernetes v1.31+ and ImageVolume feature gate enabled
-# Note: Image volumes are inherently read-only
+# Note: OCI artifacts are inherently read-only
 # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/image-volumes/
-imageVolume:
-  # name: config-files
+ociArtifacts:
+  # name: perses-manifests
   # image:
-  #   reference: "registry.example.com/config:v1.0.0"
-  #   pullPolicy: IfNotPresent  # Options: Always, IfNotPresent, Never
+  #   reference: "registry.example.com/perses-manifests:v1.0.0"
+  #   pullPolicy: Always  # Options: Always, IfNotPresent, Never
   # mountPath: "/etc/perses/provisioning"  # Should match provisioning.folders path
   # # Optional: Mount specific path from image
   # subPath: "configs/production"

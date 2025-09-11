@@ -79,11 +79,11 @@ spec:
           {{- if .Values.volumeMounts }}
           {{- tpl (toYaml .Values.volumeMounts | nindent 10) . }}
           {{- end }}
-          {{- if .Values.imageVolume }}
-          - name: {{ .Values.imageVolume.name }}
-            mountPath: {{ .Values.imageVolume.mountPath }}
-            {{- if .Values.imageVolume.subPath }}
-            subPath: {{ .Values.imageVolume.subPath }}
+          {{- if .Values.ociArtifacts }}
+          - name: {{ .Values.ociArtifacts.name }}
+            mountPath: {{ .Values.ociArtifacts.mountPath }}
+            {{- if .Values.ociArtifacts.subPath }}
+            subPath: {{ .Values.ociArtifacts.subPath }}
             {{- end }}
           {{- end }}
           - name: config
@@ -143,12 +143,12 @@ spec:
         {{- if .Values.volumes }}
         {{- tpl (toYaml .Values.volumes | nindent 8) . }}
         {{- end }}
-        {{- if .Values.imageVolume }}
-        - name: {{ .Values.imageVolume.name }}
+        {{- if .Values.ociArtifacts }}
+        - name: {{ .Values.ociArtifacts.name }}
           image:
-            reference: {{ .Values.imageVolume.image.reference }}
-            {{- if .Values.imageVolume.image.pullPolicy }}
-            pullPolicy: {{ .Values.imageVolume.image.pullPolicy }}
+            reference: {{ .Values.ociArtifacts.image.reference }}
+            {{- if .Values.ociArtifacts.image.pullPolicy }}
+            pullPolicy: {{ .Values.ociArtifacts.image.pullPolicy }}
             {{- end }}
         {{- end }}
         {{- if .Values.config.database.file }}
