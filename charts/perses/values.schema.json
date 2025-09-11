@@ -674,8 +674,7 @@
           "type": "string",
           "description": "Optional: Mount specific path from image (Kubernetes v1.33+)"
         }
-      },
-      "required": ["name", "image", "mountPath"]
+      }
     },
     "readinessProbe": {
       "type": "object",

@@ -122,6 +122,7 @@ volumeMounts: []
 # Note: OCI artifacts are inherently read-only
 # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/image-volumes/
 ociArtifacts:
+  {}
   # name: perses-manifests
   # image:
   #   reference: "registry.example.com/perses-manifests:v1.0.0"
