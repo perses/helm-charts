@@ -131,9 +131,9 @@ spec:
         {{- tpl (toYaml .Values.volumes | nindent 8) . }}
         {{- end }}
         - name: config
-          configMap:
+          secret:
             defaultMode: 420
-            name: {{ include "perses.fullname" . }}
+            secretName: {{ include "perses.fullname" . }}
         - name: storage
           emptyDir: {}
       {{- if .Values.sidecar.enabled }}

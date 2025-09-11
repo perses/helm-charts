@@ -146,8 +146,9 @@ spec:
           {{- end }}
         {{- end }}
         - name: config
-          configMap:
-            name: {{ include "perses.fullname" . }}
+          secret:
+            secretName: {{ include "perses.fullname" . }}
+            defaultMode: 420
         {{- if .Values.datasources }}
         - name: datasources
           configMap:
