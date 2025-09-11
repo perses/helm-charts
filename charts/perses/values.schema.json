@@ -640,6 +640,42 @@
     "volumeMounts": {
       "type": "array"
     },
+    "ociArtifacts": {
+      "type": ["object", "null"],
+      "description": "OCI artifacts configuration for mounting OCI images as volumes",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the OCI artifact volume"
+        },
+        "image": {
+          "type": "object",
+          "description": "Image configuration",
+          "additionalProperties": false,
+          "properties": {
+            "reference": {
+              "type": "string",
+              "description": "OCI image reference (registry/image:tag)"
+            },
+            "pullPolicy": {
+              "type": "string",
+              "description": "Image pull policy",
+              "enum": ["Always", "IfNotPresent", "Never"]
+            }
+          },
+          "required": ["reference"]
+        },
+        "mountPath": {
+          "type": "string",
+          "description": "Path where the OCI artifact should be mounted in the container"
+        },
+        "subPath": {
+          "type": "string",
+          "description": "Optional: Mount specific path from image (Kubernetes v1.33+)"
+        }
+      }
+    },
     "readinessProbe": {
       "type": "object",
       "additionalProperties": false,

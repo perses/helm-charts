@@ -79,6 +79,13 @@ spec:
           {{- if .Values.volumeMounts }}
           {{- tpl (toYaml .Values.volumeMounts | nindent 10) . }}
           {{- end }}
+          {{- if .Values.ociArtifacts }}
+          - name: {{ .Values.ociArtifacts.name }}
+            mountPath: {{ .Values.ociArtifacts.mountPath }}
+            {{- if .Values.ociArtifacts.subPath }}
+            subPath: {{ .Values.ociArtifacts.subPath }}
+            {{- end }}
+          {{- end }}
           - name: config
             mountPath: "/etc/perses/config"
           {{- if .Values.config.database.file }}
@@ -135,6 +142,14 @@ spec:
       volumes:
         {{- if .Values.volumes }}
         {{- tpl (toYaml .Values.volumes | nindent 8) . }}
+        {{- end }}
+        {{- if .Values.ociArtifacts }}
+        - name: {{ .Values.ociArtifacts.name }}
+          image:
+            reference: {{ .Values.ociArtifacts.image.reference }}
+            {{- if .Values.ociArtifacts.image.pullPolicy }}
+            pullPolicy: {{ .Values.ociArtifacts.image.pullPolicy }}
+            {{- end }}
         {{- end }}
         {{- if .Values.config.database.file }}
         - name: data
