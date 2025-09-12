@@ -23,56 +23,9 @@ To uninstall/delete the my-release deployment:
 helm delete my-release
 ```
 
-## Upgrading an existing Release to a new version with Breaking Changes
+## Upgrading
 
-We try as much as possible to avoid breaking changes, but sometimes it's necessary to introduce them. If you are upgrading from a version to another that contains breaking changes, you will need to follow the steps below,
-based on the version you are upgrading from.
-
-### To 0.8.0
-
-This version introduces a breaking change on the `config` section. Some fields on the `config` section has been renamed. You will need to update your values file to reflect the new field names.
-
-Update `security` Fields
-
-- Change `readOnly` to `readonly`.
-- Change `enableAuth` to `enable_auth`.
-
-**Before:**
-
-```yaml
-security:
-  readOnly: false
-  enableAuth: false
-```
-
-**After:**
-
-```yaml
-security:
-  readonly: false
-  enable_auth: false
-```
-
-Move the important_dashboards list into a new frontend section.
-
-**Before:**
-
-```yaml
-important_dashboards:
-- name: "My Dashboard"
-    url: "https://my-dashboard.com"
-```
-
-**After:**
-
-```yaml
-frontend:
-  important_dashboards:
-  - name: "My Dashboard"
-    url: "https://my-dashboard.com"
-```
-
-SQL Field is not defined by default anymore. If you want to enable SQL and file system storage is the default.
+For upgrade instructions, including handling breaking changes between versions, see the [Upgrade Guide](../../docs/upgrade-guide.md).
 {{ template "chart.requirementsSection" . }}
 
 {{ template "chart.valuesSection" . }}
