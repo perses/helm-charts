@@ -40,7 +40,7 @@ The frequency of resource updates is controlled by Perses provisioning configura
 provisioning:
   interval: "5m"  # Check for changes every 5 minutes instead of default 1 hour
   folders:
-    - /opt/perses/provisioning  # Path where the shared volume is mounted
+    - /etc/perses/provisioning  # Path where the shared volume is mounted
 ```
 
 ## Recommended Folder Structure
