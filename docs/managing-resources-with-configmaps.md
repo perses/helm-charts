@@ -1,7 +1,7 @@
 # Managing Perses Resources with ConfigMaps
 
-> [!NOTE]
-> This approach is only applicable when Perses is configured to use file system storage (`config.database.file`).
+!!! note
+    This approach is only applicable when Perses is configured to use file system storage (`config.database.file`).
 
 A sidecar container is deployed in the Perses pod when enabled. This container uses [kiwigrid/k8s-sidecar](https://github.com/kiwigrid/k8s-sidecar) to watch all ConfigMaps in the cluster and filters out the ones with a configurable label (default: `perses.dev/resource: "true"`). 
 

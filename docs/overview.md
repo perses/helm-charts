@@ -39,7 +39,7 @@ For the complete list of available configuration options, refer to the [Perses C
 
 ## Features
 
-### Resource Management
+### Perses Resource Management
 
 The Helm chart supports two powerful approaches for managing Perses resources:
 
