@@ -1,11 +1,11 @@
 # Managing Perses Resources with ConfigMaps
 
 > [!NOTE]
-> This approach is only applicable when Perses is configured to use file system storage (`database.file`).
+> This approach is only applicable when Perses is configured to use file system storage (`config.database.file`).
 
-By default, a sidecar container is deployed in the Perses pod when enabled. This container uses [kiwigrid/k8s-sidecar](https://github.com/kiwigrid/k8s-sidecar) to watch all ConfigMaps in the cluster and filters out the ones with a configurable label (default: `perses.dev/resource: "true"`). 
+A sidecar container is deployed in the Perses pod when enabled. This container uses [kiwigrid/k8s-sidecar](https://github.com/kiwigrid/k8s-sidecar) to watch all ConfigMaps in the cluster and filters out the ones with a configurable label (default: `perses.dev/resource: "true"`). 
 
-The files defined in those ConfigMaps are written by the sidecar to a shared volume that is also mounted by the main Perses container at the [provisioning path](https://perses.dev/perses/docs/configuration/provisioning). Changes to the ConfigMaps are continuously monitored by the sidecar and reflected in Perses based on the **provisioning configuration interval** (by default 1 hour).
+The files defined in those ConfigMaps are written by the sidecar to a shared volume that is also mounted by the main Perses container at the [provisioning path](https://perses.dev/perses/docs/configuration/provisioning). Changes to the ConfigMaps are continuously monitored by the sidecar and reflected in Perses based on the **provisioning configuration interval** (by default 10 minutes).
 
 All Perses manifests such as Dashboards, Projects, Datasources, etc. can be managed as ConfigMaps using this approach.
 
@@ -38,26 +38,9 @@ The frequency of resource updates is controlled by Perses provisioning configura
 
 ```yaml
 provisioning:
-  interval: "5m"  # Check for changes every 5 minutes instead of default 1 hour
+  interval: "5m"  # Check for changes every 5 minutes instead of default 10 minutes
   folders:
     - /etc/perses/provisioning  # Path where the shared volume is mounted
-```
-
-## Recommended Folder Structure
-
-When using the custom chart approach, organize your resources in the `files/` directory:
-
-```bash
-your-chart/files/
-├── dashboards/
-│   ├── dashboard1.json
-│   ├── dashboard2.json
-├── projects/
-│   ├── project1.json
-│   ├── project2.json
-└── datasources/
-    ├── prometheus-demo.json
-    └── tempo-demo.json
 ```
 
 ## Easy ConfigMap Creation with Helm template
@@ -92,6 +75,8 @@ your-chart/
     │   └── dashboard1.json
     └── datasources/
         └── prometheus.json
+    └── projects/
+        └── project1.json
 ```
 
 ## Examples
