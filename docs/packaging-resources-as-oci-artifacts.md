@@ -3,8 +3,6 @@
 !!! note
     This approach is only applicable when Perses is configured to use file system storage (`config.database.file`).
 
-## Overview
-
 The OCI artifacts feature allows you to package and distribute Perses resources (dashboards, datasources, projects, etc.) as versioned OCI artifacts. This leverages [Kubernetes's ImageVolume feature](https://kubernetes.io/docs/tasks/configure-pod-container/image-volumes/) to mount OCI images directly as volumes, enabling immutable configuration deployments with built-in versioning and rollback capabilities.
 
 ## Benefits
