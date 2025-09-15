@@ -44,4 +44,4 @@ For the complete list of available configuration options, refer to the [Perses C
 The Helm chart supports two powerful approaches for managing Perses resources:
 
 - **[managing resources with ConfigMaps](managing-resources-with-configmaps.md)**: Use Kubernetes ConfigMaps with a sidecar container to automatically provision dashboards, datasources, and other Perses resources
-- **[packaging resources as OCI artifacts](packaging-resources-as-oci-artifacts.md)**: Package and version your Perses resources as OCI artifacts for immutable deployments with rollback capabilities
+- **[packaging resources as OCI artifacts](packaging-resources-as-oci-artifacts.md)**: Package and version your Perses resources as OCI artifacts
