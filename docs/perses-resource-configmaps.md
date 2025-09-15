@@ -45,10 +45,29 @@ provisioning:
 
 ## Easy ConfigMap Creation with Helm template
 
-You can use the below Helm template to automatically generate ConfigMaps for all the Perses resources placed in a folder within your Helm chart.
+You can manage multiple Perses resources by placing the Perses resource files under a `files/` directory in your chart and letting a Helm template turn them into labeled ConfigMaps automatically.
+
+First, organize your chart like this (one JSON file per resource is recommended):
+
+```bash
+your-chart/
+├── Chart.yaml
+├── values.yaml
+├── templates/
+│   └── configmap-generator.yaml   # The Helm template shown below
+└── files/
+    ├── dashboards/
+    │   └── dashboard1.json
+    ├── datasources/
+    │   └── prometheus.json
+    └── projects/
+        └── project1.json
+```
+
+Then add the following Helm template at `templates/configmap-generator.yaml` to render one ConfigMap per JSON resource. The file's basename becomes the key inside the ConfigMap, and the required sidecar label is applied automatically. This keeps each resource isolated and avoids the 1MB ConfigMap size limit.
 
 ```yaml
-# In your custom chart's templates/configmaps.yaml
+# templates/configmap-generator.yaml
 {{- range $path, $bytes := .Files.Glob "files/**/*.json" }}
 ---
 apiVersion: v1
@@ -63,21 +82,7 @@ data:
 {{- end }}
 ```
 
-Place your resources in your chart's `files/` directory:
-```bash
-your-chart/
-├── Chart.yaml
-├── values.yaml
-├── templates/
-│   └── configmaps.yaml
-└── files/
-    ├── dashboards/
-    │   └── dashboard1.json
-    └── datasources/
-        └── prometheus.json
-    └── projects/
-        └── project1.json
-```
+In the above example, Helm will iterate over every `*.json` file under `files/` (recursively) and create a separate ConfigMap manifest for each.
 
 ## Examples
 
