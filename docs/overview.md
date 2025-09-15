@@ -1,6 +1,6 @@
 # Perses Helm Charts
 
-You can deploy the Perses application in your Kubernetes cluster using the official Helm chart.
+You can deploy the Perses application in your Kubernetes cluster using the official Helm charts.
 
 ## Quick Start
 
@@ -34,14 +34,6 @@ config:
 ```
 
 This configuration structure mirrors exactly what you would put in a Perses configuration file, making it easy to adapt existing Perses configurations to Helm deployments.
-
-### Common Configuration Areas
-
-- **Security & Authentication**: Enable/disable auth, configure OIDC providers
-- **Database**: Choose between file-based or SQL storage
-- **Datasource Discovery**: Configure automatic datasource detection
-- **Frontend**: Customize UI behavior and important dashboards
-- **Plugins**: Enable development mode or custom plugin paths
 
 For the complete list of available configuration options, refer to the [Perses Configuration Documentation](https://perses.dev/perses/docs/configuration/configuration/).
 

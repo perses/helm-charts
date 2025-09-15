@@ -7,7 +7,7 @@ A sidecar container is deployed in the Perses pod when enabled. This container u
 
 The files defined in those ConfigMaps are written by the sidecar to a shared volume that is also mounted by the main Perses container at the [provisioning path](https://perses.dev/perses/docs/configuration/provisioning). Changes to the ConfigMaps are continuously monitored by the sidecar and reflected in Perses based on the **provisioning configuration interval** (by default 10 minutes).
 
-All Perses manifests such as Dashboards, Projects, Datasources, etc. can be managed as ConfigMaps using this approach.
+All Perses resources such as Dashboards, Projects, Datasources, etc. can be managed as ConfigMaps using this approach.
 
 ## How It Works
 
