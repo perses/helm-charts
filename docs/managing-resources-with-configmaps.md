@@ -37,10 +37,11 @@ sidecar:
 The frequency of resource updates is controlled by Perses provisioning configuration, not the sidecar. To configure faster updates, adjust the provisioning interval in your Perses configuration:
 
 ```yaml
-provisioning:
-  interval: "5m"  # Check for changes every 5 minutes instead of default 10 minutes
-  folders:
-    - /etc/perses/provisioning  # Path where the shared volume is mounted
+config:
+  provisioning:
+    interval: "5m"  # Check for changes every 5 minutes instead of default 10 minutes
+    folders:
+      - /etc/perses/provisioning  # Path where the shared volume is mounted
 ```
 
 ## Easy ConfigMap Creation with Helm template
