@@ -38,6 +38,7 @@ kubectl logs -l app.kubernetes.io/name=my-perses
 kubectl get pods -l app.kubernetes.io/name=my-perses
 kubectl get svc -l app.kubernetes.io/name=my-perses
 kubectl logs -l app.kubernetes.io/name=my-perses
+
 ```console
 # Check pod status
 kubectl get pods -l app.kubernetes.io/name=my-perses
