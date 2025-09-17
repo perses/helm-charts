@@ -66,10 +66,3 @@ Create the name of the service account to use
 {{- define "perses.dns" -}}
 http://{{ include "perses.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.targetPort }}
 {{- end -}}
-
-{{- define "perses.config" -}}
-{{ $config := unset .Values.config "annotations" }}
-{{- with $config }}
-{{- toYaml . }}
-{{- end }}
-{{- end -}}

@@ -204,6 +204,18 @@ config:
       - /etc/perses/provisioning
     interval: 10m
 
+# -- Perses configuration as environment variables.
+# Perses automatically merges them at runtime using the PERSES_<YAML_PATH> pattern,
+# e.g. PERSES_SECURITY_AUTHENTICATION_PROVIDERS_OIDC_0_CLIENT_SECRET
+envVars: []
+  # - name: PERSES_SECURITY_AUTHENTICATION_PROVIDERS_OIDC_0_CLIENT_SECRET
+  #   value: "4711"
+  # - name: PERSES_SECURITY_AUTHENTICATION_PROVIDERS_OIDC_1_CLIENT_SECRET
+  #   value: "0815"
+
+# -- Use an external secret as environment variable source
+envVarsExternalSecretName: ""
+
 # --  Sidecar configuration that watches for ConfigMaps with the specified label/labelValue and loads them into Perses provisioning
 sidecar:
   # -- Enable the sidecar container for ConfigMap provisioning
