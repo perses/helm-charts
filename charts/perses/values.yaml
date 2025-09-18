@@ -112,7 +112,7 @@ volumeMounts: []
 # This feature allows you to package Perses manifests (dashboards, datasources, projects, etc.)
 # as OCI images and mount them directly into the Perses container. The mounted manifests will be
 # automatically loaded by Perses provisioning system when mounted at the provisioning path.
-# 
+#
 # Use cases:
 # - Distribute dashboards as versioned OCI images
 # - Deploy datasource configurations from container registries
@@ -228,15 +228,18 @@ config:
     interval: 10m
 
 # -- Perses configuration as environment variables.
+# A Kubernetes Secret will be created containing these environment variables.
 # Perses automatically merges them at runtime using the PERSES_<YAML_PATH> pattern,
 # e.g. PERSES_SECURITY_AUTHENTICATION_PROVIDERS_OIDC_0_CLIENT_SECRET
+# For more information, see: https://perses.dev/perses/docs/configuration/configuration/?h=envir#configuration-file
 envVars: []
   # - name: PERSES_SECURITY_AUTHENTICATION_PROVIDERS_OIDC_0_CLIENT_SECRET
   #   value: "4711"
   # - name: PERSES_SECURITY_AUTHENTICATION_PROVIDERS_OIDC_1_CLIENT_SECRET
   #   value: "0815"
 
-# -- Use an external secret as environment variable source
+# -- Name of existing Kubernetes Secret containing environment variables.
+# When specified, no new Secret is created and values from envVars array are ignored.
 envVarsExternalSecretName: ""
 
 # --  Sidecar configuration that watches for ConfigMaps with the specified label/labelValue and loads them into Perses provisioning
