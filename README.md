@@ -1,19 +1,28 @@
 # Perses Kubernetes Helm Charts
 
-The code is provided as-is with no warranties.
+Helm chart for provisioning Perses on Kubernetes.
 
-## Usage
+## Quick Start
+
+### Prerequisites
 
 [Helm](https://helm.sh) must be installed to use the charts.
 Please refer to Helm's [documentation](https://helm.sh/docs/) to get started.
 
-Once Helm is set up properly, add the repo as follows:
+### Installation
+
+Add the Perses Helm repository:
 
 ```console
 helm repo add perses https://perses.github.io/helm-charts
+helm repo update
 ```
 
-You can then run `helm search repo perses` to see the charts.
+Install Perses with default configuration:
+
+```console
+helm install my-perses perses/perses
+```
 
 ## Contributing
 

@@ -23,7 +23,7 @@ checkdocs:
 .PHONY: fmt-docs
 fmt-docs:
 	@echo ">> format markdown document"
-	$(MDOX) fmt --soft-wraps -l $$(find . -name '*.md' -print) --links.validate.config-file=./.mdox.validate.yaml
+	$(MDOX) fmt --soft-wraps -l $$(find . -name '*.md' -not -path './docs/*' -print) --links.validate.config-file=./.mdox.validate.yaml
 
 .PHONY: update-helm-readme
 update-helm-readme:

@@ -4,7 +4,7 @@
 
 Perses helm chart
 
-![Version: 0.15.0](https://img.shields.io/badge/Version-0.15.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.52.0](https://img.shields.io/badge/AppVersion-v0.52.0-informational?style=flat-square)
+![Version: 0.15.0](https://img.shields.io/badge/Version-0.15.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.51.1](https://img.shields.io/badge/AppVersion-v0.51.1-informational?style=flat-square)
 
 ## Installing the Chart
 
@@ -24,56 +24,9 @@ To uninstall/delete the my-release deployment:
 helm delete my-release
 ```
 
-## Upgrading an existing Release to a new version with Breaking Changes
+## Upgrading
 
-We try as much as possible to avoid breaking changes, but sometimes it's necessary to introduce them. If you are upgrading from a version to another that contains breaking changes, you will need to follow the steps below,
-based on the version you are upgrading from.
-
-### To 0.8.0
-
-This version introduces a breaking change on the `config` section. Some fields on the `config` section has been renamed. You will need to update your values file to reflect the new field names.
-
-Update `security` Fields
-
-- Change `readOnly` to `readonly`.
-- Change `enableAuth` to `enable_auth`.
-
-**Before:**
-
-```yaml
-security:
-  readOnly: false
-  enableAuth: false
-```
-
-**After:**
-
-```yaml
-security:
-  readonly: false
-  enable_auth: false
-```
-
-Move the important_dashboards list into a new frontend section.
-
-**Before:**
-
-```yaml
-important_dashboards:
-- name: "My Dashboard"
-    url: "https://my-dashboard.com"
-```
-
-**After:**
-
-```yaml
-frontend:
-  important_dashboards:
-  - name: "My Dashboard"
-    url: "https://my-dashboard.com"
-```
-
-SQL Field is not defined by default anymore. If you want to enable SQL and file system storage is the default.
+For upgrade instructions, including handling breaking changes between versions, see the [Upgrade Guide](../../docs/upgrade-guide.md).
 
 ## Values
 
@@ -94,6 +47,8 @@ SQL Field is not defined by default anymore. If you want to enable SQL and file 
 | config.security.enable_auth          | bool   | `false`                                                                                                                                                                                                                                                                                                                                                    | Enable Authentication                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | config.security.readonly             | bool   | `false`                                                                                                                                                                                                                                                                                                                                                    | Configure Perses instance as readonly                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | datasources                          | list   | `[]`                                                                                                                                                                                                                                                                                                                                                       | Configure datasources DEPRECATED: This field will be removed in the future release. Please use the 'sidecar' configuration to provision datasources. ref: https://github.com/perses/perses/blob/90beed356243208f14cf2249bebb6f6222cb77ae/docs/datasource.md                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| envVars                              | list   | `[]`                                                                                                                                                                                                                                                                                                                                                       | Perses configuration as environment variables. A Kubernetes Secret will be created containing these environment variables. Perses automatically merges them at runtime using the PERSES_<YAML_PATH> pattern, e.g. PERSES_SECURITY_AUTHENTICATION_PROVIDERS_OIDC_0_CLIENT_SECRET For more information, see: https://perses.dev/perses/docs/configuration/configuration/?h=envir#configuration-file                                                                                                                                                                                                                                                                                                                                                     |
+| envVarsExternalSecretName            | string | `""`                                                                                                                                                                                                                                                                                                                                                       | Name of existing Kubernetes Secret containing environment variables. When specified, no new Secret is created and values from envVars array are ignored.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | extraArgs                            | object | `{}`                                                                                                                                                                                                                                                                                                                                                       | Additional arguments to pass to perses. Set to null for argumentless flags                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | extraObjects                         | list   | `[]`                                                                                                                                                                                                                                                                                                                                                       | Deploy extra K8s manifests                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | fullnameOverride                     | string | `""`                                                                                                                                                                                                                                                                                                                                                       | Override fully qualified app name                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
