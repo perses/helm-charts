@@ -75,6 +75,16 @@ spec:
           - --{{ $key }}
           {{- end }}
           {{- end }}
+        {{- if .Values.envVars }}
+        env:
+        {{- range .Values.envVars }}
+        - name: {{ .name }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ $.Values.envVarsExternalSecretName | default ( include "perses.fullname" $ ) }}
+              key: {{ .name | kebabcase }}
+        {{- end }}
+        {{- end }}
         volumeMounts:
           {{- if .Values.volumeMounts }}
           {{- tpl (toYaml .Values.volumeMounts | nindent 10) . }}
@@ -162,6 +172,7 @@ spec:
         {{- end }}
         - name: config
           configMap:
+            defaultMode: 420
             name: {{ include "perses.fullname" . }}
         {{- if .Values.datasources }}
         - name: datasources

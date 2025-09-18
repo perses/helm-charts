@@ -20,17 +20,20 @@ config:
   security:
     enable_auth: true
     readonly: false
+    authentication:
+      providers:
+        oidc:
+          - slug_id: "github"
+            name: "Github"
+            issuer: "https://github.com"
+            client_id: "your-client-id"
   database:
     file:
       folder: "/var/lib/perses"
-  authentication:
-    providers:
-      oidc:
-        - slug_id: "github"
-          name: "Github"
-          issuer: "https://github.com"
-          client_id: "your-client-id"
-          client_secret: "your-client-secret"
+# use an environment variable from a kubernetes secret to inject client_secret
+envVars:
+  - name: PERSES_SECURITY_AUTHENTICATION_PROVIDERS_OIDC_0_CLIENT_SECRET
+    value: "your-client-secret"
 ```
 
 This configuration structure mirrors exactly what you would put in a Perses configuration file, making it easy to adapt existing Perses configurations to Helm deployments.

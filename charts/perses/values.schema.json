@@ -100,6 +100,12 @@
     "extraObjects": {
       "type": "array"
     },
+    "envVars": {
+      "type": "array"
+    },
+    "envVarsExternalSecretName": {
+      "type": "string"
+    },
     "config": {
       "type": "object",
       "additionalProperties": true,
