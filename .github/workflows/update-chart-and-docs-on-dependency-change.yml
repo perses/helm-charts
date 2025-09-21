@@ -4,7 +4,7 @@ on:
   pull_request:
     types: [opened, labeled, synchronize]
 
-jobs:
+jobs: 
   bump-chart-version:
     name: Bump Chart Version
     if: contains(github.event.pull_request.labels.*.name, 'dependencies')
