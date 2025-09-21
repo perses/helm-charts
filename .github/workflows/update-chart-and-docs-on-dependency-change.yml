@@ -45,6 +45,13 @@ jobs:
             # Update version in Chart.yaml
             yq e ".version = \"$new_version\"" -i charts/perses/Chart.yaml
             echo "Successfully updated Chart.yaml version"
+            
+            # Commit and push the version bump
+            git config --local user.email "github-actions[bot]@users.noreply.github.com"
+            git config --local user.name "github-actions[bot]"
+            git add charts/perses/Chart.yaml
+            git commit -m "chore(perses): bump chart version to ${new_version} due to appVersion change" || echo "No changes to commit"
+            git push origin "${{ github.event.pull_request.head.ref }}"
           else
             echo "No appVersion change detected - skipping version update"
           fi
@@ -53,6 +60,9 @@ jobs:
     name: Update Docs and Commit
     needs: [bump-chart-version]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
