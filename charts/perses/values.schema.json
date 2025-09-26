@@ -1000,6 +1000,40 @@
         }
       },
       "required": ["enabled"]
+    },
+    "nodeSelector": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "tolerations": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "affinity": {
+      "type": "object"
+    },
+    "topologySpreadConstraints": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "podAntiAffinity": {
+      "type": "string",
+      "enum": [
+        "",
+        "soft",
+        "hard"
+      ],
+      "default": ""
+    },
+    "podAntiAffinityTopologyKey": {
+      "type": "string",
+      "default": "kubernetes.io/hostname"
     }
   }
 }
