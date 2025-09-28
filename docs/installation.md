@@ -29,15 +29,6 @@ helm install my-perses perses/perses # my-perses is the release name
 ## Verification
 
 After installation, verify that Perses is running:
-```console
-kubectl get pods -l app.kubernetes.io/name=my-perses
-kubectl get svc -l app.kubernetes.io/name=my-perses
-kubectl logs -l app.kubernetes.io/name=my-perses
-
-```console
-kubectl get pods -l app.kubernetes.io/name=my-perses
-kubectl get svc -l app.kubernetes.io/name=my-perses
-kubectl logs -l app.kubernetes.io/name=my-perses
 
 ```console
 # Check pod status
