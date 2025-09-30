@@ -261,6 +261,21 @@ config:
     folders:
       - /etc/perses/provisioning
     interval: 10m
+    # -- persistence configuration for provisioning volume
+    persistence:
+      # -- enable persistent volume for provisioning
+      enabled: true
+      # -- storage class for provisioning PVC
+      storageClass: ""
+      # -- access modes for provisioning PVC
+      accessModes:
+        - ReadWriteOnce
+      # -- size of provisioning PVC
+      size: 1Gi
+      # -- labels for provisioning PVC
+      labels: {}
+      # -- annotations for provisioning PVC
+      annotations: {}
 
 # -- Perses configuration as environment variables.
 # A Kubernetes Secret will be created containing these environment variables.

@@ -106,7 +106,7 @@ spec:
           - name: datasources
             mountPath: /etc/perses/datasources
           {{- end }}
-          {{- if .Values.sidecar.enabled }}
+          {{- if or .Values.sidecar.enabled .Values.config.provisioning.persistence.enabled }}
           - name: provisioning
             mountPath: {{ .Values.config.provisioning.folders | first }}
           {{- end }}
@@ -179,7 +179,7 @@ spec:
           configMap:
             name: {{ include "perses.fullname" . }}-datasources
         {{- end }}
-        {{- if .Values.sidecar.enabled }}
+        {{- if and (or .Values.sidecar.enabled .Values.config.provisioning.persistence.enabled) (not .Values.config.provisioning.persistence.enabled) }}
         - name: provisioning
           emptyDir: {}
         {{- end }}
@@ -232,4 +232,32 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+  {{- if .Values.config.provisioning.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: provisioning
+        {{- with .Values.config.provisioning.persistence.labels }}
+        labels:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.config.provisioning.persistence.annotations }}
+        annotations:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      spec:
+        accessModes:
+          {{- range .Values.config.provisioning.persistence.accessModes }}
+          - {{ . | quote }}
+          {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.config.provisioning.persistence.size | quote }}
+        {{- if .Values.config.provisioning.persistence.storageClass }}
+        {{- if (eq "-" .Values.config.provisioning.persistence.storageClass) }}
+        storageClassName: ""
+        {{- else }}
+        storageClassName: {{ .Values.config.provisioning.persistence.storageClass | quote }}
+        {{- end }}
+        {{- end }}
+  {{- end }}
 {{- end }}
