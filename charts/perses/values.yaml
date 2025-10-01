@@ -260,7 +260,7 @@ config:
   provisioning:
     folders:
       - /etc/perses/provisioning
-    interval: 30s
+    interval: 10m
 
 # -- Persistence configuration for Perses provisioning. 
 # For more information on provisioning feature, see: https://perses.dev/perses/docs/configuration/provisioning/
@@ -272,7 +272,7 @@ config:
 # This PVC can be referenced by other workloads (e.g., CronJobs) to write dashboards/datasources.
 provisioningPersistence:
   # -- enable persistent volume for provisioning
-  enabled: true
+  enabled: false
   # -- storage class for provisioning PVC
   storageClass: ""
   # -- access modes for provisioning PVC
