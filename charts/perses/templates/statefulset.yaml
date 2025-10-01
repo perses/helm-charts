@@ -179,7 +179,7 @@ spec:
           configMap:
             name: {{ include "perses.fullname" . }}-datasources
         {{- end }}
-        {{- if and (or .Values.sidecar.enabled .Values.config.provisioning.persistence.enabled) (not .Values.config.provisioning.persistence.enabled) }}
+        {{- if and .Values.sidecar.enabled (not .Values.config.provisioning.persistence.enabled) }}
         - name: provisioning
           emptyDir: {}
         {{- end }}

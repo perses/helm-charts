@@ -264,7 +264,7 @@ config:
     # -- persistence configuration for provisioning volume
     persistence:
       # -- enable persistent volume for provisioning
-      enabled: true
+      enabled: false
       # -- storage class for provisioning PVC
       storageClass: ""
       # -- access modes for provisioning PVC
