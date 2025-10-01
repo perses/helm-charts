@@ -517,6 +517,45 @@
         }
       }
     },
+    "provisioningPersistence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "storageClass": {
+          "type": "string"
+        },
+        "accessModes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "ReadWriteOnce",
+              "ReadOnlyMany",
+              "ReadWriteMany",
+              "ReadWriteOncePod"
+            ]
+          }
+        },
+        "size": {
+          "type": "string"
+        },
+        "labels": {
+          "type": "object"
+        },
+        "annotations": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "enabled",
+        "accessModes",
+        "size"
+      ]
+    },
     "sidecar": {
       "type": "object",
       "additionalProperties": false,
@@ -577,7 +616,13 @@
         "accessModes": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "ReadWriteOnce",
+              "ReadOnlyMany",
+              "ReadWriteMany",
+              "ReadWriteOncePod"
+            ]
           }
         },
         "size": {
