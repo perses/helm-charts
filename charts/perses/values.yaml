@@ -12,7 +12,7 @@ fullnameOverride: ""
 ##
 image:
   # -- Perses image repository and name
-    name: "docker.io/persesdev/perses"
+  name: "docker.io/persesdev/perses"
 
   # -- Overrides the image tag whose default is the chart appVersion.
   version: ""
