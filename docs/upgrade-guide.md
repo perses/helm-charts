@@ -22,7 +22,7 @@ For upgrades that introduce breaking changes, follow the version-specific migrat
 
 ## Breaking Changes by Version
 
-### Upgrading to 0.17.2
+### Upgrading to 0.18.0
 
 This version introduces breaking changes to the `image` section. Some fields have been added.
 
