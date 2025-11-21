@@ -24,7 +24,7 @@ For upgrades that introduce breaking changes, follow the version-specific migrat
 
 ### Upgrading to 0.18.0
 
-This version introduces breaking changes to the `image` section. Some fields have been added.
+This version introduces breaking changes to the `image` section. A field has been added.
 
 
 #### Configuration Field Changes
