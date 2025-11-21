@@ -26,6 +26,48 @@ Install Perses with default configuration:
 helm install my-perses perses/perses # my-perses is the release name
 ```
 
+### Using FluxCD
+If you want to use Perses with [FluxCD](https://fluxcd.io/), you can include the Perses manifests directly in your GitOps repository so Flux can reconcile and deploy them automatically.
+
+```yaml
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: perses
+  namespace: <namespace>
+spec:
+  interval: 12h
+  url: https://perses.github.io/helm-charts
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: perses
+  namespace: <namespace>
+spec:
+  interval: 1h
+  timeout: 5m
+  releaseName: perses
+  targetNamespace: <namespace>
+  chart:
+    spec:
+      chart: perses
+      version: <version>
+      sourceRef:
+        kind: HelmRepository
+        name: perses
+        namespace: <namespace>
+      interval: 1m
+
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+
+  upgrade:
+    remediation:
+      retries: 3
+```
 ## Verification
 
 After installation, verify that Perses is running:
