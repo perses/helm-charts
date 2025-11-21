@@ -1,5 +1,12 @@
 {{- if .Values.sidecar.enabled }}
-{{- $clusterScope := .Values.sidecar.allNamespaces }}
+{{- $nsConfig := dict "customEnv" false }}
+{{- range .Values.sidecar.extraEnvVars }}
+  {{- if eq .name "NAMESPACE" }}
+    {{- $_ := set $nsConfig "customEnv" true }}
+  {{- end }}
+{{- end }}
+{{- $hasCustomNamespaceEnv := $nsConfig.customEnv }}
+{{- $clusterScope := or .Values.sidecar.allNamespaces $hasCustomNamespaceEnv }}
 {{- $roleKind := ternary "ClusterRole" "Role" $clusterScope }}
 {{- $bindingKind := ternary "ClusterRoleBinding" "RoleBinding" $clusterScope }}
 {{- $roleName := ternary (printf "%s-clusterrole" (include "perses.fullname" .)) (printf "%s-role" (include "perses.fullname" .)) $clusterScope }}
