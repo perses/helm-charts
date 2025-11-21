@@ -58,7 +58,7 @@ spec:
           {{- end }}
       {{- end }}
       - name: {{ .Chart.Name }}
-        image: "{{ .Values.image.name }}:{{ .Values.image.version | default .Chart.AppVersion }}"
+        image: "{{ .Values.image.registry }}/{{ .Values.image.name }}:{{ .Values.image.version | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         args:
           - --config=/etc/perses/config/config.yaml
