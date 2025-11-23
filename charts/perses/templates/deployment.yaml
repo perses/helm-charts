@@ -33,6 +33,13 @@ spec:
         {{- toYaml .Values.persistence.securityContext | nindent 8 }}
       containers:
       {{- if .Values.sidecar.enabled }}
+      {{- $nsConfig := dict "customEnv" false }}
+      {{- range .Values.sidecar.extraEnvVars }}
+        {{- if eq .name "NAMESPACE" }}
+          {{- $_ := set $nsConfig "customEnv" true }}
+        {{- end }}
+      {{- end }}
+      {{- $hasCustomNamespaceEnv := $nsConfig.customEnv }}
       - name: {{ .Chart.Name }}-provisioning-sidecar
         image: "{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}"
         volumeMounts:
@@ -45,7 +52,7 @@ spec:
             value: {{ .Values.sidecar.labelValue | quote }}
           - name: FOLDER
             value: {{ .Values.config.provisioning.folders | first }}
-          {{- if .Values.sidecar.allNamespaces}}
+          {{- if and (not $hasCustomNamespaceEnv) .Values.sidecar.allNamespaces }}
           - name: NAMESPACE
             value: ALL
           {{- end }}
