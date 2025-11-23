@@ -22,6 +22,30 @@ For upgrades that introduce breaking changes, follow the version-specific migrat
 
 ## Breaking Changes by Version
 
+### Upgrading to 0.18.0
+
+This version introduces breaking changes to the `image` section. A field has been added.
+
+
+#### Configuration Field Changes
+
+- Added `image.registry` to support CRI-O 1.34
+
+**Before:**
+
+```yaml
+image:
+  name: "persesdev/perses"
+```
+
+**After:**
+
+```yaml
+image:
+  registry: docker.io
+  name: "persesdev/perses"
+```
+
 ### Upgrading to 0.8.0
 
 This version introduces breaking changes to the `config` section. Some fields have been renamed and reorganized.

@@ -11,6 +11,9 @@ fullnameOverride: ""
 ## Image of Perses
 ##
 image:
+  # -- Perses image registry
+  registry: docker.io
+
   # -- Perses image repository and name
   name: "persesdev/perses"
 
