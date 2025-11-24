@@ -127,7 +127,7 @@ spec:
             containerPort: {{ .Values.service.targetPort }}
         readinessProbe:
           httpGet:
-            path: {{ .Values.config.api_prefix }}/metrics
+            path: {{ .Values.config.api_prefix }}/api/v1/health
             port: http
             scheme: HTTP
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
@@ -137,7 +137,7 @@ spec:
           failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
         livenessProbe:
           httpGet:
-            path: {{ .Values.config.api_prefix }}/metrics
+            path: {{ .Values.config.api_prefix }}/api/v1/health
             port: http
             scheme: HTTP
           initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
