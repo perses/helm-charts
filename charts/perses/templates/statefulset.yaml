@@ -46,6 +46,8 @@ spec:
             value: {{ .Values.sidecar.labelValue | quote }}
           - name: FOLDER
             value: {{ .Values.config.provisioning.folders | first }}
+          - name: HEALTH_PORT
+            value: "{{ .Values.sidecar.healthPort }}"
           {{- if .Values.sidecar.allNamespaces}}
           - name: NAMESPACE
             value: ALL

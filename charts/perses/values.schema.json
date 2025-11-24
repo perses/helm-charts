@@ -596,6 +596,9 @@
         },
         "labelValue": {
           "type": "string"
+        },
+        "healthPort": {
+          "type": "integer"
         }
       },
       "required": [
@@ -603,7 +606,8 @@
         "image",
         "label",
         "labelValue",
-        "allNamespaces"
+        "allNamespaces",
+        "healthPort"
       ]
     },
     "persistence": {
