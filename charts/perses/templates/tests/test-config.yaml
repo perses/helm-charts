@@ -57,13 +57,13 @@ data:
 
     {{- if and .Values.gateway.enabled .Values.gateway.createGateway }}
     @test "Verify successful creation of gateway resource" {
-        verify "there is 1 gateways.gateway.networking.k8s.io named '^{{ default (printf \"%s-gateway\" (include \"perses.fullname\" .)) .Values.gateway.name }}$'"
+        verify "there is 1 gateways.gateway.networking.k8s.io named '^{{ default (printf "%s-gateway" (include "perses.fullname" .)) .Values.gateway.name }}$'"
     }
     {{- end -}}
 
     {{- if .Values.gateway.enabled }}
     @test "Verify successful creation of HTTPRoute resource" {
-        verify "there is 1 httproutes.gateway.networking.k8s.io named '^{{ default (printf \"%s-http-route\" (include \"perses.fullname\" .)) .Values.gateway.httpRoute.name }}$'"
+        verify "there is 1 httproutes.gateway.networking.k8s.io named '^{{ default (printf "%s-http-route" (include "perses.fullname" .)) .Values.gateway.httpRoute.name }}$'"
     }
     {{- end -}}
 
