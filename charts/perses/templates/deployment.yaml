@@ -34,7 +34,7 @@ spec:
       containers:
       {{- if .Values.sidecar.enabled }}
       - name: {{ .Chart.Name }}-provisioning-sidecar
-        image: "{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}"
+        image: "{{ .Values.image.registry }}/{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}"
         volumeMounts:
         - name: provisioning
           mountPath: {{ .Values.config.provisioning.folders | first }}
