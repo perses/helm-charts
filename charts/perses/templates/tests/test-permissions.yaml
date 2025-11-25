@@ -26,6 +26,11 @@ rules:
   - apiGroups: ["networking.k8s.io"]
     resources: ["ingresses"]
     verbs: ["get", "list"]
+  {{- if .Values.gateway.enabled }}
+  - apiGroups: ["gateway.networking.k8s.io"]
+    resources: ["gateways", "httproutes"]
+    verbs: ["get", "list"]
+  {{- end }}
 {{- if .Values.serviceMonitor.selfMonitor }}
   - apiGroups: ["monitoring.coreos.com"]
     resources: ["servicemonitors"]
