@@ -34,4 +34,4 @@ We'd love to have you contribute! Please refer to our [contribution guidelines](
 
 <!-- Keep full URL links to repo files because this README syncs from main to gh-pages.  -->
 
-[Apache 2.0 License](https://github.com/perses/helm-charts/blob/main/LICENSE).
+[Apache 2.0 License](./LICENSE).

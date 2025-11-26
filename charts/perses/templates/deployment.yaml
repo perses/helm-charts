@@ -41,7 +41,7 @@ spec:
       {{- end }}
       {{- $hasCustomNamespaceEnv := $nsConfig.customEnv }}
       - name: {{ .Chart.Name }}-provisioning-sidecar
-        image: "{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}"
+        image: "{{ .Values.sidecar.image.registry | default .Values.image.registry }}/{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}"
         volumeMounts:
         - name: provisioning
           mountPath: {{ .Values.config.provisioning.folders | first }}
@@ -52,6 +52,8 @@ spec:
             value: {{ .Values.sidecar.labelValue | quote }}
           - name: FOLDER
             value: {{ .Values.config.provisioning.folders | first }}
+          - name: HEALTH_PORT
+            value: "{{ .Values.sidecar.healthPort }}"
           {{- if and (not $hasCustomNamespaceEnv) .Values.sidecar.allNamespaces }}
           - name: NAMESPACE
             value: ALL
