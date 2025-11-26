@@ -1,8 +1,23 @@
 {{- if .Values.sidecar.enabled }}
+{{- $nsConfig := dict "customEnv" false }}
+{{- range .Values.sidecar.extraEnvVars }}
+  {{- if eq .name "NAMESPACE" }}
+    {{- $_ := set $nsConfig "customEnv" true }}
+  {{- end }}
+{{- end }}
+{{- $hasCustomNamespaceEnv := $nsConfig.customEnv }}
+{{- $clusterScope := or .Values.sidecar.allNamespaces $hasCustomNamespaceEnv }}
+{{- $roleKind := ternary "ClusterRole" "Role" $clusterScope }}
+{{- $bindingKind := ternary "ClusterRoleBinding" "RoleBinding" $clusterScope }}
+{{- $roleName := ternary (printf "%s-clusterrole" (include "perses.fullname" .)) (printf "%s-role" (include "perses.fullname" .)) $clusterScope }}
+{{- $bindingName := ternary (printf "%s-clusterrolebinding" (include "perses.fullname" .)) (printf "%s-rolebinding" (include "perses.fullname" .)) $clusterScope }}
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
+kind: {{ $roleKind }}
 metadata:
-  name: {{ include "perses.fullname" . }}-clusterrole
+  name: {{ $roleName }}
+  {{- if not $clusterScope }}
+  namespace: {{ .Release.Namespace }}
+  {{- end }}
   labels:
     {{- include "perses.labels" . | nindent 4 }}
     app.kubernetes.io/component: iam
@@ -16,13 +31,16 @@ rules:
   verbs: ["get", "watch", "list"]
 {{- end }}
 ---
-kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
+kind: {{ $bindingKind }}
 metadata:
-  name: {{ include "perses.fullname" . }}-clusterrolebinding
+  name: {{ $bindingName }}
+  {{- if not $clusterScope }}
+  namespace: {{ .Release.Namespace }}
+  {{- end }}
 roleRef:
-  kind: ClusterRole
-  name: {{ include "perses.fullname" . }}-clusterrole
+  kind: {{ $roleKind }}
+  name: {{ $roleName }}
   apiGroup: rbac.authorization.k8s.io
 subjects:
 - kind: ServiceAccount
