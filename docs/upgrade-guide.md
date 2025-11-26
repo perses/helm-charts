@@ -22,6 +22,43 @@ For upgrades that introduce breaking changes, follow the version-specific migrat
 
 ## Breaking Changes by Version
 
+### Upgrading to 0.19.0
+
+This version introduces a breaking change to the sidecar image configuration.
+
+#### Configuration Field Changes
+
+- The sidecar now uses its own registry field: `sidecar.image.registry`. Previously, the sidecar image always inherited `image.registry`.
+
+**Before (sidecar registry implicitly inherited from `image.registry`):**
+
+```yaml
+image:
+  registry: custom.registry.local
+  name: "persesdev/perses"
+sidecar:
+  enabled: true
+  image:
+    repository: kiwigrid/k8s-sidecar
+    tag: 2.1.2
+```
+
+**After (set `sidecar.image.registry` explicitly to keep the same registry):**
+
+```yaml
+image:
+  registry: custom.registry.local
+  name: "persesdev/perses"
+sidecar:
+  enabled: true
+  image:
+    registry: custom.registry.local
+    repository: kiwigrid/k8s-sidecar
+    tag: 2.1.2
+```
+
+If you rely on `image.registry` to point the sidecar to a custom registry, add `sidecar.image.registry` with the same value during upgrade.
+
 ### Upgrading to 0.18.0
 
 This version introduces breaking changes to the `image` section. A field has been added.
