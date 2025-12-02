@@ -397,6 +397,46 @@ ingress:
 #    - secretName: ingress-cert
 #      hosts: []
 
+# -- Configure Gateway API resources to expose Perses Frontend through a Gateway and HTTPRoute
+gateway:
+  # -- Enable Gateway API resources
+  enabled: false
+  # -- Create a Gateway resource. If false, only the HTTPRoute is created and parentRefs must target an existing Gateway.
+  createGateway: true
+  # -- Name of the Gateway to create or reference. Defaults to "<release-name>-perses-gateway" when empty.
+  name: ""
+  # -- Namespace of the Gateway. Defaults to the release namespace when empty.
+  namespace: ""
+  # -- GatewayClass name used by the Gateway. Required when createGateway is true.
+  gatewayClassName: ""
+  # -- Labels to add to the Gateway
+  labels: {}
+  # -- Annotations to add to the Gateway
+  annotations: {}
+  # -- Listener configuration for the Gateway
+  listeners:
+    - name: http
+      port: 80
+      protocol: HTTP
+      hostname: ""
+      allowedRoutes:
+        namespaces:
+          from: Same
+  httpRoute:
+    # -- Name of the HTTPRoute. Defaults to "<release-name>-perses-http-route" when empty.
+    name: ""
+    # -- Labels to add to the HTTPRoute
+    labels: {}
+    # -- Annotations to add to the HTTPRoute
+    annotations: {}
+    # -- ParentRefs for the HTTPRoute. Defaults to the created Gateway when createGateway is true.
+    parentRefs: []
+    # -- Hostnames served by the HTTPRoute
+    hostnames:
+      - perses.local
+    # -- Rules for the HTTPRoute. Defaults to a single PathPrefix "/" rule targeting the Perses service.
+    rules: []
+
 # -- Configure datasources
 # DEPRECATED: This field will be removed in the future release. Please use the 'sidecar' configuration to provision datasources.
 # ref: https://github.com/perses/perses/blob/90beed356243208f14cf2249bebb6f6222cb77ae/docs/datasource.md

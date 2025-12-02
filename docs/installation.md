@@ -90,3 +90,39 @@ kubectl port-forward svc/my-perses 8080:80
 ```
 
 Then visit http://localhost:8080 in your browser to access the Perses UI.
+
+## Exposing Perses via Gateway API
+
+Gateway API support is optional and disabled by default. Make sure Gateway API CRDs and a `GatewayClass` are installed in your cluster before enabling it.
+
+### Create a Gateway and HTTPRoute
+
+This creates both resources and wires the route to the created gateway:
+
+```console
+helm install my-perses perses/perses \
+  --set gateway.enabled=true \
+  --set gateway.createGateway=true \
+  --set gateway.gatewayClassName=<your-gateway-class> \
+  --set gateway.httpRoute.hostnames[0]=perses.example.com
+```
+
+Optional overrides:
+- `gateway.name` / `gateway.namespace`: name/namespace of the Gateway (defaults to `<release>-perses-gateway` in the release namespace)
+- `gateway.listeners`: listener definitions for the Gateway
+- `gateway.httpRoute.rules`: custom match/backends; defaults to PathPrefix `/` to the Perses service
+
+### Reuse an existing Gateway (only create HTTPRoute)
+
+If a Gateway already exists, only create the HTTPRoute and point it at that Gateway:
+
+```console
+helm install my-perses perses/perses \
+  --set gateway.enabled=true \
+  --set gateway.createGateway=false \
+  --set gateway.httpRoute.parentRefs[0].name=<existing-gateway> \
+  --set gateway.httpRoute.parentRefs[0].namespace=<gateway-namespace> \
+  --set gateway.httpRoute.hostnames[0]=perses.example.com
+```
+
+`gateway.httpRoute.parentRefs` is required when `createGateway=false`; you can also set `sectionName`/`port` if your Gateway needs them.

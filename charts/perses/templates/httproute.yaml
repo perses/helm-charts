@@ -1,0 +1,81 @@
+{{- if .Values.gateway.enabled }}
+{{- $fullName := include "perses.fullname" . -}}
+{{- $gatewayName := default (printf "%s-gateway" $fullName) .Values.gateway.name -}}
+{{- $routeName := default (printf "%s-http-route" $fullName) .Values.gateway.httpRoute.name -}}
+{{- $svcPort := .Values.service.port -}}
+{{- $defaultParentRef := dict "name" $gatewayName -}}
+{{- if .Values.gateway.namespace }}
+{{- $_ := set $defaultParentRef "namespace" .Values.gateway.namespace -}}
+{{- end }}
+{{- $parentRefs := .Values.gateway.httpRoute.parentRefs }}
+{{- if and (empty $parentRefs) .Values.gateway.createGateway }}
+{{- $parentRefs = (list $defaultParentRef) }}
+{{- end }}
+{{- if empty $parentRefs }}
+{{- fail "gateway.httpRoute.parentRefs must be set when gateway.enabled is true and gateway.createGateway is false" }}
+{{- end }}
+{{- $rules := .Values.gateway.httpRoute.rules }}
+{{- if empty $rules }}
+{{- $rules = list (dict "matches" (list (dict "path" (dict "type" "PathPrefix" "value" "/"))) "backendRefs" (list (dict "name" $fullName "port" $svcPort))) }}
+{{- end }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ $routeName }}
+  labels:
+    {{- include "perses.labels" . | nindent 4 }}
+    app.kubernetes.io/component: networking
+    {{- with .Values.gateway.httpRoute.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.gateway.httpRoute.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  parentRefs:
+    {{- range $parentRefs }}
+    - name: {{ .name }}
+      {{- if .namespace }}
+      namespace: {{ .namespace }}
+      {{- end }}
+      {{- if .sectionName }}
+      sectionName: {{ .sectionName }}
+      {{- end }}
+    {{- end }}
+  {{- if .Values.gateway.httpRoute.hostnames }}
+  hostnames:
+    {{- range .Values.gateway.httpRoute.hostnames }}
+    - {{ . | quote }}
+    {{- end }}
+  {{- end }}
+  rules:
+    {{- range $rules }}
+    - {{- if .matches }}
+      matches:
+        {{- toYaml .matches | nindent 8 }}
+      {{- end }}
+      {{- if .filters }}
+      filters:
+        {{- toYaml .filters | nindent 8 }}
+      {{- end }}
+      {{- $backendRefs := .backendRefs | default (list (dict "name" $fullName "port" $svcPort)) }}
+      backendRefs:
+        {{- range $backendRefs }}
+        - name: {{ .name | default $fullName }}
+          {{- if .namespace }}
+          namespace: {{ .namespace }}
+          {{- end }}
+          {{- if .kind }}
+          kind: {{ .kind }}
+          {{- end }}
+          {{- if .group }}
+          group: {{ .group }}
+          {{- end }}
+          port: {{ .port | default $svcPort }}
+          {{- if .weight }}
+          weight: {{ .weight }}
+          {{- end }}
+        {{- end }}
+    {{- end }}
+{{- end }}
