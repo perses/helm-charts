@@ -106,6 +106,12 @@
     "envVars": {
       "type": "array"
     },
+    "autoGenerateAuthEnvVars": {
+      "type": "boolean"
+    },
+    "envVarsSecretName": {
+      "type": "string"
+    },
     "envVarsExternalSecretName": {
       "type": "string"
     },

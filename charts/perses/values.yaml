@@ -302,6 +302,11 @@ envVars: []
   # - name: PERSES_SECURITY_AUTHENTICATION_PROVIDERS_OIDC_1_CLIENT_SECRET
   #   value: "0815"
 
+# -- Automatically generate env vars for auth providers (client_id/client_secret) based on config.security.authentication.providers
+autoGenerateAuthEnvVars: true
+# -- Custom name for the generated Secret that holds envVars (defaults to release fullname)
+envVarsSecretName: ""
+
 # -- Name of existing Kubernetes Secret containing environment variables.
 # When specified, no new Secret is created and values from envVars array are ignored.
 envVarsExternalSecretName: ""
