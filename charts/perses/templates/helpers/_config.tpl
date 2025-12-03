@@ -31,7 +31,9 @@ Merge user-provided envVars with auto-generated auth provider env vars.
 {{- if $autoEnabled }}
   {{- $auto = (include "perses.authProviderEnvVars" . | fromYaml | default (list)) }}
 {{- end }}
-{{- $user := .Values.envVars | default (list) }}
+{{- $auto := (kindIs "slice" $auto | ternary $auto (list $auto)) }}
+{{- $userRaw := .Values.envVars | default (list) }}
+{{- $user := (kindIs "slice" $userRaw | ternary $userRaw (list $userRaw)) }}
 {{- $merged := concat $user $auto }}
 {{- toYaml $merged }}
 {{- end }}

@@ -88,11 +88,13 @@ spec:
         {{- if $envVars }}
         env:
         {{- range $envVars }}
+        {{- if and (kindIs "map" .) (hasKey . "name") }}
         - name: {{ .name }}
           valueFrom:
             secretKeyRef:
               name: {{ $.Values.envVarsExternalSecretName | default ( include "perses.envVarsSecretName" $ ) }}
               key: {{ .name | kebabcase }}
+        {{- end }}
         {{- end }}
         {{- end }}
         volumeMounts:
