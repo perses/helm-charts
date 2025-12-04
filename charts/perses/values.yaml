@@ -302,8 +302,6 @@ envVars: []
   # - name: PERSES_SECURITY_AUTHENTICATION_PROVIDERS_OIDC_1_CLIENT_SECRET
   #   value: "0815"
 
-# -- Automatically generate env vars for auth providers (client_id/client_secret) based on config.security.authentication.providers
-autoGenerateAuthEnvVars: true
 # -- Secret settings for envVars / auto-generated auth env vars
 secret:
   # -- Create the Secret automatically

@@ -118,9 +118,6 @@
         }
       }
     },
-    "autoGenerateAuthEnvVars": {
-      "type": "boolean"
-    },
     "envVarsExternalSecretName": {
       "type": "string",
       "deprecated": true,

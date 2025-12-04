@@ -26,11 +26,7 @@ We include entries even when the value is empty so they can be sourced from an e
 Merge user-provided envVars with auto-generated auth provider env vars.
 */}}
 {{- define "perses.mergedEnvVars" -}}
-{{- $autoEnabled := (default true .Values.autoGenerateAuthEnvVars) }}
-{{- $auto := list }}
-{{- if $autoEnabled }}
-  {{- $auto = (include "perses.authProviderEnvVars" . | fromYaml | default (list)) }}
-{{- end }}
+{{- $auto := (include "perses.authProviderEnvVars" . | fromYaml | default (list)) }}
 {{- $auto := (kindIs "slice" $auto | ternary $auto (list $auto)) }}
 {{- $userRaw := .Values.envVars | default (list) }}
 {{- $user := (kindIs "slice" $userRaw | ternary $userRaw (list $userRaw)) }}
