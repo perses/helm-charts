@@ -42,9 +42,20 @@ Merge user-provided envVars with auto-generated auth provider env vars.
 Resolve env vars Secret name (generated or custom override).
 */}}
 {{- define "perses.envVarsSecretName" -}}
-{{- if .Values.envVarsSecretName }}
-{{- .Values.envVarsSecretName }}
+{{- $name := "" }}
+{{- if and .Values.secret .Values.secret.name }}
+  {{- $name = .Values.secret.name }}
+{{- else if .Values.envVarsExternalSecretName }}
+  {{- $name = .Values.envVarsExternalSecretName }}
 {{- else }}
-{{- include "perses.fullname" . }}
+  {{- $name = (include "perses.fullname" .) }}
 {{- end }}
+{{- $name }}
+{{- end }}
+
+{{/*
+Should we create the env vars Secret?
+*/}}
+{{- define "perses.shouldCreateEnvVarsSecret" -}}
+{{- and (default true .Values.secret.create) (not .Values.envVarsExternalSecretName) }}
 {{- end }}

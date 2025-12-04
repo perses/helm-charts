@@ -91,7 +91,7 @@ spec:
         - name: {{ .name }}
           valueFrom:
             secretKeyRef:
-              name: {{ $.Values.envVarsExternalSecretName | default ( include "perses.envVarsSecretName" $ ) }}
+              name: {{ include "perses.envVarsSecretName" $ }}
               key: {{ .name | kebabcase }}
         {{- end }}
         {{- end }}

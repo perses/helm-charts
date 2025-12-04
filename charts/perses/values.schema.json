@@ -106,14 +106,25 @@
     "envVars": {
       "type": "array"
     },
+    "secret": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "create": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
     "autoGenerateAuthEnvVars": {
       "type": "boolean"
     },
-    "envVarsSecretName": {
-      "type": "string"
-    },
     "envVarsExternalSecretName": {
-      "type": "string"
+      "type": "string",
+      "deprecated": true,
+      "description": "DEPRECATED (since 0.19.2): use secret.create=false and secret.name instead. This field will be removed in a future release."
     },
     "config": {
       "type": "object",

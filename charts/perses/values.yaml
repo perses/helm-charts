@@ -304,11 +304,16 @@ envVars: []
 
 # -- Automatically generate env vars for auth providers (client_id/client_secret) based on config.security.authentication.providers
 autoGenerateAuthEnvVars: true
-# -- Custom name for the generated Secret that holds envVars (defaults to release fullname)
-envVarsSecretName: ""
+# -- Secret settings for envVars / auto-generated auth env vars
+secret:
+  # -- Create the Secret automatically
+  create: true
+  # -- Name of the Secret to reference (defaults to release fullname when empty)
+  name: ""
 
 # -- Name of existing Kubernetes Secret containing environment variables.
 # When specified, no new Secret is created and values from envVars array are ignored.
+# DEPRECATED (since 0.19.2): use secret.create=false and secret.name instead. This field will be removed in a future release.
 envVarsExternalSecretName: ""
 
 # --  Sidecar configuration that watches for ConfigMaps with the specified label/labelValue and loads them into Perses provisioning
