@@ -1,3 +1,7 @@
+{{/* ========================================================================
+Naming & identity helpers
+========================================================================= */}}
+
 {{/*
 Expand the name of the chart.
 */}}
@@ -63,6 +67,9 @@ Create the name of the service account to use
 {{- end }}
 {{- end }}
 
+{{/*
+Render an internal DNS endpoint for the Perses service.
+*/}}
 {{- define "perses.dns" -}}
 http://{{ include "perses.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.targetPort }}
 {{- end -}}
