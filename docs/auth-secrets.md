@@ -64,4 +64,4 @@ envVars:
 
 ## Deprecated: `envVarsExternalSecretName`
 
-`envVarsExternalSecretName` continues to work but is deprecated since 0.19.2 and will be removed in a future release. Prefer the `secret.create` / `secret.name` pattern above.***
+`envVarsExternalSecretName` continues to work but is deprecated since 0.19.2 and will be removed in a future release. Prefer the `secret.create` / `secret.name` pattern above.
