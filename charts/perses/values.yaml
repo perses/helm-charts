@@ -311,7 +311,11 @@ secret:
 
 # -- Name of existing Kubernetes Secret containing environment variables.
 # When specified, no new Secret is created and values from envVars array are ignored.
-# DEPRECATED (since 0.19.2): use secret.create=false and secret.name instead. This field will be removed in a future release.
+#########################################################################################################
+######   WARNING: 'envVarsExternalSecretName' is deprecated since 0.19.2 and will be removed soon.  #####
+######            Use the 'secret' block to reference an existing Secret instead.                   #####
+######            Example: set secret.create=false and secret.name to your Secret name.             #####
+#########################################################################################################
 envVarsExternalSecretName: ""
 
 # --  Sidecar configuration that watches for ConfigMaps with the specified label/labelValue and loads them into Perses provisioning
