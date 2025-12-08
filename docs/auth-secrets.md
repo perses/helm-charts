@@ -50,7 +50,18 @@ secret:
   name: "" # optional; defaults to the release fullname
 ```
 
-Populate `client_id` / `client_secret` directly in values (or add them via `envVars`), and the chart will place them in the generated Secret and mount them as env vars.
+Set the provider `client_id` / `client_secret` in `values.yaml` (or supply them via `envVars`). The chart copies those values into the generated Secret with the expected keys and mounts them into the Perses pod as environment variables, so you don't need to create or mount the Secret yourself:
+
+```yaml
+config:
+  security:
+    enable_auth: true
+    authentication:
+      providers:
+        oidc:
+          - client_id: "<client-id>"
+            client_secret: "<client-secret>"
+```
 
 ## Providing extra env vars
 
