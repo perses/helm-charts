@@ -84,14 +84,17 @@ spec:
           - --{{ $key }}
           {{- end }}
           {{- end }}
-        {{- if .Values.envVars }}
+        {{- $envVars := (include "perses.mergedEnvVars" . | fromYaml | default (list)) }}
+        {{- if $envVars }}
         env:
-        {{- range .Values.envVars }}
+        {{- range $envVars }}
+        {{- if and (kindIs "map" .) (hasKey . "name") }}
         - name: {{ .name }}
           valueFrom:
             secretKeyRef:
-              name: {{ $.Values.envVarsExternalSecretName | default ( include "perses.fullname" $ ) }}
+              name: {{ include "perses.envVarsSecretName" $ }}
               key: {{ .name | kebabcase }}
+        {{- end }}
         {{- end }}
         {{- end }}
         volumeMounts:
