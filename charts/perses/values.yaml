@@ -302,21 +302,35 @@ envVars: []
   # - name: PERSES_SECURITY_AUTHENTICATION_PROVIDERS_OIDC_1_CLIENT_SECRET
   #   value: "0815"
 
+# -- Secret settings for envVars / auto-generated auth env vars
+secret:
+  # -- Create the Secret automatically
+  create: true
+  # -- Name of the Secret to reference (defaults to release fullname when empty)
+  name: ""
+
 # -- Name of existing Kubernetes Secret containing environment variables.
 # When specified, no new Secret is created and values from envVars array are ignored.
+#########################################################################################################
+######   WARNING: 'envVarsExternalSecretName' is deprecated since 0.19.2 and will be removed soon.  #####
+######            Use the 'secret' block to reference an existing Secret instead.                   #####
+######            Example: set secret.create=false and secret.name to your Secret name.             #####
+#########################################################################################################
 envVarsExternalSecretName: ""
 
 # --  Sidecar configuration that watches for ConfigMaps with the specified label/labelValue and loads them into Perses provisioning
 sidecar:
   # -- Enable the sidecar container for ConfigMap provisioning
   enabled: false
+  # -- List of usernames to bind to the Perses global-admin role when the sidecar is enabled
+  globalAdminUsers: []
   image:
     # -- Container image registry for the sidecar
     registry: docker.io
     # -- Container image repository for the sidecar
     repository: kiwigrid/k8s-sidecar
     # -- Container image tag for the sidecar
-    tag: 2.1.4
+    tag: 2.3.0
   # -- Label key to watch for ConfigMaps containing Perses resources
   label: "perses.dev/resource"
   # -- Label value to watch for ConfigMaps containing Perses resources
