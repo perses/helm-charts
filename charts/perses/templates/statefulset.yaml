@@ -84,10 +84,35 @@ spec:
           - --{{ $key }}
           {{- end }}
           {{- end }}
-        {{- $envVars := (include "perses.mergedEnvVars" . | fromYaml | default (list)) }}
-        {{- if $envVars }}
+        {{- $userEnvVars := .Values.envVars | default (list) }}
+        {{- $autoEnvVars := list }}
+        {{- $usingExternalSecret := or (and .Values.secret (not (default true .Values.secret.create))) .Values.envVarsExternalSecretName }}
+        {{- if not $usingExternalSecret }}
+        {{- if .Values.config.security.enable_auth }}
+        {{- if .Values.config.security.authentication }}
+        {{- range $i, $provider := .Values.config.security.authentication.providers.oidc }}
+        {{- $autoEnvVars = append $autoEnvVars (dict "name" (printf "PERSES_SECURITY_AUTHENTICATION_PROVIDERS_OIDC_%d_CLIENT_ID" $i)) }}
+        {{- $autoEnvVars = append $autoEnvVars (dict "name" (printf "PERSES_SECURITY_AUTHENTICATION_PROVIDERS_OIDC_%d_CLIENT_SECRET" $i)) }}
+        {{- end }}
+        {{- end }}
+        {{- end }}
+        {{- end }}
+        {{- $userEnvNames := dict }}
+        {{- range $userEnvVars }}
+        {{- if and (kindIs "map" .) (hasKey . "name") }}
+        {{- $_ := set $userEnvNames .name true }}
+        {{- end }}
+        {{- end }}
+        {{- $filteredAuto := list }}
+        {{- range $autoEnvVars }}
+        {{- if not (hasKey $userEnvNames .name) }}
+        {{- $filteredAuto = append $filteredAuto . }}
+        {{- end }}
+        {{- end }}
+        {{- $mergedEnvVars := concat $userEnvVars $filteredAuto }}
+        {{- if $mergedEnvVars }}
         env:
-        {{- range $envVars }}
+        {{- range $mergedEnvVars }}
         {{- if and (kindIs "map" .) (hasKey . "name") }}
         - name: {{ .name }}
           valueFrom:
