@@ -30,6 +30,10 @@ sidecar:
   label: "perses.dev/resource"
   labelValue: "true"
   allNamespaces: true  # Watch ConfigMaps from all namespaces
+  # Optional: bootstrap global admins via ConfigMaps watched by the sidecar
+  globalAdminUsers:
+    - user1
+    - user2
 ```
 
 ### Provisioning Timing
@@ -43,6 +47,20 @@ config:
     folders:
       - /etc/perses/provisioning  # Path where the shared volume is mounted
 ```
+
+### Bootstrapping Global Admins
+
+When the sidecar is enabled, the chart can provision a ConfigMap that defines a `GlobalRole` and `GlobalRoleBinding` to grant the `global-admin` role to specific users. Add the usernames under `sidecar.globalAdminUsers`:
+
+```yaml
+sidecar:
+  enabled: true
+  globalAdminUsers:
+    - jane
+    - john
+```
+
+The chart renders a ConfigMap labeled with `sidecar.label`/`sidecar.labelValue`, so the sidecar picks it up and Perses provisions the role/binding automatically. Leave `globalAdminUsers` empty to skip creating the bootstrap resources.
 
 ## Easy ConfigMap Creation with Helm template
 
