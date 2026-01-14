@@ -70,8 +70,8 @@ jobs:
           ref: ${{ github.head_ref }}
           fetch-depth: 2
 
-      - name: Setup Go development environment
-        uses: ./.github/actions/setup_environment
+      - uses: perses/github-actions@v0.11.0
+      - uses: ./.github/perses-ci/actions/setup_environment
         with:
           enable_go: true
 
