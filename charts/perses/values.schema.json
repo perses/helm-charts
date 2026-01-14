@@ -580,6 +580,12 @@
         "enabled": {
           "type": "boolean"
         },
+        "globalAdminUsers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "allNamespaces": {
           "type": "boolean"
         },
