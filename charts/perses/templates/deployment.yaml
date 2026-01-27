@@ -83,10 +83,10 @@ spec:
           - --{{ $key }}
           {{- end }}
           {{- end }}
-        {{- $envVars := (include "perses.mergedEnvVars" . | fromYaml | default (list)) }}
-        {{- if $envVars }}
+        {{- $mergedEnvVars := include "perses.mergedEnvVars" . | fromYamlArray }}
+        {{- if $mergedEnvVars }}
         env:
-        {{- range $envVars }}
+        {{- range $mergedEnvVars }}
         {{- if and (kindIs "map" .) (hasKey . "name") }}
         - name: {{ .name }}
           valueFrom:
