@@ -328,7 +328,7 @@ sidecar:
     # -- Container image repository for the sidecar
     repository: kiwigrid/k8s-sidecar
     # -- Container image tag for the sidecar
-    tag: 2.3.0
+    tag: 2.5.0
   # -- Label key to watch for ConfigMaps containing Perses resources
   label: "perses.dev/resource"
   # -- Label value to watch for ConfigMaps containing Perses resources
