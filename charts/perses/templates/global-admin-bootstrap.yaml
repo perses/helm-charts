@@ -1,0 +1,30 @@
+{{- if and .Values.sidecar.enabled .Values.sidecar.globalAdminUsers }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "perses.fullname" . }}-admin-bootstrap
+  labels:
+    {{- include "perses.labels" . | nindent 4 }}
+    {{ .Values.sidecar.label }}: {{ .Values.sidecar.labelValue | quote }}
+data:
+  global-admin-role.yaml: |
+    kind: GlobalRole
+    metadata:
+      name: global-admin
+    spec:
+      permissions:
+        - actions: ["*"]
+          scopes: ["*"]
+
+  global-admin-binding.yaml: |
+    kind: GlobalRoleBinding
+    metadata:
+      name: global-admin-binding
+    spec:
+      role: global-admin
+      subjects:
+        {{- range .Values.sidecar.globalAdminUsers }}
+        - kind: User
+          name: {{ . | quote }}
+        {{- end }}
+{{- end }}
