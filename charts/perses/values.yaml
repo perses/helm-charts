@@ -322,6 +322,8 @@ envVarsExternalSecretName: ""
 sidecar:
   # -- Enable the sidecar container for ConfigMap provisioning
   enabled: false
+  # -- List of usernames to bind to the Perses global-admin role when the sidecar is enabled
+  globalAdminUsers: []
   image:
     # -- Container image registry for the sidecar
     registry: docker.io
