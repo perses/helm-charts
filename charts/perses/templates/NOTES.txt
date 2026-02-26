@@ -10,6 +10,15 @@
   {{- if and .Values.config.database.file .Values.config.database.sql }}
     {{- fail "[ERROR] Both 'config.database.file' and 'config.database.sql' cannot be set at the same time. Please configure only one of them." }}
   {{- end }}
+  {{- $sqlConfig := .Values.config.database.sql }}
+  {{- if $sqlConfig }}
+    {{- $tlsConfig := $sqlConfig.tls_config }}
+    {{- if and $tlsConfig (kindIs "map" $tlsConfig) }}
+      {{- if or (hasKey $tlsConfig "ca_file") (hasKey $tlsConfig "cert_file") (hasKey $tlsConfig "key_file") (hasKey $tlsConfig "server_name") (hasKey $tlsConfig "insecure_skip_verify") (hasKey $tlsConfig "min_version") (hasKey $tlsConfig "max_version") }}
+        {{- fail "[ERROR] Legacy SQL TLS keys detected under 'config.database.sql.tls_config'. Use camelCase keys: ca_file->caFile, cert_file->certFile, key_file->keyFile, server_name->serverName, insecure_skip_verify->insecureSkipVerify, min_version->minVersion, max_version->maxVersion." }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
 {{- end }}
 
 {{- if .Values.datasources }}

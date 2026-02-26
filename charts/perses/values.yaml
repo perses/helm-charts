@@ -250,7 +250,7 @@ config:
     file:
       folder: /perses
       extension: json
-    # -- SQL Config
+    # -- SQL Config (Perses v0.53+ uses camelCase keys in tls_config)
     # sql:
     #   user: "user"
     #   password: "password"
@@ -258,6 +258,14 @@ config:
     #   addr: "localhost:3306"
     #   db_name: "perses"
     #   allow_native_passwords: true
+    #   tls_config:
+    #     caFile: "/ca/ca.crt"
+    #     certFile: "/tls/tls.crt"
+    #     keyFile: "/tls/tls.key"
+    #     serverName: "localhost"
+    #     insecureSkipVerify: false
+    #     minVersion: "TLS12"
+    #     maxVersion: "TLS13"
 
   # -- provisioning config
   provisioning:
