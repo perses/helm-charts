@@ -22,6 +22,63 @@ For upgrades that introduce breaking changes, follow the version-specific migrat
 
 ## Breaking Changes by Version
 
+### Upgrading to 0.20.0
+
+This version targets Perses `v0.53.0` and includes breaking changes for SQL TLS configuration.
+
+#### SQL TLS Configuration Field Changes
+
+Perses `v0.53.0` only supports camelCase keys in `config.database.sql.tls_config`.
+Legacy snake_case keys now fail during Helm template rendering.
+
+**Migration mapping:**
+
+- `ca_file` -> `caFile`
+- `cert_file` -> `certFile`
+- `key_file` -> `keyFile`
+- `server_name` -> `serverName`
+- `insecure_skip_verify` -> `insecureSkipVerify`
+- `min_version` -> `minVersion` (values: `TLS10`, `TLS11`, `TLS12`, `TLS13`)
+- `max_version` -> `maxVersion` (values: `TLS10`, `TLS11`, `TLS12`, `TLS13`)
+
+**Before:**
+
+```yaml
+config:
+  database:
+    sql:
+      tls_config:
+        ca_file: /etc/perses/tls/ca.crt
+        cert_file: /etc/perses/tls/tls.crt
+        key_file: /etc/perses/tls/tls.key
+        server_name: mysql.internal
+        insecure_skip_verify: false
+        min_version: TLS12
+        max_version: TLS13
+```
+
+**After:**
+
+```yaml
+config:
+  database:
+    sql:
+      tls_config:
+        caFile: /etc/perses/tls/ca.crt
+        certFile: /etc/perses/tls/tls.crt
+        keyFile: /etc/perses/tls/tls.key
+        serverName: mysql.internal
+        insecureSkipVerify: false
+        minVersion: TLS12
+        maxVersion: TLS13
+```
+
+#### Container User Change in Perses v0.53.0
+
+Perses switched its container default user from `nobody` to `nonroot`.
+If you use file-based DB storage or existing PVC data, make sure mounted directories are writable by the effective runtime user/group.
+The chart defaults include `persistence.securityContext.fsGroup=2000`, but custom security contexts or pre-existing volume permissions may still require manual adjustment.
+
 ### Upgrading to 0.19.0
 
 This version introduces a breaking change to the sidecar image configuration.

@@ -485,6 +485,8 @@
                   "type": "string"
                 },
                 "tls_config": {
+                  "type": "object",
+                  "additionalProperties": false,
                   "properties": {
                     "ca": {
                       "type": "string"
@@ -495,20 +497,38 @@
                     "key": {
                       "type": "string"
                     },
-                    "ca_file": {
+                    "caFile": {
                       "type": "string"
                     },
-                    "cert_file": {
+                    "certFile": {
                       "type": "string"
                     },
-                    "key_file": {
+                    "keyFile": {
                       "type": "string"
                     },
-                    "server_name": {
+                    "serverName": {
                       "type": "string"
                     },
-                    "insecure_skip_verify": {
+                    "insecureSkipVerify": {
                       "type": "boolean"
+                    },
+                    "minVersion": {
+                      "type": "string",
+                      "enum": [
+                        "TLS10",
+                        "TLS11",
+                        "TLS12",
+                        "TLS13"
+                      ]
+                    },
+                    "maxVersion": {
+                      "type": "string",
+                      "enum": [
+                        "TLS10",
+                        "TLS11",
+                        "TLS12",
+                        "TLS13"
+                      ]
                     }
                   }
                 }
