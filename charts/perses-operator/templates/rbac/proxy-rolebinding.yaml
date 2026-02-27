@@ -1,0 +1,20 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+    labels:
+        app.kubernetes.io/component: kube-rbac-proxy
+        app.kubernetes.io/created-by: perses-operator
+        app.kubernetes.io/instance: proxy-rolebinding
+        app.kubernetes.io/name: clusterrolebinding
+        helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+        app.kubernetes.io/part-of: perses-operator
+    name: {{ include "perses-operator.resourceName" (dict "suffix" "proxy-rolebinding" "context" $) }}
+roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: {{ include "perses-operator.resourceName" (dict "suffix" "proxy-role" "context" $) }}
+subjects:
+    - kind: ServiceAccount
+      name: {{ include "perses-operator.resourceName" (dict "suffix" "controller-manager" "context" $) }}
+      namespace: {{ .Release.Namespace }}

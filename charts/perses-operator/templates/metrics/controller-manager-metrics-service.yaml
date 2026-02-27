@@ -1,0 +1,24 @@
+{{- if .Values.metrics.enable }}
+apiVersion: v1
+kind: Service
+metadata:
+    labels:
+        app.kubernetes.io/component: kube-rbac-proxy
+        app.kubernetes.io/created-by: perses-operator
+        app.kubernetes.io/instance: controller-manager-metrics-service
+        app.kubernetes.io/name: service
+        helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+        app.kubernetes.io/part-of: perses-operator
+        control-plane: controller-manager
+    name: {{ include "perses-operator.resourceName" (dict "suffix" "controller-manager-metrics-service" "context" $) }}
+    namespace: {{ .Release.Namespace }}
+spec:
+    ports:
+        - name: https
+          port: {{ .Values.metrics.port }}
+          protocol: TCP
+          targetPort: https
+    selector:
+        control-plane: controller-manager
+{{- end }}
