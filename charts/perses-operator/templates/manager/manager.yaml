@@ -13,7 +13,7 @@ metadata:
     name: {{ include "perses-operator.resourceName" (dict "suffix" "controller-manager" "context" $) }}
     namespace: {{ .Release.Namespace }}
 spec:
-    replicas: 1
+    replicas: {{ .Values.manager.replicas }}
     selector:
         matchLabels:
             control-plane: controller-manager
@@ -24,6 +24,9 @@ spec:
             labels:
                 control-plane: controller-manager
         spec:
+            {{- with .Values.manager.imagePullSecrets }}
+            imagePullSecrets: {{ toYaml . | nindent 16 }}
+            {{- end }}
             {{- with .Values.manager.tolerations }}
             tolerations: {{ toYaml . | nindent 16 }}
             {{- end }}
@@ -32,6 +35,9 @@ spec:
             {{- end }}
             {{- with .Values.manager.affinity }}
             affinity: {{ toYaml . | nindent 16 }}
+            {{- end }}
+            {{- with .Values.manager.podSecurityContext }}
+            securityContext: {{ toYaml . | nindent 16 }}
             {{- end }}
             containers:
                 - args:
@@ -47,6 +53,9 @@ spec:
                     {{- end }}
                   image: "{{ .Values.manager.image.repository }}:{{ .Values.manager.image.tag }}"
                   imagePullPolicy: {{ .Values.manager.image.pullPolicy }}
+                  {{- with .Values.manager.env }}
+                  env: {{ toYaml . | nindent 20 }}
+                  {{- end }}
                   livenessProbe:
                     httpGet:
                         path: /healthz
@@ -85,25 +94,16 @@ spec:
                     - --upstream=http://127.0.0.1:8080/
                     - --logtostderr=true
                     - --v=0
-                  image: gcr.io/kubebuilder/kube-rbac-proxy:v0.13.1
+                  image: "{{ .Values.kubeRbacProxy.image.repository }}:{{ .Values.kubeRbacProxy.image.tag }}"
                   name: kube-rbac-proxy
                   ports:
                     - containerPort: 8443
                       name: https
                       protocol: TCP
                   resources:
-                    limits:
-                        cpu: 500m
-                        memory: 128Mi
-                    requests:
-                        cpu: 5m
-                        memory: 64Mi
+                    {{- toYaml .Values.kubeRbacProxy.resources | nindent 20 }}
                   securityContext:
-                    {{- if .Values.manager.podSecurityContext }}
-                    {{- toYaml .Values.manager.podSecurityContext | nindent 20 }}
-                    {{- else }}
-                    {}
-                    {{- end }}
+                    {{- toYaml .Values.kubeRbacProxy.securityContext | nindent 20 }}
             serviceAccountName: {{ include "perses-operator.resourceName" (dict "suffix" "controller-manager" "context" $) }}
             terminationGracePeriodSeconds: 10
             volumes:

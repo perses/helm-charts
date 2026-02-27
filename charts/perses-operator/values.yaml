@@ -14,7 +14,7 @@ manager:
   image:
     repository: docker.io/persesdev/perses-operator
     tag: v0.2.0
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
 
   ## Arguments
   ##
@@ -78,6 +78,25 @@ manager:
   ## Manager pod's tolerations
   ##
   tolerations: []
+
+## Kube RBAC Proxy sidecar configuration
+##
+kubeRbacProxy:
+  image:
+    repository: gcr.io/kubebuilder/kube-rbac-proxy
+    tag: v0.13.1
+  resources:
+    limits:
+      cpu: 500m
+      memory: 128Mi
+    requests:
+      cpu: 5m
+      memory: 64Mi
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
 
 ## Helper RBAC roles for managing custom resources
 ##

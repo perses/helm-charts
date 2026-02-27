@@ -1,14 +1,22 @@
 apiVersion: v2
 name: perses-operator
-description: A Helm chart to distribute perses-operator
+description: A Helm chart for the Perses Operator - manages Perses instances and dashboards on Kubernetes
 type: application
 
 version: 0.1.0
-appVersion: "0.1.0"
+appVersion: "0.2.0"
+
+home: https://github.com/perses/perses-operator
+sources:
+  - https://github.com/perses/perses-operator
+
+maintainers:
+  - name: perses
+    url: https://github.com/perses
 
 keywords:
   - kubernetes
   - operator
-
-annotations:
-  kubebuilder.io/generated-by: kubebuilder
+  - perses
+  - monitoring
+  - dashboards
