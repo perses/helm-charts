@@ -14,7 +14,6 @@
 include Makefile.tools
 
 GO                    ?= go
-MDOX                  ?= mdox
 CONTAINER_CLI         ?= docker
 CHARTS                := $(wildcard charts/*)
 
@@ -25,7 +24,7 @@ checkdocs:
 	@git diff --exit-code -- *.md
 
 .PHONY: fmt-docs
-fmt-docs:
+fmt-docs: mdox
 	@echo ">> format markdown document"
 	$(MDOX) fmt --soft-wraps -l $$(find . -name '*.md' -not -path './docs/*' -print) --links.validate.config-file=./.mdox.validate.yaml
 

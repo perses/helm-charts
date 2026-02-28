@@ -1,49 +1,44 @@
-## String to partially override chart.fullname template (will maintain the release name)
-##
+# -- String to partially override chart.fullname template (will maintain the release name)
 # nameOverride: ""
 
-## String to fully override chart.fullname template
-##
+# -- String to fully override chart.fullname template
 # fullnameOverride: ""
 
-## Configure the controller manager deployment
-##
+# -- Configure the controller manager deployment
 manager:
+  # -- Number of replicas
   replicas: 1
-  
+
   image:
+    # -- Container image repository
     repository: docker.io/persesdev/perses-operator
+    # -- Container image tag
     tag: v0.2.0
+    # -- Image pull policy
     pullPolicy: IfNotPresent
 
-  ## Arguments
-  ##
+  # -- Arguments passed to the manager container
   args:
     - --leader-elect
 
-  ## Environment variables
-  ##
+  # -- Environment variables for the manager container
   env: []
 
-  ## Image pull secrets
-  ##
+  # -- Image pull secrets
   imagePullSecrets: []
 
-  ## Pod-level security settings
-  ##
+  # -- Pod-level security settings
   podSecurityContext: {}
     # fsGroup: 2000
 
-  ## Container-level security settings
-  ##
+  # -- Container-level security settings
   securityContext:
     allowPrivilegeEscalation: false
     capabilities:
         drop:
             - ALL
 
-  ## Resource limits and requests
-  ##
+  # -- Resource limits and requests
   resources:
     limits:
         cpu: 500m
@@ -52,8 +47,7 @@ manager:
         cpu: 10m
         memory: 64Mi
 
-  ## Manager pod's affinity
-  ##
+  # -- Manager pod affinity
   affinity:
     nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
@@ -71,20 +65,20 @@ manager:
                       values:
                         - linux
 
-  ## Manager pod's node selector
-  ##
+  # -- Manager pod node selector
   nodeSelector: {}
 
-  ## Manager pod's tolerations
-  ##
+  # -- Manager pod tolerations
   tolerations: []
 
-## Kube RBAC Proxy sidecar configuration
-##
+# -- Kube RBAC Proxy sidecar configuration
 kubeRbacProxy:
   image:
+    # -- Kube RBAC Proxy image repository
     repository: gcr.io/kubebuilder/kube-rbac-proxy
+    # -- Kube RBAC Proxy image tag
     tag: v0.13.1
+  # -- Kube RBAC Proxy resource limits and requests
   resources:
     limits:
       cpu: 500m
@@ -92,50 +86,45 @@ kubeRbacProxy:
     requests:
       cpu: 5m
       memory: 64Mi
+  # -- Kube RBAC Proxy container security context
   securityContext:
     allowPrivilegeEscalation: false
     capabilities:
       drop:
         - ALL
 
-## Helper RBAC roles for managing custom resources
-##
+# -- Helper RBAC roles for managing custom resources
 rbacHelpers:
-  # Install convenience admin/editor/viewer roles for CRDs
+  # -- Install convenience admin/editor/viewer roles for CRDs
   enable: false
 
-## Custom Resource Definitions
-##
+# -- Custom Resource Definitions
 crd:
-  # Install CRDs with the chart
+  # -- Install CRDs with the chart
   enable: true
-  # Keep CRDs when uninstalling
+  # -- Keep CRDs when uninstalling
   keep: true
 
-## Controller metrics endpoint.
-## Enable to expose /metrics endpoint with RBAC protection.
-##
+# -- Controller metrics endpoint. Enable to expose /metrics endpoint with RBAC protection.
 metrics:
+  # -- Enable metrics endpoint
   enable: true
-  # Metrics server port
+  # -- Metrics server port
   port: 8082
 
-## Cert-manager integration for TLS certificates.
-## Required for webhook certificates and metrics endpoint certificates.
-##
+# -- Cert-manager integration for TLS certificates. Required for webhook and metrics endpoint certificates.
 certManager:
+  # -- Enable cert-manager integration
   enable: true
 
-## Webhook server configuration
-##
+# -- Webhook server configuration
 webhook:
+  # -- Enable webhook server
   enable: true
-  # Webhook server port
+  # -- Webhook server port
   port: 9443
 
-## Prometheus ServiceMonitor for metrics scraping.
-## Requires prometheus-operator to be installed in the cluster.
-##
+# -- Prometheus ServiceMonitor for metrics scraping. Requires prometheus-operator to be installed in the cluster.
 prometheus:
+  # -- Enable ServiceMonitor creation
   enable: false
-
