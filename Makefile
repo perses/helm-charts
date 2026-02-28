@@ -45,6 +45,34 @@ helm-template: helm
 .PHONY: helm-validate
 helm-validate: helm-lint helm-template
 
+KIND_CLUSTER_NAME    ?= helm-charts-test
+CERT_MANAGER_VERSION ?= $(shell grep cert-manager-version .github/env | cut -d= -f2)
+KIND_VERSION         ?= $(shell grep kind-version .github/env | cut -d= -f2)
+KIND_IMAGE           ?= $(shell grep kind-image .github/env | cut -d= -f2)
+
+.PHONY: kind-create
+kind-create: ## Create a kind cluster for local testing.
+	@kind create cluster --name $(KIND_CLUSTER_NAME) --image $(KIND_IMAGE) --wait 60s
+	@echo ">> installing cert-manager $(CERT_MANAGER_VERSION)"
+	@kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/$(CERT_MANAGER_VERSION)/cert-manager.yaml
+	@kubectl wait --for=condition=Available deployment --all -n cert-manager --timeout=120s
+
+.PHONY: kind-delete
+kind-delete: ## Delete the kind cluster.
+	@kind delete cluster --name $(KIND_CLUSTER_NAME)
+
+.PHONY: helm-test
+helm-test: helm kind-create ## Install and test charts on kind. Use CHART=charts/<name> to test a single chart.
+	@for chart in $(or $(CHART),$(CHARTS)); do \
+		release=$$(basename $$chart); \
+		echo ">> installing $$chart as $$release"; \
+		$(HELM) install $$release $$chart --wait --timeout 120s; \
+		echo ">> testing $$release"; \
+		$(HELM) test $$release; \
+	done
+	@echo ">> cleaning up kind cluster"
+	@make kind-delete
+
 .PHONY: update-helm-readme
 update-helm-readme:
 	@for chart in $(CHARTS); do \

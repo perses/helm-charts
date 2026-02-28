@@ -128,3 +128,17 @@ webhook:
 prometheus:
   # -- Enable ServiceMonitor creation
   enable: false
+
+# -- Helm test framework configuration
+testFramework:
+  # -- Enable helm test resources
+  enabled: true
+  image:
+    # -- Test image registry
+    registry: ghcr.io
+    # -- Test image repository
+    repository: cloudoperators/greenhouse-extensions-integration-test
+    # -- Test image tag
+    tag: main
+  # -- Test image pull policy
+  imagePullPolicy: IfNotPresent

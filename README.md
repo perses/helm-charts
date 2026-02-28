@@ -40,6 +40,10 @@ helm install perses-operator perses/perses-operator
 
 For detailed configuration options, see the [Perses Operator chart documentation](./charts/perses-operator/README.md).
 
+## Development
+
+See the [Developer Guide](./DEVELOPER_GUIDE.md) for local setup, testing, documentation generation, and adding new charts.
+
 ## Contributing
 
 <!-- Keep full URL links to repo files because this README syncs from main to gh-pages.  -->

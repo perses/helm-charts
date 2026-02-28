@@ -31,6 +31,12 @@ jobs:
         with:
           enable_go: true
 
+      # perses-operator chart requires cert-manager for webhook and metrics TLS certificates
+      - name: install cert-manager
+        run: |
+          kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/${{ env.cert-manager-version }}/cert-manager.yaml
+          kubectl wait --for=condition=Available deployment --all -n cert-manager --timeout=120s
+
       - name: run chart-testing (install)
         run: ct install --all
       - name: install mdox
