@@ -1,0 +1,19 @@
+# Tool versions
+HELM_VERSION ?= v3.17.1
+
+# Local bin directory for tool installs
+LOCALBIN ?= $(shell pwd)/bin
+$(LOCALBIN):
+	mkdir -p $(LOCALBIN)
+
+## Tool binaries
+HELM ?= $(LOCALBIN)/helm
+
+.PHONY: helm
+$(HELM) helm: $(LOCALBIN) ## Install helm locally if necessary.
+	@{ \
+		set -ex ;\
+		[[ -f $(HELM) ]] && exit 0 ;\
+		OS=$$(go env GOOS) && ARCH=$$(go env GOARCH) && \
+		curl -sSL https://get.helm.sh/helm-$(HELM_VERSION)-$${OS}-$${ARCH}.tar.gz | tar xz -C $(LOCALBIN) --strip-components=1 $${OS}-$${ARCH}/helm ;\
+	}
