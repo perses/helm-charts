@@ -4,10 +4,23 @@ Your release is named {{ .Release.Name }}.
 
 The controller and CRDs have been installed in namespace {{ .Release.Namespace }}.
 
+{{- if .Values.certManager.enable }}
+
+NOTE: This chart requires cert-manager to be installed in the cluster.
+      cert-manager is used to generate TLS certificates for the webhook server.
+      Install it from: https://cert-manager.io/docs/installation/
+{{- end }}
+
+{{- if .Values.crd.keep }}
+
+NOTE: CRDs are configured to be retained when uninstalling (crd.keep=true).
+      To remove them manually: kubectl delete crd perses.perses.dev persesdashboards.perses.dev persesdatasources.perses.dev
+{{- end }}
+
 To verify the installation:
 
   kubectl get pods -n {{ .Release.Namespace }}
-  kubectl get customresourcedefinitions
+  kubectl get customresourcedefinitions | grep perses
 
 To learn more about the release, try:
 

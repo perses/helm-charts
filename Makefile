@@ -73,6 +73,10 @@ helm-test: helm kind-create ## Install and test charts on kind. Use CHART=charts
 	@echo ">> cleaning up kind cluster"
 	@make kind-delete
 
+.PHONY: sync-crds
+sync-crds: ## Sync CRDs from perses-operator (version from Chart.yaml appVersion).
+	@./hack/sync-crds.sh
+
 .PHONY: update-helm-readme
 update-helm-readme:
 	@for chart in $(CHARTS); do \

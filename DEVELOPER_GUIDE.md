@@ -65,6 +65,35 @@ The `lint-and-test` workflow runs on every pull request that modifies files unde
 3. Runs `ct install --all` (chart-testing: installs each chart and runs `helm test`)
 4. Validates chart READMEs are up to date
 
+## Syncing CRDs from Upstream
+
+The perses-operator CRDs in `charts/perses-operator/templates/crd/` are sourced from the [perses-operator](https://github.com/perses/perses-operator) repository (`config/crd/bases/`). The script at `hack/sync-crds.sh` follows the same pattern as the [kube-prometheus-stack CRD updater](https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/hack/update_crds.sh) -- it downloads each CRD individually and wraps it with the necessary Helm templating:
+
+- `{{- if .Values.crd.enable }}` conditional install
+- `helm.sh/resource-policy: keep` annotation (controlled by `crd.keep`)
+- `cert-manager.io/inject-ca-from` annotation (controlled by `certManager.enable`)
+- Webhook conversion block with templated service name/namespace (for CRDs with multiple versions)
+
+Currently synced CRDs:
+
+| Upstream file                       | Destination                         | Webhook |
+|-------------------------------------|-------------------------------------|---------|
+| `perses.dev_perses.yaml`            | `perses.perses.dev.yaml`            | yes     |
+| `perses.dev_persesdashboards.yaml`  | `persesdashboards.perses.dev.yaml`  | yes     |
+| `perses.dev_persesdatasources.yaml` | `persesdatasources.perses.dev.yaml` | no      |
+
+> **Note:** `persesglobaldatasources` is not yet available upstream and is commented out in the script. Uncomment when a future release includes it.
+
+The script reads `appVersion` from `charts/perses-operator/Chart.yaml` to determine which release tag to download from. To sync a different version, update `appVersion` in `Chart.yaml` first.
+
+### Usage
+
+```bash
+make sync-crds
+```
+
+After syncing, always run `make helm-validate` to ensure the templates still render correctly, and review the diff to verify the Helm wrappers were applied properly.
+
 ## Documentation
 
 Chart READMEs are auto-generated using [helm-docs](https://github.com/norwoodj/helm-docs) and formatted with [mdox](https://github.com/bwplotka/mdox).

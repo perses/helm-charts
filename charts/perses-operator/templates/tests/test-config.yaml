@@ -49,10 +49,12 @@ data:
         [ "$status" -eq 0 ]
     }
 
+    {{/* Uncomment when persesglobaldatasources is available upstream
     @test "Verify that PersesGlobalDatasource CRD is installed" {
         run kubectl get crd persesglobaldatasources.perses.dev
         [ "$status" -eq 0 ]
     }
+    */}}
     {{- end }}
 
     {{- if .Values.prometheus.enable }}

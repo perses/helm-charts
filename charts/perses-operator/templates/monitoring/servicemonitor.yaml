@@ -19,21 +19,19 @@ spec:
       tlsConfig:
         {{- if .Values.certManager.enable }}
         serverName: {{ include "perses-operator.resourceName" (dict "suffix" "controller-manager-metrics-service" "context" $) }}.{{ .Release.Namespace }}.svc
-        # Apply secure TLS configuration with cert-manager
         insecureSkipVerify: false
         ca:
           secret:
-            name: metrics-server-cert
+            name: {{ include "perses-operator.resourceName" (dict "suffix" "webhook-server-cert" "context" $) }}
             key: ca.crt
         cert:
           secret:
-            name: metrics-server-cert
+            name: {{ include "perses-operator.resourceName" (dict "suffix" "webhook-server-cert" "context" $) }}
             key: tls.crt
         keySecret:
-          name: metrics-server-cert
+          name: {{ include "perses-operator.resourceName" (dict "suffix" "webhook-server-cert" "context" $) }}
           key: tls.key
         {{- else }}
-        # Development/Test mode (insecure configuration)
         insecureSkipVerify: true
         {{- end }}
   selector:
