@@ -54,24 +54,45 @@ The plugin is installed automatically on first run. Tests cover deployment, serv
 
 The Makefile provides targets to spin up a Kind cluster, install cert-manager (required by the operator chart), deploy charts, and run Helm tests.
 
-Test all charts:
+#### Step-by-step
 
 ```bash
-make helm-test
+# 1. Create Kind cluster with cert-manager
+make kind-create
+
+# 2. Install a chart from local source
+make helm-local-install CHART=charts/perses-operator
+
+# 3. Verify resources
+kubectl get deployment -n default | grep controller-manager
+kubectl get svc -n default | grep perses-operator
+kubectl get crd | grep perses
+kubectl get certificate -n default
+kubectl get issuer -n default
+
+# 4. Run helm tests (bats integration tests)
+bin/helm test perses-operator
+
+# 5. Run unit tests (no cluster needed)
+make helm-unit-test
+
+# 6. Check test pod logs
+kubectl logs perses-operator-test -n default
+
+# 7. Uninstall the chart
+make helm-local-uninstall CHART=charts/perses-operator
+
+# 8. Tear down the cluster
+make kind-delete
 ```
 
-Test a single chart:
+#### Automated (end-to-end)
+
+Alternatively, `helm-test` handles the full lifecycle (create cluster, install, test, cleanup):
 
 ```bash
-make helm-test CHART=charts/perses-operator
-```
-
-You can also manage the cluster lifecycle separately:
-
-```bash
-make kind-create    # Create kind cluster with cert-manager
-# ... manually install and test charts ...
-make kind-delete    # Tear down the cluster
+make helm-test                                 # All charts
+make helm-test CHART=charts/perses-operator    # Single chart
 ```
 
 ### CI Testing
@@ -148,8 +169,9 @@ This formats all docs and verifies there are no uncommitted changes to markdown 
 1. Create the chart under `charts/<chart-name>/`
 2. Add a `README.md.gotmpl` template for helm-docs
 3. Use `# --` comments in `values.yaml` for value descriptions
-4. Add helm tests under `templates/tests/`
-5. Run `make update-helm-readme` to generate the README
-6. Update `.github/CODEOWNERS` with ownership
-7. Update `renovate.json` if the chart tracks an `appVersion` from a container image
-8. Run `make helm-validate` and `make helm-test CHART=charts/<chart-name>` to verify
+4. Add helm integration tests under `templates/tests/`
+5. Add helm unit tests under `unittests/` and add `unittests/` to `.helmignore`
+6. Run `make update-helm-readme` to generate the README
+7. Update `.github/CODEOWNERS` with ownership
+8. Update `renovate.json` if the chart tracks an `appVersion` from a container image
+9. Run `make helm-validate`, `make helm-unit-test CHART=charts/<chart-name>`, and `make helm-test CHART=charts/<chart-name>` to verify

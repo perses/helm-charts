@@ -55,7 +55,43 @@ data:
         [ "$status" -eq 0 ]
     }
     */}}
+
+    @test "Verify CRDs have keep resource-policy annotation" {
+        run kubectl get crd perses.perses.dev -o jsonpath='{.metadata.annotations.helm\.sh/resource-policy}'
+        [ "$status" -eq 0 ]
+        {{- if .Values.crd.keep }}
+        [ "$output" = "keep" ]
+        {{- end }}
+    }
     {{- end }}
+
+    @test "Verify manager container drops all capabilities" {
+        run kubectl get pod -l control-plane=controller-manager -n {{ .Release.Namespace }} \
+          -o jsonpath='{.items[0].spec.containers[0].securityContext.capabilities.drop[0]}'
+        [ "$status" -eq 0 ]
+        [ "$output" = "ALL" ]
+    }
+
+    @test "Verify manager container disallows privilege escalation" {
+        run kubectl get pod -l control-plane=controller-manager -n {{ .Release.Namespace }} \
+          -o jsonpath='{.items[0].spec.containers[0].securityContext.allowPrivilegeEscalation}'
+        [ "$status" -eq 0 ]
+        [ "$output" = "false" ]
+    }
+
+    @test "Verify kube-rbac-proxy sidecar is present" {
+        run kubectl get pod -l control-plane=controller-manager -n {{ .Release.Namespace }} \
+          -o jsonpath='{.items[0].spec.containers[1].name}'
+        [ "$status" -eq 0 ]
+        [ "$output" = "kube-rbac-proxy" ]
+    }
+
+    @test "Verify webhook cert volume is mounted read-only" {
+        run kubectl get pod -l control-plane=controller-manager -n {{ .Release.Namespace }} \
+          -o jsonpath='{.items[0].spec.containers[0].volumeMounts[0].readOnly}'
+        [ "$status" -eq 0 ]
+        [ "$output" = "true" ]
+    }
 
     {{- if .Values.prometheus.enable }}
     @test "Verify that the ServiceMonitor exists" {

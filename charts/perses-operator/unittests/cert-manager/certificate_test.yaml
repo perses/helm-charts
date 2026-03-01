@@ -9,6 +9,7 @@ tests:
   - it: should render Certificate when certManager is enabled
     set:
       certManager.enable: true
+    template: templates/cert-manager/serving-cert.yaml
     asserts:
       - containsDocument:
           kind: Certificate
@@ -17,6 +18,7 @@ tests:
   - it: should render Issuer when certManager is enabled
     set:
       certManager.enable: true
+    template: templates/cert-manager/selfsigned-issuer.yaml
     asserts:
       - containsDocument:
           kind: Issuer

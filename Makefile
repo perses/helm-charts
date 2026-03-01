@@ -50,7 +50,7 @@ helm-unit-test: helm-unittest ## Run helm unit tests. Use CHART=charts/<name> to
 	@for chart in $(or $(CHART),$(CHARTS)); do \
 		if [ -d "$$chart/unittests" ]; then \
 			echo ">> unit testing $$chart"; \
-			$(HELM) unittest $$chart; \
+			$(HELM) unittest -f 'unittests/**/*_test.yaml' $$chart; \
 		fi; \
 	done
 
@@ -69,6 +69,22 @@ kind-create: ## Create a kind cluster for local testing.
 .PHONY: kind-delete
 kind-delete: ## Delete the kind cluster.
 	@kind delete cluster --name $(KIND_CLUSTER_NAME)
+
+.PHONY: helm-local-install
+helm-local-install: helm ## Install charts locally. Use CHART=charts/<name> to install a single chart.
+	@for chart in $(or $(CHART),$(CHARTS)); do \
+		release=$$(basename $$chart); \
+		echo ">> installing $$chart as $$release"; \
+		$(HELM) install $$release $$chart --wait --timeout 120s; \
+	done
+
+.PHONY: helm-local-uninstall
+helm-local-uninstall: helm ## Uninstall charts locally. Use CHART=charts/<name> to uninstall a single chart.
+	@for chart in $(or $(CHART),$(CHARTS)); do \
+		release=$$(basename $$chart); \
+		echo ">> uninstalling $$release"; \
+		$(HELM) uninstall $$release; \
+	done
 
 .PHONY: helm-test
 helm-test: helm kind-create ## Install and test charts on kind. Use CHART=charts/<name> to test a single chart.
