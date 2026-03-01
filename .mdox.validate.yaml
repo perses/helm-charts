@@ -5,3 +5,6 @@ validators:
   # randomly it returns the error: status code 403: Forbidden
   - regex: 'groups\.google\.com'
     type: "ignore"
+  # intermittent timeouts from CI runners
+  - regex: 'helm\.sh'
+    type: "ignore"
