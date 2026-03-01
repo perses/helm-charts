@@ -1,0 +1,47 @@
+suite: metrics service
+templates:
+  - templates/metrics/controller-manager-metrics-service.yaml
+release:
+  name: test-release
+  namespace: test-ns
+tests:
+  - it: should render when metrics is enabled
+    set:
+      metrics.enable: true
+    asserts:
+      - isKind:
+          of: Service
+      - isAPIVersion:
+          of: v1
+
+  - it: should not render when metrics is disabled
+    set:
+      metrics.enable: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should set the correct name
+    set:
+      metrics.enable: true
+    asserts:
+      - equal:
+          path: metadata.name
+          value: test-release-perses-operator-controller-manager-metrics-service
+
+  - it: should use the configured port
+    set:
+      metrics.enable: true
+      metrics.port: 9090
+    asserts:
+      - equal:
+          path: spec.ports[0].port
+          value: 9090
+
+  - it: should select controller-manager pods
+    set:
+      metrics.enable: true
+    asserts:
+      - equal:
+          path: spec.selector.control-plane
+          value: controller-manager

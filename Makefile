@@ -45,6 +45,15 @@ helm-template: helm
 .PHONY: helm-validate
 helm-validate: helm-lint helm-template
 
+.PHONY: helm-unit-test
+helm-unit-test: helm-unittest ## Run helm unit tests. Use CHART=charts/<name> to test a single chart.
+	@for chart in $(or $(CHART),$(CHARTS)); do \
+		if [ -d "$$chart/unittests" ]; then \
+			echo ">> unit testing $$chart"; \
+			$(HELM) unittest $$chart; \
+		fi; \
+	done
+
 KIND_CLUSTER_NAME    ?= helm-charts-test
 CERT_MANAGER_VERSION ?= $(shell grep cert-manager-version .github/env | cut -d= -f2)
 KIND_VERSION         ?= $(shell grep kind-version .github/env | cut -d= -f2)

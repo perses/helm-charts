@@ -1,0 +1,132 @@
+suite: manager deployment
+templates:
+  - templates/manager/manager.yaml
+release:
+  name: test-release
+  namespace: test-ns
+tests:
+  - it: should render a Deployment
+    asserts:
+      - isKind:
+          of: Deployment
+      - isAPIVersion:
+          of: apps/v1
+
+  - it: should set the correct name
+    asserts:
+      - equal:
+          path: metadata.name
+          value: test-release-perses-operator-controller-manager
+
+  - it: should set the release namespace
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: test-ns
+
+  - it: should use the default image
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: "docker.io/persesdev/perses-operator:v0.2.0"
+
+  - it: should allow overriding the image
+    set:
+      manager.image.repository: custom/operator
+      manager.image.tag: v1.0.0
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: "custom/operator:v1.0.0"
+
+  - it: should set default replicas to 1
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 1
+
+  - it: should allow setting replicas
+    set:
+      manager.replicas: 3
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 3
+
+  - it: should enable metrics bind address when metrics enabled
+    set:
+      metrics.enable: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics-bind-address=127.0.0.1:8082"
+
+  - it: should disable metrics bind address when metrics disabled
+    set:
+      metrics.enable: false
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics-bind-address=0"
+
+  - it: should include kube-rbac-proxy sidecar
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[1].name
+          value: kube-rbac-proxy
+
+  - it: should set webhook port
+    set:
+      webhook.port: 9443
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].ports[0].containerPort
+          value: 9443
+
+  - it: should apply tolerations when set
+    set:
+      manager.tolerations:
+        - key: "node-role"
+          operator: "Equal"
+          value: "infra"
+          effect: "NoSchedule"
+    asserts:
+      - equal:
+          path: spec.template.spec.tolerations[0].key
+          value: "node-role"
+
+  - it: should apply nodeSelector when set
+    set:
+      manager.nodeSelector:
+        disktype: ssd
+    asserts:
+      - equal:
+          path: spec.template.spec.nodeSelector.disktype
+          value: ssd
+
+  - it: should apply imagePullSecrets when set
+    set:
+      manager.imagePullSecrets:
+        - name: my-secret
+    asserts:
+      - equal:
+          path: spec.template.spec.imagePullSecrets[0].name
+          value: my-secret
+
+  - it: should support nameOverride
+    release:
+      name: my-release
+    set:
+      nameOverride: custom-name
+    asserts:
+      - equal:
+          path: metadata.name
+          value: my-release-custom-name-controller-manager
+
+  - it: should support fullnameOverride
+    set:
+      fullnameOverride: my-operator
+    asserts:
+      - equal:
+          path: metadata.name
+          value: my-operator-controller-manager

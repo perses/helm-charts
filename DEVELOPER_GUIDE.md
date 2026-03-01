@@ -32,6 +32,24 @@ make helm-validate   # Run both lint and template
 
 ## Testing
 
+### Unit Tests
+
+Unit tests use the [helm-unittest](https://github.com/helm-unittest/helm-unittest) plugin. Tests live under `charts/<chart>/unittests/` and validate template rendering without a cluster.
+
+Run all unit tests:
+
+```bash
+make helm-unit-test
+```
+
+Run unit tests for a single chart:
+
+```bash
+make helm-unit-test CHART=charts/perses-operator
+```
+
+The plugin is installed automatically on first run. Tests cover deployment, services, RBAC, cert-manager, and conditional resources (webhook, metrics, ServiceMonitor).
+
 ### Local Testing with Kind
 
 The Makefile provides targets to spin up a Kind cluster, install cert-manager (required by the operator chart), deploy charts, and run Helm tests.
