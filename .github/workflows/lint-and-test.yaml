@@ -26,6 +26,12 @@ jobs:
           kind-version: ${{ env.kind-version }}
           kind-image: ${{ env.kind-image }}
 
+      # Ensure perses-operator CRDs match upstream for the appVersion in Chart.yaml
+      - name: verify CRDs are in sync with upstream
+        run: |
+          make sync-crds
+          git diff --exit-code -- charts/perses-operator/templates/crd/
+
       - name: run helm unit tests
         run: make helm-unit-test
 
