@@ -20,6 +20,17 @@
       ],
       "depNameTemplate": "persesdev/perses",
       "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "^charts/perses-operator/Chart.yaml$"
+      ],
+      "matchStrings": [
+        "appVersion: \"(?<currentValue>.*?)\"\\n"
+      ],
+      "depNameTemplate": "persesdev/perses-operator",
+      "datasourceTemplate": "docker"
     }
   ],
   "packageRules": [

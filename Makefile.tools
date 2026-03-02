@@ -1,0 +1,47 @@
+## Makefile.tools
+## This file contains all tool installation targets and version definitions.
+## It is included by the main Makefile and serves as the single source of truth for tool versions.
+##
+## Usage:
+##   make helm           - Install helm
+##   make mdox           - Install mdox
+##   make helm-unittest  - Install helm-unittest plugin
+##   make clean-tools    - Remove all installed tools
+
+## Tool versions
+HELM_VERSION ?= v3.17.1
+HELM_UNITTEST_VERSION ?= v1.0.3
+
+## Location to install dependencies to
+LOCALBIN ?= $(shell pwd)/bin
+$(LOCALBIN):
+	mkdir -p $(LOCALBIN)
+
+## Tool binaries
+HELM ?= $(LOCALBIN)/helm
+MDOX ?= $(LOCALBIN)/mdox
+
+.PHONY: helm
+$(HELM) helm: $(LOCALBIN) ## Install helm locally if necessary.
+	@{ \
+		set -ex ;\
+		[[ -f $(HELM) ]] && exit 0 ;\
+		OS=$$(go env GOOS) && ARCH=$$(go env GOARCH) && \
+		curl -sSL https://get.helm.sh/helm-$(HELM_VERSION)-$${OS}-$${ARCH}.tar.gz | tar xz -C $(LOCALBIN) --strip-components=1 $${OS}-$${ARCH}/helm ;\
+	}
+
+.PHONY: mdox
+$(MDOX) mdox: $(LOCALBIN) ## Install mdox locally if necessary.
+	@{ \
+		set -ex ;\
+		[[ -f $(MDOX) ]] && exit 0 ;\
+		GOBIN=$(LOCALBIN) go install github.com/bwplotka/mdox@latest ;\
+	}
+
+.PHONY: helm-unittest
+helm-unittest: helm ## Install helm-unittest plugin if necessary.
+	@$(HELM) plugin list | grep -q unittest || $(HELM) plugin install https://github.com/helm-unittest/helm-unittest --version $(HELM_UNITTEST_VERSION)
+
+.PHONY: clean-tools
+clean-tools: ## Remove all installed tools.
+	rm -rf $(LOCALBIN)

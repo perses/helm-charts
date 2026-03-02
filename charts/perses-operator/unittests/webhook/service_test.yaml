@@ -1,0 +1,63 @@
+suite: webhook service
+templates:
+  - templates/webhook/webhook-service.yaml
+release:
+  name: test-release
+  namespace: test-ns
+tests:
+  - it: should render when webhook is enabled
+    set:
+      webhook.enable: true
+    asserts:
+      - isKind:
+          of: Service
+      - isAPIVersion:
+          of: v1
+
+  - it: should not render when webhook is disabled
+    set:
+      webhook.enable: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should set the correct name
+    set:
+      webhook.enable: true
+    asserts:
+      - equal:
+          path: metadata.name
+          value: test-release-perses-operator-webhook-service
+
+  - it: should set the release namespace
+    set:
+      webhook.enable: true
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: test-ns
+
+  - it: should target the webhook port from values
+    set:
+      webhook.enable: true
+      webhook.port: 9443
+    asserts:
+      - equal:
+          path: spec.ports[0].targetPort
+          value: 9443
+
+  - it: should expose port 443
+    set:
+      webhook.enable: true
+    asserts:
+      - equal:
+          path: spec.ports[0].port
+          value: 443
+
+  - it: should select controller-manager pods
+    set:
+      webhook.enable: true
+    asserts:
+      - equal:
+          path: spec.selector.control-plane
+          value: controller-manager

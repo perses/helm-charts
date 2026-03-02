@@ -208,4 +208,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+### Local tool binaries ###
+bin/
+
 # End of https://www.toptal.com/developers/gitignore/api/helm,macos,linux,windows,visualstudiocode,vim,goland

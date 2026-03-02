@@ -1,0 +1,101 @@
+{{- if .Values.testFramework.enabled -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-test
+  namespace: {{ .Release.Namespace }}
+  labels:
+    type: helm-chart-test
+  annotations:
+    "helm.sh/hook": test
+    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
+data:
+  run.sh: |-
+
+    #!/usr/bin/env bats
+
+    load "/usr/lib/bats/bats-detik/utils"
+    load "/usr/lib/bats/bats-detik/detik"
+
+    DETIK_CLIENT_NAME="kubectl"
+
+    @test "Verify that the controller-manager deployment exists" {
+        verify "there is 1 deployment named '{{ include "perses-operator.resourceName" (dict "suffix" "controller-manager" "context" $) }}'"
+    }
+
+    @test "Verify that the controller-manager pod is running" {
+        try "at most 5 times every 20s to get pods named '{{ include "perses-operator.resourceName" (dict "suffix" "controller-manager" "context" $) }}.*' and verify that '.status.phase' is 'running'"
+    }
+
+    {{- if .Values.metrics.enable }}
+    @test "Verify that the metrics service exists" {
+        verify "there is 1 service named '{{ include "perses-operator.resourceName" (dict "suffix" "controller-manager-metrics-service" "context" $) }}'"
+    }
+    {{- end }}
+
+    {{- if .Values.crd.enable }}
+    @test "Verify that Perses CRD is installed" {
+        run kubectl get crd perses.perses.dev
+        [ "$status" -eq 0 ]
+    }
+
+    @test "Verify that PersesDashboard CRD is installed" {
+        run kubectl get crd persesdashboards.perses.dev
+        [ "$status" -eq 0 ]
+    }
+
+    @test "Verify that PersesDatasource CRD is installed" {
+        run kubectl get crd persesdatasources.perses.dev
+        [ "$status" -eq 0 ]
+    }
+
+    {{/* Uncomment when persesglobaldatasources is available upstream
+    @test "Verify that PersesGlobalDatasource CRD is installed" {
+        run kubectl get crd persesglobaldatasources.perses.dev
+        [ "$status" -eq 0 ]
+    }
+    */}}
+
+    @test "Verify CRDs have keep resource-policy annotation" {
+        run kubectl get crd perses.perses.dev -o jsonpath='{.metadata.annotations.helm\.sh/resource-policy}'
+        [ "$status" -eq 0 ]
+        {{- if .Values.crd.keep }}
+        [ "$output" = "keep" ]
+        {{- end }}
+    }
+    {{- end }}
+
+    @test "Verify manager container drops all capabilities" {
+        run kubectl get pod -l control-plane=controller-manager -n {{ .Release.Namespace }} \
+          -o jsonpath='{.items[0].spec.containers[0].securityContext.capabilities.drop[0]}'
+        [ "$status" -eq 0 ]
+        [ "$output" = "ALL" ]
+    }
+
+    @test "Verify manager container disallows privilege escalation" {
+        run kubectl get pod -l control-plane=controller-manager -n {{ .Release.Namespace }} \
+          -o jsonpath='{.items[0].spec.containers[0].securityContext.allowPrivilegeEscalation}'
+        [ "$status" -eq 0 ]
+        [ "$output" = "false" ]
+    }
+
+    @test "Verify kube-rbac-proxy sidecar is present" {
+        run kubectl get pod -l control-plane=controller-manager -n {{ .Release.Namespace }} \
+          -o jsonpath='{.items[0].spec.containers[1].name}'
+        [ "$status" -eq 0 ]
+        [ "$output" = "kube-rbac-proxy" ]
+    }
+
+    @test "Verify webhook cert volume is mounted read-only" {
+        run kubectl get pod -l control-plane=controller-manager -n {{ .Release.Namespace }} \
+          -o jsonpath='{.items[0].spec.containers[0].volumeMounts[0].readOnly}'
+        [ "$status" -eq 0 ]
+        [ "$output" = "true" ]
+    }
+
+    {{- if .Values.prometheus.enable }}
+    @test "Verify that the ServiceMonitor exists" {
+        verify "there is 1 servicemonitor named '{{ include "perses-operator.resourceName" (dict "suffix" "controller-manager-metrics-monitor" "context" $) }}'"
+    }
+    {{- end }}
+{{- end -}}

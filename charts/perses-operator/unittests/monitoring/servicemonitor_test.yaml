@@ -1,0 +1,68 @@
+suite: servicemonitor
+templates:
+  - templates/monitoring/servicemonitor.yaml
+release:
+  name: test-release
+  namespace: test-ns
+tests:
+  - it: should not render by default
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should render when prometheus is enabled
+    set:
+      prometheus.enable: true
+    asserts:
+      - isKind:
+          of: ServiceMonitor
+      - isAPIVersion:
+          of: monitoring.coreos.com/v1
+
+  - it: should set the correct name
+    set:
+      prometheus.enable: true
+    asserts:
+      - equal:
+          path: metadata.name
+          value: test-release-perses-operator-controller-manager-metrics-monitor
+
+  - it: should set the release namespace
+    set:
+      prometheus.enable: true
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: test-ns
+
+  - it: should use insecureSkipVerify when certManager is disabled
+    set:
+      prometheus.enable: true
+      certManager.enable: false
+    asserts:
+      - equal:
+          path: spec.endpoints[0].tlsConfig.insecureSkipVerify
+          value: true
+
+  - it: should configure TLS from cert-manager when enabled
+    set:
+      prometheus.enable: true
+      certManager.enable: true
+    asserts:
+      - equal:
+          path: spec.endpoints[0].tlsConfig.insecureSkipVerify
+          value: false
+      - equal:
+          path: spec.endpoints[0].tlsConfig.ca.secret.key
+          value: ca.crt
+
+  - it: should select by chart name and control-plane labels
+    set:
+      prometheus.enable: true
+    asserts:
+      - equal:
+          path: spec.selector.matchLabels.control-plane
+          value: controller-manager
+      - equal:
+          path: spec.selector.matchLabels["app.kubernetes.io/name"]
+          value: perses-operator

@@ -1,0 +1,38 @@
+<!-- Any change to the README file must be done on README.md.gotmpl file -->
+
+{{ template "chart.header" . }}
+{{ template "chart.description" . }}
+
+{{ template "chart.versionBadge" . }}{{ template "chart.typeBadge" . }}{{ template "chart.appVersionBadge" . }}
+
+## Prerequisites
+
+- Kubernetes 1.26+
+- Helm 3.x
+- [cert-manager](https://cert-manager.io/) installed in the cluster (required for webhook and metrics TLS certificates)
+
+## Installing the Chart
+
+To install the chart with the release name `perses-operator`:
+
+```bash
+helm repo add perses https://perses.github.io/helm-charts
+helm repo update
+helm install perses-operator perses/perses-operator
+```
+
+## Uninstalling the Chart
+
+To uninstall/delete the perses-operator deployment:
+
+```bash
+helm delete perses-operator
+```
+
+> **Note:** CRDs are kept by default when uninstalling. To remove them, set `crd.keep=false` before uninstalling or delete them manually.
+
+{{ template "chart.requirementsSection" . }}
+
+{{ template "chart.valuesSection" . }}
+
+{{ template "helm-docs.versionFooter" . }}

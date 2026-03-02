@@ -1,0 +1,74 @@
+suite: cert-manager resources
+templates:
+  - templates/cert-manager/serving-cert.yaml
+  - templates/cert-manager/selfsigned-issuer.yaml
+release:
+  name: test-release
+  namespace: test-ns
+tests:
+  - it: should render Certificate when certManager is enabled
+    set:
+      certManager.enable: true
+    template: templates/cert-manager/serving-cert.yaml
+    asserts:
+      - containsDocument:
+          kind: Certificate
+          apiVersion: cert-manager.io/v1
+
+  - it: should render Issuer when certManager is enabled
+    set:
+      certManager.enable: true
+    template: templates/cert-manager/selfsigned-issuer.yaml
+    asserts:
+      - containsDocument:
+          kind: Issuer
+          apiVersion: cert-manager.io/v1
+
+  - it: should not render when certManager is disabled
+    set:
+      certManager.enable: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should set correct Certificate name
+    set:
+      certManager.enable: true
+    template: templates/cert-manager/serving-cert.yaml
+    asserts:
+      - equal:
+          path: metadata.name
+          value: test-release-perses-operator-serving-cert
+
+  - it: should set correct Issuer name
+    set:
+      certManager.enable: true
+    template: templates/cert-manager/selfsigned-issuer.yaml
+    asserts:
+      - equal:
+          path: metadata.name
+          value: test-release-perses-operator-selfsigned-issuer
+
+  - it: should configure DNS names for the webhook service
+    set:
+      certManager.enable: true
+    template: templates/cert-manager/serving-cert.yaml
+    asserts:
+      - contains:
+          path: spec.dnsNames
+          content: test-release-perses-operator-webhook-service.test-ns.svc
+      - contains:
+          path: spec.dnsNames
+          content: test-release-perses-operator-webhook-service.test-ns.svc.cluster.local
+
+  - it: should reference the selfsigned issuer
+    set:
+      certManager.enable: true
+    template: templates/cert-manager/serving-cert.yaml
+    asserts:
+      - equal:
+          path: spec.issuerRef.kind
+          value: Issuer
+      - equal:
+          path: spec.issuerRef.name
+          value: test-release-perses-operator-selfsigned-issuer
