@@ -1326,4 +1326,36 @@ entries:
     urls:
     - https://github.com/perses/helm-charts/releases/download/perses-0.1.0/perses-0.1.0.tgz
     version: 0.1.0
-generated: "2026-02-26T10:47:35.44117287Z"
+  perses-operator:
+  - annotations:
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/perses/helm-charts
+        - name: Upstream Project
+          url: https://github.com/perses/perses-operator
+    apiVersion: v2
+    appVersion: 0.2.0
+    created: "2026-03-02T16:39:36.567749185Z"
+    description: A Helm chart for the Perses Operator - manages Perses instances and
+      dashboards on Kubernetes
+    digest: c5a22635e9cf3025e94c89a79e639cc3521752a6e33d9b8149257bfa14a8ad7c
+    home: https://github.com/perses/perses-operator
+    icon: https://raw.githubusercontent.com/perses/perses-operator/main/docs/logos/perses-operator-logo.png
+    keywords:
+    - kubernetes
+    - operator
+    - perses
+    - monitoring
+    - dashboards
+    maintainers:
+    - name: perses
+      url: https://github.com/perses
+    name: perses-operator
+    sources:
+    - https://github.com/perses/perses-operator
+    type: application
+    urls:
+    - https://github.com/perses/helm-charts/releases/download/perses-operator-0.1.0/perses-operator-0.1.0.tgz
+    version: 0.1.0
+generated: "2026-03-02T16:39:36.567842268Z"
