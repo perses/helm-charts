@@ -50,6 +50,11 @@ jobs:
       - name: run chart-testing (install)
         run: ct install --all
 
+      # Clean up cluster-scoped CRDs left by ct install (kept due to resource-policy: keep)
+      - name: clean up CRDs from chart-testing
+        run: |
+          kubectl delete crd -l app.kubernetes.io/managed-by=Helm --ignore-not-found
+
       # Test upgrade from the latest published release to the current PR branch
       - name: test helm upgrade from latest release
         run: |
