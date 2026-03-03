@@ -40,6 +40,14 @@ jobs:
         with:
           enable_go: true
 
+      # Test perses-operator without cert-manager (certManager.enable=false)
+      - name: test perses-operator without cert-manager
+        run: |
+          helm install perses-operator-no-cm charts/perses-operator \
+            --set certManager.enable=false --wait --timeout 120s
+          helm test perses-operator-no-cm
+          helm uninstall perses-operator-no-cm --wait
+
       # perses-operator chart requires cert-manager for webhook and metrics TLS certificates
       - name: install cert-manager
         run: |

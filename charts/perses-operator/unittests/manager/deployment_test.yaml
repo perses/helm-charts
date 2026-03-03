@@ -149,7 +149,9 @@ tests:
           path: spec.template.spec.containers[1].securityContext.capabilities.drop[0]
           value: ALL
 
-  - it: should configure webhook cert volume as read-only from correct secret
+  - it: should configure webhook cert volume when certManager is enabled
+    set:
+      certManager.enable: true
     asserts:
       - equal:
           path: spec.template.spec.containers[0].volumeMounts[0].mountPath
@@ -160,3 +162,12 @@ tests:
       - equal:
           path: spec.template.spec.volumes[0].secret.secretName
           value: test-release-perses-operator-webhook-server-cert
+
+  - it: should not mount cert volume when certManager is disabled
+    set:
+      certManager.enable: false
+    asserts:
+      - isNull:
+          path: spec.template.spec.containers[0].volumeMounts
+      - isNull:
+          path: spec.template.spec.volumes
