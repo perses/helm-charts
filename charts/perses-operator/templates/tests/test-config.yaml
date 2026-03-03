@@ -86,12 +86,14 @@ data:
         [ "$output" = "kube-rbac-proxy" ]
     }
 
+    {{- if .Values.certManager.enable }}
     @test "Verify webhook cert volume is mounted read-only" {
         run kubectl get pod -l control-plane=controller-manager -n {{ .Release.Namespace }} \
           -o jsonpath='{.items[0].spec.containers[0].volumeMounts[0].readOnly}'
         [ "$status" -eq 0 ]
         [ "$output" = "true" ]
     }
+    {{- end }}
 
     {{- if .Values.prometheus.enable }}
     @test "Verify that the ServiceMonitor exists" {

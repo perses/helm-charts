@@ -85,10 +85,12 @@ spec:
                     {{- else }}
                     {}
                     {{- end }}
+                  {{- if .Values.certManager.enable }}
                   volumeMounts:
                     - mountPath: /tmp/k8s-webhook-server/serving-certs
                       name: cert
                       readOnly: true
+                  {{- end }}
                 - args:
                     - --secure-listen-address=0.0.0.0:8443
                     - --upstream=http://127.0.0.1:8080/
@@ -106,8 +108,10 @@ spec:
                     {{- toYaml .Values.kubeRbacProxy.securityContext | nindent 20 }}
             serviceAccountName: {{ include "perses-operator.resourceName" (dict "suffix" "controller-manager" "context" $) }}
             terminationGracePeriodSeconds: 10
+            {{- if .Values.certManager.enable }}
             volumes:
                 - name: cert
                   secret:
                     defaultMode: 420
                     secretName: {{ include "perses-operator.resourceName" (dict "suffix" "webhook-server-cert" "context" $) }}
+            {{- end }}

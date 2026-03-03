@@ -71,11 +71,11 @@ kind-delete: ## Delete the kind cluster.
 	@kind delete cluster --name $(KIND_CLUSTER_NAME)
 
 .PHONY: helm-local-install
-helm-local-install: helm ## Install charts locally. Use CHART=charts/<name> to install a single chart.
+helm-local-install: helm ## Install charts locally. Use CHART=charts/<name> and HELM_EXTRA_ARGS="--set key=val" for overrides.
 	@for chart in $(or $(CHART),$(CHARTS)); do \
 		release=$$(basename $$chart); \
 		echo ">> installing $$chart as $$release"; \
-		$(HELM) install $$release $$chart --wait --timeout 120s; \
+		$(HELM) install $$release $$chart --wait --timeout 120s $(HELM_EXTRA_ARGS); \
 	done
 
 .PHONY: helm-local-uninstall
