@@ -10,10 +10,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Bump appVersion to `0.3.0` (perses-operator v0.3.0).
 - Sync all CRDs from upstream perses-operator v0.3.0, including new `PersesGlobalDatasource` CRD.
+- Generate self-signed TLS certificate when `certManager.enable=false` so the operator webhook server can start without cert-manager.
+- CRD conversion webhooks are now conditional on `certManager.enable`.
 
 ### Deprecated
 
-- CRD API version `perses.dev/v1alpha1` is deprecated in favor of `perses.dev/v1alpha2`. Existing v1alpha1 resources are automatically converted via the webhook. Users should migrate their manifests to `v1alpha2`.
+- CRD API version `perses.dev/v1alpha1` is deprecated in favor of `perses.dev/v1alpha2`. Existing v1alpha1 resources are automatically converted via the conversion webhook when cert-manager is enabled. Users should migrate their manifests to `v1alpha2`.
 
 ## [0.1.1]
 

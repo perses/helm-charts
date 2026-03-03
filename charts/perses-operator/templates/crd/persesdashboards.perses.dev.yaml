@@ -13,6 +13,7 @@ metadata:
     controller-gen.kubebuilder.io/version: v0.20.0
   name: persesdashboards.perses.dev
 spec:
+  {{- if .Values.certManager.enable }}
   conversion:
     strategy: Webhook
     webhook:
@@ -23,6 +24,7 @@ spec:
           path: /convert
       conversionReviewVersions:
         - v1
+  {{- end }}
   group: perses.dev
   names:
     kind: PersesDashboard

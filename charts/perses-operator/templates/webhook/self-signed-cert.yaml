@@ -1,0 +1,19 @@
+{{- if not .Values.certManager.enable }}
+{{- $svcName := include "perses-operator.resourceName" (dict "suffix" "webhook-service" "context" $) }}
+{{- $cert := genSelfSignedCert (printf "%s.%s.svc" $svcName .Release.Namespace) nil (list (printf "%s.%s.svc" $svcName .Release.Namespace) (printf "%s.%s.svc.cluster.local" $svcName .Release.Namespace)) 3650 }}
+apiVersion: v1
+kind: Secret
+metadata:
+    labels:
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+        app.kubernetes.io/name: {{ include "perses-operator.name" . }}
+        helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    name: {{ include "perses-operator.resourceName" (dict "suffix" "webhook-server-cert" "context" $) }}
+    namespace: {{ .Release.Namespace }}
+type: kubernetes.io/tls
+data:
+    tls.crt: {{ $cert.Cert | b64enc }}
+    tls.key: {{ $cert.Key | b64enc }}
+    ca.crt: {{ $cert.Cert | b64enc }}
+{{- end }}

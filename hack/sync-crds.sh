@@ -38,7 +38,8 @@ HELM_ANNOTATIONS='    {{- if .Values.crd.keep }}
     cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/{{ include "perses-operator.resourceName" (dict "suffix" "serving-cert" "context" $) }}
     {{- end }}'
 
-WEBHOOK_CONVERSION='  conversion:
+WEBHOOK_CONVERSION='  {{- if .Values.certManager.enable }}
+  conversion:
     strategy: Webhook
     webhook:
       clientConfig:
@@ -47,7 +48,8 @@ WEBHOOK_CONVERSION='  conversion:
           namespace: {{ .Release.Namespace }}
           path: /convert
       conversionReviewVersions:
-        - v1'
+        - v1
+  {{- end }}'
 
 for line in "${FILES[@]}"; do
   DESTINATION=$(echo "${line%%:*}" | xargs)

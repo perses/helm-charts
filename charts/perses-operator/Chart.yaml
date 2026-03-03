@@ -27,6 +27,10 @@ annotations:
       description: Sync all CRDs from upstream perses-operator v0.3.0
     - kind: added
       description: Add PersesGlobalDatasource CRD
+    - kind: changed
+      description: Generate self-signed TLS cert when cert-manager is disabled
+    - kind: changed
+      description: CRD conversion webhooks are now conditional on certManager.enable
     - kind: deprecated
       description: CRDs now default to perses.dev/v1alpha2; v1alpha1 is deprecated
   "artifacthub.io/license": Apache-2.0
