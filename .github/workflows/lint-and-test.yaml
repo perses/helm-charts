@@ -47,6 +47,7 @@ jobs:
             --set certManager.enable=false --wait --timeout 120s
           helm test perses-operator-no-cm
           helm uninstall perses-operator-no-cm --wait
+          kubectl delete crd -l app.kubernetes.io/managed-by=Helm --ignore-not-found
 
       # perses-operator chart requires cert-manager for webhook and metrics TLS certificates
       - name: install cert-manager
