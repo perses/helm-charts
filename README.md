@@ -54,7 +54,7 @@ See the [Developer Guide](./DEVELOPER_GUIDE.md) for local setup, testing, docume
 
 <!-- Keep full URL links to repo files because this README syncs from main to gh-pages.  -->
 
-We'd love to have you contribute! Please refer to our [contribution guidelines](https://github.com/perses/perses/blob/main/CONTRIBUTING.md) for details.
+We'd love to have you contribute! Please refer to our [contribution guidelines](https://github.com/perses/helm-charts/blob/main/CONTRIBUTING.md) for details.
 
 ## License
 

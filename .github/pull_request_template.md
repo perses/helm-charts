@@ -1,14 +1,31 @@
 <!--
   See the contributing guide for detailed guidance about contributing.
-  https://github.com/perses/perses/blob/main/CONTRIBUTING.md
+  https://github.com/perses/helm-charts/blob/main/CONTRIBUTING.md
 -->
 
 # Description
 
-<!-- Context useful to a reviewer -->
+<!-- What does this PR do and why? -->
 
-# Checklist
+Closes: #ISSUE-NUMBER
 
-- [ ] Pull request has a descriptive title and context useful to a reviewer.
-- [ ] Pull request title follows the `[<catalog_entry>] <commit message>` naming convention using one of the following `catalog_entry` values: `FEATURE`, `ENHANCEMENT`, `BUGFIX`, `BREAKINGCHANGE`, `IGNORE`.
-- [ ] All commits have [DCO signoffs](https://github.com/probot/dco#how-it-works).
+## Type of change
+
+- [ ] `FEATURE` (new functionality)
+- [ ] `ENHANCEMENT` (improves existing functionality)
+- [ ] `BUGFIX` (fixes an issue)
+- [ ] `BREAKINGCHANGE` (existing functionality no longer works as expected)
+- [ ] `DOC` (documentation only)
+- [ ] `IGNORE` (tooling, build system, CI, etc.)
+
+## Verification
+
+- [ ] `make helm-validate` passes
+- [ ] `make helm-unit-test` passes
+- [ ] `make update-helm-readme` passes
+- [ ] Manual testing (e.g. `make helm-test`)
+
+## Checklist
+
+- [ ] Descriptive title following `[<catalog_entry>] <commit message>` convention
+- [ ] All commits have [DCO signoffs](https://github.com/probot/dco#how-it-works)
