@@ -27,8 +27,7 @@ FILES=(
   "perses.perses.dev.yaml            : perses.dev_perses.yaml            : yes"
   "persesdashboards.perses.dev.yaml  : perses.dev_persesdashboards.yaml  : yes"
   "persesdatasources.perses.dev.yaml : perses.dev_persesdatasources.yaml : no"
-  # Uncomment when available in a future release
-  # "persesglobaldatasources.perses.dev.yaml : perses.dev_persesglobaldatasources.yaml : yes"
+  "persesglobaldatasources.perses.dev.yaml : perses.dev_persesglobaldatasources.yaml : yes"
 )
 
 # Helm template snippets (matching upstream 2-space indentation)
@@ -98,4 +97,4 @@ for line in "${FILES[@]}"; do
   } > "${FILE}"
 done
 
-echo "CRD sync complete. Please review the changes and run 'helm lint' to validate."
+echo "CRD sync complete. Please review the changes and run 'make helm-validate' to validate."
