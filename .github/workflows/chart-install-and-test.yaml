@@ -49,3 +49,21 @@ jobs:
 
       - name: run chart-testing (install)
         run: ct install --all
+
+      # Test upgrade from the latest published release to the current PR branch
+      - name: test helm upgrade from latest release
+        run: |
+          helm repo add perses https://perses.github.io/helm-charts
+          helm repo update
+          for chart in charts/*/; do
+            chart_name=$(basename "$chart")
+            if helm search repo "perses/$chart_name" --output json | jq -e 'length > 0' > /dev/null 2>&1; then
+              echo "Testing upgrade for $chart_name"
+              helm install "$chart_name" "perses/$chart_name" --wait --timeout 120s
+              helm upgrade "$chart_name" "$chart" --wait --timeout 120s
+              helm test "$chart_name"
+              helm uninstall "$chart_name" --wait
+            else
+              echo "Skipping $chart_name: no previous release found in repo"
+            fi
+          done
