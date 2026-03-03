@@ -1,4 +1,4 @@
-name: lint and test
+name: chart install and test
 
 on:
   pull_request:
@@ -32,14 +32,6 @@ jobs:
           make sync-crds
           git diff --exit-code -- charts/perses-operator/templates/crd/
 
-      - name: run helm unit tests
-        run: make helm-unit-test
-
-      - uses: perses/github-actions@v0.11.0
-      - uses: ./.github/perses-ci/actions/setup_environment
-        with:
-          enable_go: true
-
       # Test perses-operator without cert-manager (certManager.enable=false)
       - name: test perses-operator without cert-manager
         run: |
@@ -57,8 +49,3 @@ jobs:
 
       - name: run chart-testing (install)
         run: ct install --all
-      - name: install mdox
-        run: go install github.com/bwplotka/mdox@latest
-
-      - name: run chart README lint
-        run: make update-helm-readme && make checkdocs

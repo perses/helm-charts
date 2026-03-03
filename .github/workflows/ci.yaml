@@ -1,0 +1,32 @@
+name: ci
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: perses/github-actions@v0.11.0
+      - uses: ./.github/perses-ci/actions/setup_environment
+        with:
+          enable_go: true
+
+      - name: setup helm
+        uses: azure/setup-helm@v4
+
+      - name: verify chart docs are up to date
+        run: make update-helm-readme && make checkdocs
+
+      - name: run helm validate
+        run: make helm-validate
+
+      - name: run helm unit tests
+        run: make helm-unit-test
