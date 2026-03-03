@@ -49,12 +49,10 @@ data:
         [ "$status" -eq 0 ]
     }
 
-    {{/* Uncomment when persesglobaldatasources is available upstream
     @test "Verify that PersesGlobalDatasource CRD is installed" {
         run kubectl get crd persesglobaldatasources.perses.dev
         [ "$status" -eq 0 ]
     }
-    */}}
 
     @test "Verify CRDs have keep resource-policy annotation" {
         run kubectl get crd perses.perses.dev -o jsonpath='{.metadata.annotations.helm\.sh/resource-policy}'

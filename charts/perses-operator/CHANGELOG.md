@@ -2,6 +2,19 @@
 
 All notable changes to the perses-operator Helm chart will be documented in this file.
 
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+
+## [0.2.0]
+
+### Changed
+
+- Bump appVersion to `0.3.0` (perses-operator v0.3.0).
+- Sync all CRDs from upstream perses-operator v0.3.0, including new `PersesGlobalDatasource` CRD.
+
+### Deprecated
+
+- CRD API version `perses.dev/v1alpha1` is deprecated in favor of `perses.dev/v1alpha2`. Existing v1alpha1 resources are automatically converted via the webhook. Users should migrate their manifests to `v1alpha2`.
+
 ## [0.1.1]
 
 ### Fixed
