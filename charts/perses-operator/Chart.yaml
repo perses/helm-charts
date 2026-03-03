@@ -5,7 +5,7 @@ icon: https://raw.githubusercontent.com/perses/perses-operator/main/docs/logos/p
 type: application
 
 version: 0.1.1
-appVersion: "0.2.0"
+appVersion: "0.3.0"
 
 home: https://github.com/perses/perses-operator
 sources:
