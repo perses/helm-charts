@@ -13,37 +13,43 @@
 
 include Makefile.tools
 
+.PHONY: help
+help: ## Show available targets with descriptions.
+	@grep -hE '^[a-zA-Z_-]+:.*##' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*## "}; {printf "  \033[36m%-22s\033[0m %s\n", $$1, $$2}'
+
+.DEFAULT_GOAL := help
+
 GO                    ?= go
 CONTAINER_CLI         ?= docker
 CHARTS                := $(wildcard charts/*)
 
 .PHONY: checkdocs
-checkdocs:
+checkdocs: ## Verify markdown docs are formatted and up to date.
 	@echo ">> check format markdown docs"
 	@make fmt-docs
 	@git diff --exit-code -- *.md
 
 .PHONY: fmt-docs
-fmt-docs: mdox
+fmt-docs: mdox ## Format and validate markdown docs.
 	@echo ">> format markdown document"
 	$(MDOX) fmt --soft-wraps -l $$(find . -name '*.md' -not -path './docs/*' -print) --links.validate.config-file=./.mdox.validate.yaml
 
 .PHONY: helm-lint
-helm-lint: helm
+helm-lint: helm ## Run helm lint --strict on all charts.
 	@for chart in $(CHARTS); do \
 		echo ">> linting $$chart"; \
 		$(HELM) lint --strict $$chart; \
 	done
 
 .PHONY: helm-template
-helm-template: helm
+helm-template: helm ## Render all chart templates locally.
 	@for chart in $(CHARTS); do \
 		echo ">> rendering $$chart"; \
 		$(HELM) template test-release $$chart > /dev/null; \
 	done
 
 .PHONY: helm-validate
-helm-validate: helm-lint helm-template
+helm-validate: helm-lint helm-template ## Run lint and template validation on all charts.
 
 .PHONY: helm-unit-test
 helm-unit-test: helm-unittest ## Run helm unit tests. Use CHART=charts/<name> to test a single chart.
@@ -103,7 +109,7 @@ sync-crds: ## Sync CRDs from perses-operator (version from Chart.yaml appVersion
 	@./hack/sync-crds.sh
 
 .PHONY: update-helm-readme
-update-helm-readme:
+update-helm-readme: ## Regenerate chart READMEs using helm-docs.
 	@for chart in $(CHARTS); do \
 		echo ">> generating docs for $$chart"; \
 		$(CONTAINER_CLI) run --rm --volume "$$(pwd)/$$chart:/helm-docs" -u $$(id -u) jnorwood/helm-docs:latest; \

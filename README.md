@@ -32,9 +32,7 @@ For detailed configuration options, see the [Perses chart documentation](./chart
 
 This chart deploys the [Perses Operator](https://github.com/perses/perses-operator) on Kubernetes. It installs the operator along with CRDs, RBAC, cert-manager integration, and webhook configuration to manage Perses instances, dashboards, and data sources declaratively via custom resources.
 
-By default, the chart requires [cert-manager](https://cert-manager.io/docs/installation/) to be installed in the cluster for webhook and metrics TLS certificates.
-
-Install the Perses Operator with default configuration (requires cert-manager):
+Install the Perses Operator with default configuration (requires [cert-manager](https://cert-manager.io/docs/installation/) in the cluster):
 
 ```console
 helm install perses-operator perses/perses-operator
