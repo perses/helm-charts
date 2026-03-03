@@ -10,6 +10,10 @@ This guide covers setting up your local environment, common development tasks, a
 - [Kind](https://kind.sigs.k8s.io/docs/user/quick-start/#installation) (for local testing)
 - [kubectl](https://kubernetes.io/docs/tasks/tools/)
 
+## Available Make Targets
+
+Run `make` or `make help` to see all available targets with descriptions.
+
 ## Tool Management
 
 Tools are managed via `Makefile.tools`. They are installed to the local `bin/` directory and pinned to specific versions.
