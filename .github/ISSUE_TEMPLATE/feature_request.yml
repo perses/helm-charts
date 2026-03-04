@@ -5,11 +5,21 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you for opening a feature request for Perses.
+        Thank you for opening a feature request for Perses Helm Charts.
 
         Please do *NOT* ask support questions in Github issues.
 
         If your issue is not a feature request or bug report use [Discussions](https://github.com/perses/perses/discussions).
+  - type: dropdown
+    attributes:
+      label: Chart
+      description: Which chart does this relate to?
+      options:
+        - perses
+        - perses-operator
+        - new chart
+    validations:
+      required: true
   - type: textarea
     attributes:
       label: Proposal

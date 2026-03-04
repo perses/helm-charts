@@ -5,11 +5,20 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you for opening a bug report for Perses.
+        Thank you for opening a bug report for Perses Helm Charts.
 
         Please do *NOT* ask support questions in Github issues.
 
         If your issue is not a feature request or bug report use [Discussions](https://github.com/perses/perses/discussions).
+  - type: dropdown
+    attributes:
+      label: Chart
+      description: Which chart is affected?
+      options:
+        - perses
+        - perses-operator
+    validations:
+      required: true
   - type: textarea
     attributes:
       label: What did you do?
@@ -30,23 +39,26 @@ body:
         ## Environment
   - type: input
     attributes:
-      label: System information
-      description: insert output of `uname -srm` here, or operating system version
-      placeholder: e.g. Linux 5.16.15 x86_64
+      label: Chart version
+      description: Output of `helm list` or the chart version you installed.
+      placeholder: e.g. 0.1.0
+  - type: input
+    attributes:
+      label: Kubernetes version
+      description: Output of `kubectl version --short`.
+      placeholder: e.g. v1.31.0
+  - type: input
+    attributes:
+      label: Helm version
+      description: Output of `helm version --short`.
+      placeholder: e.g. v3.17.1
   - type: textarea
     attributes:
-      label: Perses version
-      description: Insert the Perses version here.
-      render: text
-      placeholder: |
-        e.g. 0.39.0
-  - type: textarea
-    attributes:
-      label: Perses configuration file
-      description: Insert relevant configuration here. Don't forget to remove secrets.
+      label: Values used
+      description: Insert the values overrides you used (helm install --set or values file). Don't forget to remove secrets.
       render: yaml
   - type: textarea
     attributes:
       label: Logs
-      description: Insert Perses logs relevant to the issue here.
+      description: Insert relevant pod logs or Helm output here.
       render: text
