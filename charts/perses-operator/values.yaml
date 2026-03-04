@@ -75,9 +75,9 @@ manager:
 kubeRbacProxy:
   image:
     # -- Kube RBAC Proxy image repository
-    repository: gcr.io/kubebuilder/kube-rbac-proxy
+    repository: quay.io/brancz/kube-rbac-proxy
     # -- Kube RBAC Proxy image tag
-    tag: v0.13.1
+    tag: v0.21.0
   # -- Kube RBAC Proxy resource limits and requests
   resources:
     limits:

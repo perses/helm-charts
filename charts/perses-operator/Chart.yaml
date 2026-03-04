@@ -31,6 +31,8 @@ annotations:
       description: Generate self-signed TLS cert when cert-manager is disabled
     - kind: changed
       description: CRD conversion webhooks are now conditional on certManager.enable
+    - kind: changed
+      description: Bump kube-rbac-proxy from v0.13.1 to v0.21.0 for CVE fixes
     - kind: deprecated
       description: CRDs now default to perses.dev/v1alpha2; v1alpha1 is deprecated
   "artifacthub.io/license": Apache-2.0

@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for your interest in contributing! This guide covers the contribution workflow 
+Thank you for your interest in contributing! This guide covers the contribution workflow
 for this repository.
 
 We are using GitHub as our main development and discussion forum.

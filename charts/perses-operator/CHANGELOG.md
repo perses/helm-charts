@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Sync all CRDs from upstream perses-operator v0.3.0, including new `PersesGlobalDatasource` CRD.
 - Generate self-signed TLS certificate when `certManager.enable=false` so the operator webhook server can start without cert-manager.
 - CRD conversion webhooks are now conditional on `certManager.enable`.
+- Bump kube-rbac-proxy from `v0.13.1` to `v0.21.0` for CVE fixes.
 
 ### Deprecated
 
