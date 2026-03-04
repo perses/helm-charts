@@ -108,7 +108,18 @@ The `chart-install-and-test` workflow runs on every pull request that modifies f
 3. Runs `ct install --all` (chart-testing: installs each chart and runs `helm test`)
 4. Validates chart READMEs are up to date
 
-## Syncing perses-operator CRDs from Upstream
+## Bumping perses-operator Version
+
+When a new perses-operator version is released:
+
+1. Update `charts/perses-operator/Chart.yaml` — set `appVersion` to the new operator version and bump `version` (chart version)
+2. Update `charts/perses-operator/values.yaml` — set `manager.image.tag` to match the new `appVersion`
+3. Run `make sync-crds` — syncs CRDs from upstream (see below)
+4. Update `charts/perses-operator/CHANGELOG.md` and `artifacthub.io/changes` in `Chart.yaml`
+5. Run `make update-helm-readme` — regenerates README
+6. Run `make helm-validate` and `make helm-unit-test` — validates and tests
+
+### CRD Syncing
 
 The perses-operator CRDs in `charts/perses-operator/templates/crd/` are sourced from the [perses-operator](https://github.com/perses/perses-operator) repository (`config/crd/bases/`). The script at `hack/sync-crds.sh` follows the same pattern as the [kube-prometheus-stack CRD updater](https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/hack/update_crds.sh) -- it downloads each CRD individually and wraps it with the necessary Helm templating:
 
@@ -126,9 +137,7 @@ Currently synced CRDs:
 | `perses.dev_persesdatasources.yaml`       | `persesdatasources.perses.dev.yaml`       | no      |
 | `perses.dev_persesglobaldatasources.yaml` | `persesglobaldatasources.perses.dev.yaml` | yes     |
 
-The script reads `appVersion` from `charts/perses-operator/Chart.yaml` to determine which release tag to download from. To sync a different version, update `appVersion` in `Chart.yaml` first.
-
-### Usage
+The script reads `appVersion` from `charts/perses-operator/Chart.yaml` to determine which release tag to download from.
 
 ```bash
 make sync-crds

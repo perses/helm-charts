@@ -13,7 +13,7 @@ manager:
     # -- Container image repository
     repository: docker.io/persesdev/perses-operator
     # -- Container image tag
-    tag: v0.3.0
+    tag: v0.3.1
     # -- Image pull policy
     pullPolicy: IfNotPresent
 
