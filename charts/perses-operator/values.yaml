@@ -13,7 +13,7 @@ manager:
     # -- Container image repository
     repository: docker.io/persesdev/perses-operator
     # -- Container image tag
-    tag: v0.2.0
+    tag: v0.3.1
     # -- Image pull policy
     pullPolicy: IfNotPresent
 
@@ -75,9 +75,9 @@ manager:
 kubeRbacProxy:
   image:
     # -- Kube RBAC Proxy image repository
-    repository: gcr.io/kubebuilder/kube-rbac-proxy
+    repository: quay.io/brancz/kube-rbac-proxy
     # -- Kube RBAC Proxy image tag
-    tag: v0.13.1
+    tag: v0.21.0
   # -- Kube RBAC Proxy resource limits and requests
   resources:
     limits:

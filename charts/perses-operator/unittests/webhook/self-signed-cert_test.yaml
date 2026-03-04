@@ -1,0 +1,32 @@
+suite: self-signed certificate
+templates:
+  - templates/webhook/self-signed-cert.yaml
+release:
+  name: test-release
+  namespace: test-ns
+tests:
+  - it: should create a self-signed cert Secret when certManager is disabled
+    set:
+      certManager.enable: false
+    asserts:
+      - isKind:
+          of: Secret
+      - equal:
+          path: type
+          value: kubernetes.io/tls
+      - equal:
+          path: metadata.name
+          value: test-release-perses-operator-webhook-server-cert
+      - isNotEmpty:
+          path: data["tls.crt"]
+      - isNotEmpty:
+          path: data["tls.key"]
+      - isNotEmpty:
+          path: data["ca.crt"]
+
+  - it: should not create a Secret when certManager is enabled
+    set:
+      certManager.enable: true
+    asserts:
+      - hasDocuments:
+          count: 0

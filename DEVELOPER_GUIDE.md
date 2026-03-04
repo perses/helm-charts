@@ -101,14 +101,25 @@ make helm-test CHART=charts/perses-operator    # Single chart
 
 ### CI Testing
 
-The `lint-and-test` workflow runs on every pull request that modifies files under `charts/`. It:
+The `chart-install-and-test` workflow runs on every pull request that modifies files under `charts/`. It:
 
 1. Sets up a Kind cluster
 2. Installs cert-manager
 3. Runs `ct install --all` (chart-testing: installs each chart and runs `helm test`)
 4. Validates chart READMEs are up to date
 
-## Syncing CRDs from Upstream
+## Bumping perses-operator Version
+
+When a new perses-operator version is released:
+
+1. Update `charts/perses-operator/Chart.yaml` — set `appVersion` to the new operator version and bump `version` (chart version)
+2. Update `charts/perses-operator/values.yaml` — set `manager.image.tag` to match the new `appVersion`
+3. Run `make sync-crds` — syncs CRDs from upstream (see below)
+4. Update `charts/perses-operator/CHANGELOG.md` and `artifacthub.io/changes` in `Chart.yaml`
+5. Run `make update-helm-readme` — regenerates README
+6. Run `make helm-validate` and `make helm-unit-test` — validates and tests
+
+### CRD Syncing
 
 The perses-operator CRDs in `charts/perses-operator/templates/crd/` are sourced from the [perses-operator](https://github.com/perses/perses-operator) repository (`config/crd/bases/`). The script at `hack/sync-crds.sh` follows the same pattern as the [kube-prometheus-stack CRD updater](https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/hack/update_crds.sh) -- it downloads each CRD individually and wraps it with the necessary Helm templating:
 
@@ -119,17 +130,14 @@ The perses-operator CRDs in `charts/perses-operator/templates/crd/` are sourced 
 
 Currently synced CRDs:
 
-| Upstream file                       | Destination                         | Webhook |
-|-------------------------------------|-------------------------------------|---------|
-| `perses.dev_perses.yaml`            | `perses.perses.dev.yaml`            | yes     |
-| `perses.dev_persesdashboards.yaml`  | `persesdashboards.perses.dev.yaml`  | yes     |
-| `perses.dev_persesdatasources.yaml` | `persesdatasources.perses.dev.yaml` | no      |
+| Upstream file                             | Destination                               | Webhook |
+|-------------------------------------------|-------------------------------------------|---------|
+| `perses.dev_perses.yaml`                  | `perses.perses.dev.yaml`                  | yes     |
+| `perses.dev_persesdashboards.yaml`        | `persesdashboards.perses.dev.yaml`        | yes     |
+| `perses.dev_persesdatasources.yaml`       | `persesdatasources.perses.dev.yaml`       | no      |
+| `perses.dev_persesglobaldatasources.yaml` | `persesglobaldatasources.perses.dev.yaml` | yes     |
 
-> **Note:** `persesglobaldatasources` is not yet available upstream and is commented out in the script. Uncomment when a future release includes it.
-
-The script reads `appVersion` from `charts/perses-operator/Chart.yaml` to determine which release tag to download from. To sync a different version, update `appVersion` in `Chart.yaml` first.
-
-### Usage
+The script reads `appVersion` from `charts/perses-operator/Chart.yaml` to determine which release tag to download from.
 
 ```bash
 make sync-crds
@@ -149,6 +157,8 @@ make update-helm-readme
 
 This runs `helm-docs` (via Docker) for each chart followed by `mdox fmt` to format all markdown files.
 
+CI runs `make update-helm-readme && make checkdocs` to verify there are no uncommitted changes to markdown files after regeneration.
+
 ### Writing Value Descriptions
 
 Use the `# --` comment style in `values.yaml` so helm-docs picks up descriptions:
@@ -160,14 +170,6 @@ enable: true
 
 Each chart has a `README.md.gotmpl` template that controls the generated README structure. Edit the template to change sections like prerequisites, install instructions, etc.
 
-### Checking Docs
-
-```bash
-make checkdocs
-```
-
-This formats all docs and verifies there are no uncommitted changes to markdown files.
-
 ## Adding a New Chart
 
 1. Create the chart under `charts/<chart-name>/`
@@ -175,7 +177,7 @@ This formats all docs and verifies there are no uncommitted changes to markdown 
 3. Use `# --` comments in `values.yaml` for value descriptions
 4. Add helm integration tests under `templates/tests/`
 5. Add helm unit tests under `unittests/` and add `unittests/` to `.helmignore`
-6. Run `make update-helm-readme` to generate the README
+6. Run `make update-helm-readme` to generate docs and formatting
 7. Update `.github/CODEOWNERS` with ownership
 8. Update `renovate.json` if the chart tracks an `appVersion` from a container image
 9. Run `make helm-validate`, `make helm-unit-test CHART=charts/<chart-name>`, and `make helm-test CHART=charts/<chart-name>` to verify

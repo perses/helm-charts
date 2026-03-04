@@ -27,8 +27,7 @@ FILES=(
   "perses.perses.dev.yaml            : perses.dev_perses.yaml            : yes"
   "persesdashboards.perses.dev.yaml  : perses.dev_persesdashboards.yaml  : yes"
   "persesdatasources.perses.dev.yaml : perses.dev_persesdatasources.yaml : no"
-  # Uncomment when available in a future release
-  # "persesglobaldatasources.perses.dev.yaml : perses.dev_persesglobaldatasources.yaml : yes"
+  "persesglobaldatasources.perses.dev.yaml : perses.dev_persesglobaldatasources.yaml : yes"
 )
 
 # Helm template snippets (matching upstream 2-space indentation)
@@ -39,7 +38,8 @@ HELM_ANNOTATIONS='    {{- if .Values.crd.keep }}
     cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/{{ include "perses-operator.resourceName" (dict "suffix" "serving-cert" "context" $) }}
     {{- end }}'
 
-WEBHOOK_CONVERSION='  conversion:
+WEBHOOK_CONVERSION='  {{- if .Values.certManager.enable }}
+  conversion:
     strategy: Webhook
     webhook:
       clientConfig:
@@ -48,7 +48,8 @@ WEBHOOK_CONVERSION='  conversion:
           namespace: {{ .Release.Namespace }}
           path: /convert
       conversionReviewVersions:
-        - v1'
+        - v1
+  {{- end }}'
 
 for line in "${FILES[@]}"; do
   DESTINATION=$(echo "${line%%:*}" | xargs)
@@ -98,4 +99,4 @@ for line in "${FILES[@]}"; do
   } > "${FILE}"
 done
 
-echo "CRD sync complete. Please review the changes and run 'helm lint' to validate."
+echo "CRD sync complete. Please review the changes and run 'make helm-validate' to validate."

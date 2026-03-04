@@ -2,6 +2,22 @@
 
 All notable changes to the perses-operator Helm chart will be documented in this file.
 
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+
+## [0.2.0]
+
+### Changed
+
+- Bump appVersion to `0.3.1` (perses-operator v0.3.1).
+- Sync all CRDs from upstream perses-operator v0.3.1, including new `PersesGlobalDatasource` CRD.
+- Generate self-signed TLS certificate when `certManager.enable=false` so the operator webhook server can start without cert-manager.
+- CRD conversion webhooks are now conditional on `certManager.enable`.
+- Bump kube-rbac-proxy image from `gcr.io/kubebuilder/kube-rbac-proxy:v0.13.1` to `quay.io/brancz/kube-rbac-proxy:v0.21.0` for CVE fixes.
+
+### Deprecated
+
+- CRD API version `perses.dev/v1alpha1` is deprecated in favor of `perses.dev/v1alpha2`. Existing v1alpha1 resources are automatically converted via the conversion webhook when cert-manager is enabled. Users should migrate their manifests to `v1alpha2`.
+
 ## [0.1.1]
 
 ### Fixed

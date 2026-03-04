@@ -3,29 +3,42 @@ name: perses-operator
 description: A Helm chart for the Perses Operator - manages Perses instances and dashboards on Kubernetes
 icon: https://raw.githubusercontent.com/perses/perses-operator/main/docs/logos/perses-operator-logo.png
 type: application
-
-version: 0.1.1
-appVersion: "0.2.0"
-
+version: 0.2.0
+appVersion: "0.3.1"
 home: https://github.com/perses/perses-operator
 sources:
   - https://github.com/perses/perses-operator
-
+  - https://github.com/perses/helm-charts
 maintainers:
   - name: perses
     url: https://github.com/perses
-
-annotations:
-  "artifacthub.io/license": Apache-2.0
-  "artifacthub.io/links": |
-    - name: Chart Source
-      url: https://github.com/perses/helm-charts
-    - name: Upstream Project
-      url: https://github.com/perses/perses-operator
-
 keywords:
   - kubernetes
   - operator
   - perses
   - monitoring
   - dashboards
+  - observability
+annotations:
+  "artifacthub.io/changes": |
+    - kind: changed
+      description: Bump appVersion to 0.3.1 (perses-operator v0.3.1)
+    - kind: changed
+      description: Sync all CRDs from upstream perses-operator v0.3.1
+    - kind: added
+      description: Add PersesGlobalDatasource CRD
+    - kind: changed
+      description: Generate self-signed TLS cert when cert-manager is disabled
+    - kind: changed
+      description: CRD conversion webhooks are now conditional on certManager.enable
+    - kind: changed
+      description: Bump kube-rbac-proxy from gcr.io/kubebuilder/kube-rbac-proxy:v0.13.1 to quay.io/brancz/kube-rbac-proxy:v0.21.0 for CVE fixes
+    - kind: deprecated
+      description: CRDs now default to perses.dev/v1alpha2; v1alpha1 is deprecated
+  "artifacthub.io/license": Apache-2.0
+  "artifacthub.io/links": |
+    - name: Chart Source
+      url: https://github.com/perses/helm-charts
+    - name: Upstream Project
+      url: https://github.com/perses/perses-operator
+  "artifacthub.io/operator": "true"

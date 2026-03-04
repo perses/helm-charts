@@ -27,7 +27,7 @@ To install without cert-manager (not recommended for production):
 helm install perses-operator perses/perses-operator --set certManager.enable=false
 ```
 
-> **Note:** Disabling cert-manager means TLS certificates for webhooks and metrics will not be automatically provisioned. This is suitable for development and testing but not recommended for production. You will need to manage certificates externally if required.
+> **Note:** When cert-manager is disabled, the chart generates a self-signed TLS certificate for the webhook server. CRD conversion webhooks (v1alpha1 <-> v1alpha2) are also disabled, so only `v1alpha2` resources can be used. This is suitable for development and testing but not recommended for production.
 
 ## Uninstalling the Chart
 
@@ -38,6 +38,12 @@ helm delete perses-operator
 ```
 
 > **Note:** CRDs are kept by default when uninstalling. To remove them, set `crd.keep=false` before uninstalling or delete them manually.
+
+## Upgrading
+
+### To 0.2.0
+
+This release updates CRDs to default to `perses.dev/v1alpha2`. The `v1alpha1` API version is deprecated and will be removed in a future release. Existing `v1alpha1` resources are automatically converted via the conversion webhook when cert-manager is enabled. Users should migrate their manifests to use `v1alpha2`.
 
 {{ template "chart.requirementsSection" . }}
 

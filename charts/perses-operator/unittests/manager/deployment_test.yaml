@@ -28,7 +28,7 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: "docker.io/persesdev/perses-operator:v0.2.0"
+          value: "docker.io/persesdev/perses-operator:v0.3.1"
 
   - it: should allow overriding the image
     set:
@@ -149,9 +149,7 @@ tests:
           path: spec.template.spec.containers[1].securityContext.capabilities.drop[0]
           value: ALL
 
-  - it: should configure webhook cert volume when certManager is enabled
-    set:
-      certManager.enable: true
+  - it: should always mount webhook cert volume
     asserts:
       - equal:
           path: spec.template.spec.containers[0].volumeMounts[0].mountPath
@@ -163,11 +161,13 @@ tests:
           path: spec.template.spec.volumes[0].secret.secretName
           value: test-release-perses-operator-webhook-server-cert
 
-  - it: should not mount cert volume when certManager is disabled
+  - it: should mount same cert secret regardless of certManager setting
     set:
       certManager.enable: false
     asserts:
-      - isNull:
-          path: spec.template.spec.containers[0].volumeMounts
-      - isNull:
-          path: spec.template.spec.volumes
+      - equal:
+          path: spec.template.spec.containers[0].volumeMounts[0].mountPath
+          value: /tmp/k8s-webhook-server/serving-certs
+      - equal:
+          path: spec.template.spec.volumes[0].secret.secretName
+          value: test-release-perses-operator-webhook-server-cert
