@@ -1330,6 +1330,43 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: Bump appVersion to 0.3.2 (perses-operator v0.3.2)
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/perses/helm-charts
+        - name: Upstream Project
+          url: https://github.com/perses/perses-operator
+      artifacthub.io/operator: "true"
+    apiVersion: v2
+    appVersion: 0.3.2
+    created: "2026-03-10T15:06:11.779476Z"
+    description: A Helm chart for the Perses Operator - manages Perses instances and
+      dashboards on Kubernetes
+    digest: c1e3ba18def169fc89376d63d13552ee088eb25e1ef88a546e4e9b6e23e55637
+    home: https://github.com/perses/perses-operator
+    icon: https://raw.githubusercontent.com/perses/perses-operator/main/docs/logos/perses-operator-logo.png
+    keywords:
+    - kubernetes
+    - operator
+    - perses
+    - monitoring
+    - dashboards
+    - observability
+    maintainers:
+    - name: perses
+      url: https://github.com/perses
+    name: perses-operator
+    sources:
+    - https://github.com/perses/perses-operator
+    - https://github.com/perses/helm-charts
+    type: application
+    urls:
+    - https://github.com/perses/helm-charts/releases/download/perses-operator-0.2.1/perses-operator-0.2.1.tgz
+    version: 0.2.1
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: Bump appVersion to 0.3.1 (perses-operator v0.3.1)
         - kind: changed
           description: Sync all CRDs from upstream perses-operator v0.3.1
@@ -1438,4 +1475,4 @@ entries:
     urls:
     - https://github.com/perses/helm-charts/releases/download/perses-operator-0.1.0/perses-operator-0.1.0.tgz
     version: 0.1.0
-generated: "2026-03-04T14:05:25.693939469Z"
+generated: "2026-03-10T15:06:11.77964136Z"
