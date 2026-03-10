@@ -28,7 +28,7 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: "docker.io/persesdev/perses-operator:v0.3.1"
+          value: "docker.io/persesdev/perses-operator:v0.3.2"
 
   - it: should allow overriding the image
     set:

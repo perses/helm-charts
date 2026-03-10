@@ -3,8 +3,8 @@ name: perses-operator
 description: A Helm chart for the Perses Operator - manages Perses instances and dashboards on Kubernetes
 icon: https://raw.githubusercontent.com/perses/perses-operator/main/docs/logos/perses-operator-logo.png
 type: application
-version: 0.2.0
-appVersion: "0.3.1"
+version: 0.2.1
+appVersion: "0.3.2"
 home: https://github.com/perses/perses-operator
 sources:
   - https://github.com/perses/perses-operator
@@ -22,19 +22,7 @@ keywords:
 annotations:
   "artifacthub.io/changes": |
     - kind: changed
-      description: Bump appVersion to 0.3.1 (perses-operator v0.3.1)
-    - kind: changed
-      description: Sync all CRDs from upstream perses-operator v0.3.1
-    - kind: added
-      description: Add PersesGlobalDatasource CRD
-    - kind: changed
-      description: Generate self-signed TLS cert when cert-manager is disabled
-    - kind: changed
-      description: CRD conversion webhooks are now conditional on certManager.enable
-    - kind: changed
-      description: Bump kube-rbac-proxy from gcr.io/kubebuilder/kube-rbac-proxy:v0.13.1 to quay.io/brancz/kube-rbac-proxy:v0.21.0 for CVE fixes
-    - kind: deprecated
-      description: CRDs now default to perses.dev/v1alpha2; v1alpha1 is deprecated
+      description: Bump appVersion to 0.3.2 (perses-operator v0.3.2)
   "artifacthub.io/license": Apache-2.0
   "artifacthub.io/links": |
     - name: Chart Source
