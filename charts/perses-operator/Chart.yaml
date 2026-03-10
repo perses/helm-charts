@@ -4,7 +4,7 @@ description: A Helm chart for the Perses Operator - manages Perses instances and
 icon: https://raw.githubusercontent.com/perses/perses-operator/main/docs/logos/perses-operator-logo.png
 type: application
 version: 0.2.0
-appVersion: "0.3.1"
+appVersion: "0.3.2"
 home: https://github.com/perses/perses-operator
 sources:
   - https://github.com/perses/perses-operator
