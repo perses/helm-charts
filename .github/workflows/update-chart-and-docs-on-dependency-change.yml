@@ -85,7 +85,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
 
           if [[ $(git status --porcelain) ]]; then
-            git add .
+            git add charts/ '*.md'
             git commit -m "chore: update generated docs"
             git push origin "${{ github.event.pull_request.head.ref }}"
           else
