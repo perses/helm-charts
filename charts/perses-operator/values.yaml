@@ -77,7 +77,7 @@ kubeRbacProxy:
     # -- Kube RBAC Proxy image repository
     repository: quay.io/brancz/kube-rbac-proxy
     # -- Kube RBAC Proxy image tag
-    tag: v0.21.0
+    tag: v0.21.1
   # -- Kube RBAC Proxy resource limits and requests
   resources:
     limits:
