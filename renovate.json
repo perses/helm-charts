@@ -9,6 +9,7 @@
     "dependencies"
   ],
   "prHourlyLimit": 2,
+  "gitIgnoredAuthors": ["github-actions[bot]@users.noreply.github.com"],
   "customManagers": [
     {
       "customType": "regex",
@@ -47,7 +48,13 @@
       "matchManagers": [
         "regex"
       ],
-      "bumpVersion": "minor"
+      "bumpVersions": [
+        {
+          "filePatterns": ["{{packageFileDir}}/Chart.{yaml,yml}"],
+          "matchStrings": ["version:\\s(?<version>[^\\s]+)"],
+          "bumpType": "{{#if isPatch}}patch{{else if isMajor}}major{{else}}minor{{/if}}"
+        }
+      ]
     }
   ]
 }
