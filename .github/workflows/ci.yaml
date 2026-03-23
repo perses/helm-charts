@@ -20,7 +20,7 @@ jobs:
           enable_go: true
 
       - name: setup helm
-        uses: azure/setup-helm@v4
+        uses: azure/setup-helm@v5
 
       - name: verify chart docs are up to date
         run: make update-helm-readme && make checkdocs
