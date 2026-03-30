@@ -354,6 +354,8 @@ sidecar:
     #   value: both
   # -- Enable secret access permissions in the cluster role. When enabled, the sidecar will have permissions to read secrets and use them.
   enableSecretAccess: false
+  # -- dedicated sidecar container security in case elevated privileges are needed for writing to volumes.
+  securityContext: {}
 
 # -- Persistence parameters
 persistence:

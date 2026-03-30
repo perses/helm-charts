@@ -642,6 +642,11 @@
         },
         "healthPort": {
           "type": "integer"
+        },
+        "securityContext": {
+          "type": "object",
+          "description": "Dedicated sidecar container security in case elevated privileges are needed for writing to volumes.",
+          "additionalProperties": true
         }
       },
       "required": [
