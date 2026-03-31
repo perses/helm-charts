@@ -1,11 +1,13 @@
 name: chart install and test
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     paths:
       - "charts/**"
-    branches:
-      - main
+  merge_group:
 
 jobs:
   helm-lint-and-test:
