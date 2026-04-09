@@ -108,6 +108,7 @@ helm install my-perses perses/perses \
 ```
 
 Optional overrides:
+
 - `gateway.name` / `gateway.namespace`: name/namespace of the Gateway (defaults to `<release>-perses-gateway` in the release namespace)
 - `gateway.listeners`: listener definitions for the Gateway
 - `gateway.httpRoute.rules`: custom match/backends; defaults to PathPrefix `/` to the Perses service
