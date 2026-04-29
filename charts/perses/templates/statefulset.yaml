@@ -42,7 +42,11 @@ spec:
       {{- end }}
       {{- $hasCustomNamespaceEnv := $nsConfig.customEnv }}
       - name: {{ .Chart.Name }}-provisioning-sidecar
+        {{- if .Values.sidecar.image.digest }}
+        image: "{{ .Values.sidecar.image.registry | default .Values.image.registry }}/{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}@{{ .Values.sidecar.image.digest }}"
+        {{- else }}
         image: "{{ .Values.sidecar.image.registry | default .Values.image.registry }}/{{ .Values.sidecar.image.repository }}:{{ .Values.sidecar.image.tag }}"
+        {{- end }}
         {{- with .Values.sidecar.securityContext }}
         securityContext:
           {{- toYaml . | nindent 10 }}
@@ -72,7 +76,11 @@ spec:
           {{- end }}
       {{- end }}
       - name: {{ .Chart.Name }}
+        {{- if .Values.image.digest }}
+        image: "{{ .Values.image.registry }}/{{ .Values.image.name }}:{{ .Values.image.version | default .Chart.AppVersion }}@{{ .Values.image.digest }}"
+        {{- else }}
         image: "{{ .Values.image.registry }}/{{ .Values.image.name }}:{{ .Values.image.version | default .Chart.AppVersion }}"
+        {{- end }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         args:
           - --config=/etc/perses/config/config.yaml

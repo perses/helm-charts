@@ -23,6 +23,9 @@ image:
   # -- Default image pull policy
   pullPolicy: IfNotPresent
 
+  # -- SHA256 image digest for Perses
+  digest: ""
+
 additionalLabels:
   {}
   # app: perses
@@ -339,6 +342,8 @@ sidecar:
     repository: kiwigrid/k8s-sidecar
     # -- Container image tag for the sidecar
     tag: 2.5.0
+    # -- SHA256 image digest for sidecar
+    digest: ""
   # -- Label key to watch for ConfigMaps containing Perses resources
   label: "perses.dev/resource"
   # -- Label value to watch for ConfigMaps containing Perses resources

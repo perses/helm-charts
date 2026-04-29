@@ -32,6 +32,9 @@
         },
         "pullPolicy": {
           "type": "string"
+        },
+        "digest": {
+          "type": "string"
         }
       },
       "required": [
@@ -626,6 +629,9 @@
               "type": "string"
             },
             "tag": {
+              "type": "string"
+            },
+            "digest": {
               "type": "string"
             }
           },
