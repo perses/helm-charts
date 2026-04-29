@@ -4,6 +4,14 @@ All notable changes to the perses-operator Helm chart will be documented in this
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.4.0]
+
+### Changed
+
+- Align chart version with perses-operator appVersion. Chart version now matches the operator release version.
+- Bump appVersion to `0.4.0` (perses-operator v0.4.0).
+- Bump kube-rbac-proxy from `v0.21.0` to `v0.21.2`.
+
 ## [0.2.1]
 
 ### Changed
