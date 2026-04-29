@@ -1380,6 +1380,45 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: Bump appVersion to 0.4.0 (perses-operator v0.4.0)
+        - kind: changed
+          description: Bump kube-rbac-proxy from v0.21.0 to v0.21.2
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/perses/helm-charts
+        - name: Upstream Project
+          url: https://github.com/perses/perses-operator
+      artifacthub.io/operator: "true"
+    apiVersion: v2
+    appVersion: 0.4.0
+    created: "2026-04-29T07:19:34.851403665Z"
+    description: A Helm chart for the Perses Operator - manages Perses instances and
+      dashboards on Kubernetes
+    digest: 77e619de6dbcf9991351e5a6d4caf0f7e5a070dbe1e698a90c40bd6326db471c
+    home: https://github.com/perses/perses-operator
+    icon: https://raw.githubusercontent.com/perses/perses-operator/main/docs/logos/perses-operator-logo.png
+    keywords:
+    - kubernetes
+    - operator
+    - perses
+    - monitoring
+    - dashboards
+    - observability
+    maintainers:
+    - name: perses
+      url: https://github.com/perses
+    name: perses-operator
+    sources:
+    - https://github.com/perses/perses-operator
+    - https://github.com/perses/helm-charts
+    type: application
+    urls:
+    - https://github.com/perses/helm-charts/releases/download/perses-operator-0.4.0/perses-operator-0.4.0.tgz
+    version: 0.4.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: Bump appVersion to 0.3.2 (perses-operator v0.3.2)
       artifacthub.io/license: Apache-2.0
       artifacthub.io/links: |
@@ -1525,4 +1564,4 @@ entries:
     urls:
     - https://github.com/perses/helm-charts/releases/download/perses-operator-0.1.0/perses-operator-0.1.0.tgz
     version: 0.1.0
-generated: "2026-03-30T12:57:42.529704789Z"
+generated: "2026-04-29T07:19:34.851566705Z"
