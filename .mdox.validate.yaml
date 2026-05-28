@@ -8,3 +8,5 @@ validators:
   # intermittent timeouts from CI runners
   - regex: 'helm\.sh'
     type: "ignore"
+  - regex: 'cert-manager\.io'
+    type: "ignore"
