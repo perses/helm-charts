@@ -28,6 +28,10 @@ spec:
         checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
         {{- end }}
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       serviceAccountName: {{ include "perses.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.persistence.securityContext | nindent 8 }}
