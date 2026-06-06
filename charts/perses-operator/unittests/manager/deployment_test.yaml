@@ -75,6 +75,12 @@ tests:
           path: spec.template.spec.containers[1].name
           value: kube-rbac-proxy
 
+  - it: should proxy metrics to the manager metrics port
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[1].args
+          content: "--upstream=http://127.0.0.1:8082/"
+
   - it: should set webhook port
     set:
       webhook.port: 9443
