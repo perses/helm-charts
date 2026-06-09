@@ -45,6 +45,12 @@
     "additionalLabels": {
       "type": "object"
     },
+    "imagePullSecrets": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
     "service": {
       "type": "object",
       "additionalProperties": false,

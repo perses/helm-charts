@@ -26,6 +26,9 @@ image:
   # -- SHA256 image digest for Perses
   digest: ""
 
+# -- Image pull secrets
+imagePullSecrets: []
+
 additionalLabels:
   {}
   # app: perses
