@@ -1160,6 +1160,9 @@
             }
           }
         },
+        "readOnlyRootFilesystem": {
+          "type": "boolean"
+        },
         "runAsNonRoot": {
           "type": "boolean"
         },

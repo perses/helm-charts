@@ -81,6 +81,18 @@ tests:
           path: spec.template.spec.containers[1].args
           content: "--upstream=http://127.0.0.1:8082/"
 
+  - it: should configure custom metrics port on both manager and proxy
+    set:
+      metrics.enable: true
+      metrics.port: 9090
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics-bind-address=127.0.0.1:9090"
+      - contains:
+          path: spec.template.spec.containers[1].args
+          content: "--upstream=http://127.0.0.1:9090/"
+
   - it: should set webhook port
     set:
       webhook.port: 9443

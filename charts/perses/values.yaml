@@ -221,6 +221,7 @@ securityContext:
   capabilities:
     drop:
       - ALL
+  readOnlyRootFilesystem: true
   runAsNonRoot: true
   seccompProfile:
     type: RuntimeDefault
@@ -378,6 +379,7 @@ sidecar:
     capabilities:
       drop:
         - ALL
+    readOnlyRootFilesystem: true
     runAsNonRoot: true
     seccompProfile:
       type: RuntimeDefault
