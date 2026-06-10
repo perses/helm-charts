@@ -215,6 +215,17 @@ resources:
   #    cpu: 100m
   #    memory: 128Mi
 
+# -- Container-level security context for Perses.
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+
 # -- Perses configuration file
 # ref: https://github.com/perses/perses/blob/main/docs/configuration/configuration.md
 config:
@@ -363,7 +374,15 @@ sidecar:
   # -- Enable secret access permissions in the cluster role. When enabled, the sidecar will have permissions to read secrets and use them.
   enableSecretAccess: false
   # -- dedicated sidecar container security in case elevated privileges are needed for writing to volumes.
-  securityContext: {}
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
 
 # -- Persistence parameters
 persistence:

@@ -177,6 +177,10 @@ spec:
         resources:
           {{- toYaml . | nindent 10 }}
         {{- end }}
+        {{- with .Values.securityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
       volumes:
         {{- if .Values.volumes }}
         {{- tpl (toYaml .Values.volumes | nindent 8) . }}
