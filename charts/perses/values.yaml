@@ -364,6 +364,16 @@ sidecar:
   enableSecretAccess: false
   # -- dedicated sidecar container security in case elevated privileges are needed for writing to volumes.
   securityContext: {}
+  # -- Resource limits & requests for the sidecar container.
+  # ref: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+  resources:
+    {}
+    #  limits:
+    #    cpu: 100m
+    #    memory: 128Mi
+    #  requests:
+    #    cpu: 100m
+    #    memory: 128Mi
 
 # -- Persistence parameters
 persistence:
