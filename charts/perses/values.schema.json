@@ -659,6 +659,43 @@
           "type": "object",
           "description": "Dedicated sidecar container security in case elevated privileges are needed for writing to volumes.",
           "additionalProperties": true
+        },
+        "resources": {
+          "type": "object",
+          "description": "Resource limits and requests for the sidecar container.",
+          "additionalProperties": false,
+          "properties": {
+            "limits": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "cpu": {
+                  "type": [
+                    "string",
+                    "integer"
+                  ]
+                },
+                "memory": {
+                  "type": "string"
+                }
+              }
+            },
+            "requests": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "cpu": {
+                  "type": [
+                    "string",
+                    "integer"
+                  ]
+                },
+                "memory": {
+                  "type": "string"
+                }
+              }
+            }
+          }
         }
       },
       "required": [
