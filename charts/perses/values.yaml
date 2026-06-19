@@ -374,15 +374,17 @@ sidecar:
   # -- Enable secret access permissions in the cluster role. When enabled, the sidecar will have permissions to read secrets and use them.
   enableSecretAccess: false
   # -- dedicated sidecar container security in case elevated privileges are needed for writing to volumes.
-  securityContext:
-    allowPrivilegeEscalation: false
-    capabilities:
-      drop:
-        - ALL
-    readOnlyRootFilesystem: true
-    runAsNonRoot: true
-    seccompProfile:
-      type: RuntimeDefault
+  securityContext: {}
+  # -- Resource limits & requests for the sidecar container.
+  # ref: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+  resources:
+    {}
+    #  limits:
+    #    cpu: 100m
+    #    memory: 128Mi
+    #  requests:
+    #    cpu: 100m
+    #    memory: 128Mi
 
 # -- Persistence parameters
 persistence:
