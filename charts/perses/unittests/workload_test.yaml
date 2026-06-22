@@ -1,0 +1,159 @@
+suite: perses workload
+templates:
+  - templates/NOTES.txt
+  - templates/config.yaml
+  - templates/statefulset.yaml
+  - templates/deployment.yaml
+  - templates/helpers/_config.tpl
+  - templates/helpers/_identity.tpl
+release:
+  name: test-release
+  namespace: test-ns
+tests:
+  - it: should set Perses securityContext defaults on the StatefulSet
+    template: templates/statefulset.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.securityContext.fsGroup
+          value: 2000
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.allowPrivilegeEscalation
+          value: false
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.capabilities.drop[0]
+          value: ALL
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.readOnlyRootFilesystem
+          value: true
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.runAsNonRoot
+          value: true
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.seccompProfile.type
+          value: RuntimeDefault
+
+  - it: should set Perses securityContext defaults on the Deployment
+    template: templates/deployment.yaml
+    set:
+      config.database.file: null
+      config.database.sql:
+        user: user
+        password: password
+        net: tcp
+        addr: localhost:3306
+        db_name: perses
+    asserts:
+      - equal:
+          path: spec.template.spec.securityContext.fsGroup
+          value: 2000
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.allowPrivilegeEscalation
+          value: false
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.capabilities.drop[0]
+          value: ALL
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.readOnlyRootFilesystem
+          value: true
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.runAsNonRoot
+          value: true
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.seccompProfile.type
+          value: RuntimeDefault
+
+  - it: should set sidecar securityContext defaults on the StatefulSet
+    template: templates/statefulset.yaml
+    set:
+      sidecar.enabled: true
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].name
+          value: perses-provisioning-sidecar
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.allowPrivilegeEscalation
+          value: false
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.capabilities.drop[0]
+          value: ALL
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.readOnlyRootFilesystem
+          value: true
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.runAsNonRoot
+          value: true
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.seccompProfile.type
+          value: RuntimeDefault
+
+  - it: should set sidecar securityContext defaults on the Deployment
+    template: templates/deployment.yaml
+    set:
+      sidecar.enabled: true
+      config.database.file: null
+      config.database.sql:
+        user: user
+        password: password
+        net: tcp
+        addr: localhost:3306
+        db_name: perses
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].name
+          value: perses-provisioning-sidecar
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.allowPrivilegeEscalation
+          value: false
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.capabilities.drop[0]
+          value: ALL
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.readOnlyRootFilesystem
+          value: true
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.runAsNonRoot
+          value: true
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.seccompProfile.type
+          value: RuntimeDefault
+
+  - it: should allow overriding Perses and pod security contexts
+    template: templates/statefulset.yaml
+    set:
+      persistence.securityContext:
+        fsGroup: 3000
+        runAsUser: 1000
+      securityContext:
+        allowPrivilegeEscalation: true
+        runAsNonRoot: false
+    asserts:
+      - equal:
+          path: spec.template.spec.securityContext.fsGroup
+          value: 3000
+      - equal:
+          path: spec.template.spec.securityContext.runAsUser
+          value: 1000
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.allowPrivilegeEscalation
+          value: true
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.runAsNonRoot
+          value: false
+
+  - it: should allow overriding sidecar securityContext
+    template: templates/statefulset.yaml
+    set:
+      sidecar.enabled: true
+      sidecar.securityContext:
+        allowPrivilegeEscalation: true
+        runAsUser: 65532
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].name
+          value: perses-provisioning-sidecar
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.allowPrivilegeEscalation
+          value: true
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.runAsUser
+          value: 65532

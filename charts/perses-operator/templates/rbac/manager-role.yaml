@@ -27,6 +27,14 @@ rules:
     - apiGroups:
         - ""
       resources:
+        - pods
+      verbs:
+        - get
+        - list
+        - watch
+    - apiGroups:
+        - ""
+      resources:
         - services
         - configmaps
         - secrets
@@ -36,6 +44,14 @@ rules:
         - update
         - create
         - delete
+        - list
+        - watch
+    - apiGroups:
+        - config.openshift.io
+      resources:
+        - apiservers
+      verbs:
+        - get
         - list
         - watch
     - apiGroups:

@@ -215,6 +215,17 @@ resources:
   #    cpu: 100m
   #    memory: 128Mi
 
+# -- Container-level security context for Perses.
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+
 # -- Perses configuration file
 # ref: https://github.com/perses/perses/blob/main/docs/configuration/configuration.md
 config:
