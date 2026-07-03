@@ -124,10 +124,15 @@ webhook:
   # -- Webhook server port
   port: 9443
 
-# -- Prometheus ServiceMonitor for metrics scraping. Requires prometheus-operator to be installed in the cluster.
+# -- Prometheus monitoring resources. Requires prometheus-operator to be installed in the cluster.
 prometheus:
   # -- Enable ServiceMonitor creation
   enable: false
+  rules:
+    # -- Enable PrometheusRule creation (alerting rules for the operator)
+    enable: false
+    # -- Extra labels on the PrometheusRule (e.g. {release: kube-prometheus-stack} for Prometheus ruleSelector matching)
+    labels: {}
 
 # -- Helm test framework configuration
 testFramework:

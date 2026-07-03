@@ -283,6 +283,24 @@
       "properties": {
         "enable": {
           "type": "boolean"
+        },
+        "rules": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enable": {
+              "type": "boolean"
+            },
+            "labels": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "enable"
+          ]
         }
       },
       "required": [
