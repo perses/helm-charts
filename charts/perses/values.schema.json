@@ -376,32 +376,6 @@
             }
           }
         },
-        "schemas": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "panels_path": {
-              "type": "string",
-              "default": "/etc/perses/cue/schemas/panels"
-            },
-            "queries_path": {
-              "type": "string",
-              "default": "/etc/perses/cue/schemas/queries"
-            },
-            "datasources_path": {
-              "type": "string",
-              "default": "/etc/perses/cue/schemas/datasources"
-            },
-            "variables_path": {
-              "type": "string",
-              "default": "/etc/perses/cue/schemas/variables"
-            },
-            "interval": {
-              "type": "string",
-              "default": "5m"
-            }
-          }
-        },
         "database": {
           "type": "object",
           "additionalProperties": false,
