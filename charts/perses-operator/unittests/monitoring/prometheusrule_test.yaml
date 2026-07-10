@@ -1,0 +1,77 @@
+suite: prometheusrule
+templates:
+  - templates/monitoring/prometheusrule.yaml
+release:
+  name: test-release
+  namespace: test-ns
+tests:
+  - it: should not render by default
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should not render when only prometheus.enable is true
+    set:
+      prometheus.enable: true
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should render when prometheus.rules.enable is true
+    set:
+      prometheus.rules.enable: true
+    asserts:
+      - isKind:
+          of: PrometheusRule
+      - isAPIVersion:
+          of: monitoring.coreos.com/v1
+
+  - it: should set the correct name
+    set:
+      prometheus.rules.enable: true
+    asserts:
+      - equal:
+          path: metadata.name
+          value: test-release-perses-operator-alerts
+
+  - it: should set the release namespace
+    set:
+      prometheus.rules.enable: true
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: test-ns
+
+  - it: should include extra labels when specified
+    set:
+      prometheus.rules.enable: true
+      prometheus.rules.labels:
+        release: kube-prometheus-stack
+    asserts:
+      - equal:
+          path: metadata.labels.release
+          value: kube-prometheus-stack
+
+  - it: should contain all 6 alerting rules
+    set:
+      prometheus.rules.enable: true
+    asserts:
+      - lengthEqual:
+          path: spec.groups[0].rules
+          count: 6
+
+  - it: should have correct group name
+    set:
+      prometheus.rules.enable: true
+    asserts:
+      - equal:
+          path: spec.groups[0].name
+          value: perses-operator
+
+  - it: should use dynamic job selector in alert expressions
+    set:
+      prometheus.rules.enable: true
+    asserts:
+      - matchRegex:
+          path: spec.groups[0].rules[0].expr
+          pattern: job="test-release-perses-operator-controller-manager-metrics-service"
