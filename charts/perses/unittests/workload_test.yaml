@@ -85,6 +85,16 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].securityContext.seccompProfile.type
           value: RuntimeDefault
+      - notContains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: plugins
+            mountPath: /etc/perses/plugins
+      - contains:
+          path: spec.template.spec.containers[1].volumeMounts
+          content:
+            name: plugins
+            mountPath: /etc/perses/plugins
 
   - it: should set sidecar securityContext defaults on the Deployment
     template: templates/deployment.yaml
@@ -116,6 +126,16 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].securityContext.seccompProfile.type
           value: RuntimeDefault
+      - notContains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: plugins
+            mountPath: /etc/perses/plugins
+      - contains:
+          path: spec.template.spec.containers[1].volumeMounts
+          content:
+            name: plugins
+            mountPath: /etc/perses/plugins
 
   - it: should allow overriding Perses and pod security contexts
     template: templates/statefulset.yaml
