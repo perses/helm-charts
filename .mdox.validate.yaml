@@ -10,3 +10,6 @@ validators:
     type: "ignore"
   - regex: 'cert-manager\.io'
     type: "ignore"
+  # intermittent connection refused from CI runners
+  - regex: 'perses\.dev'
+    type: "ignore"
