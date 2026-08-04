@@ -16,6 +16,8 @@ spec:
     dnsNames:
         - {{ include "perses-operator.resourceName" (dict "suffix" "webhook-service" "context" $) }}.{{ .Release.Namespace }}.svc
         - {{ include "perses-operator.resourceName" (dict "suffix" "webhook-service" "context" $) }}.{{ .Release.Namespace }}.svc.cluster.local
+        - {{ include "perses-operator.resourceName" (dict "suffix" "controller-manager-metrics-service" "context" $) }}.{{ .Release.Namespace }}.svc
+        - {{ include "perses-operator.resourceName" (dict "suffix" "controller-manager-metrics-service" "context" $) }}.{{ .Release.Namespace }}.svc.cluster.local
     issuerRef:
         kind: Issuer
         name: {{ include "perses-operator.resourceName" (dict "suffix" "selfsigned-issuer" "context" $) }}
