@@ -4,6 +4,20 @@ All notable changes to the perses-operator Helm chart will be documented in this
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.5.0]
+
+### Added
+
+- Prometheus monitoring integration: ServiceMonitor, PrometheusRule with 6 alerting rules, and metrics-reader ClusterRoleBinding for kube-rbac-proxy authentication.
+
+### Changed
+
+- Bump appVersion to `0.5.0` (perses-operator v0.5.0).
+- Bump kube-rbac-proxy from `v0.21.2` to `v0.22.1` (Go 1.26.5, security fixes: html/template XSS, HTTP/2 infinite loop, x/net IDNA).
+- Metrics service `app.kubernetes.io/name` label fixed to use chart name (was hardcoded `service`) — required for ServiceMonitor label matching.
+- kube-rbac-proxy now uses cert-manager issued TLS certificate when `certManager.enable=true`.
+- Metrics service DNS names added to the serving cert.
+
 ## [0.4.0]
 
 ### Changed
