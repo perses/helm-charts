@@ -124,6 +124,8 @@ spec:
           mountPath: "/etc/perses/config"
         - mountPath: "/etc/perses/storage"
           name: storage
+        - name: plugins
+          mountPath: {{ dig "plugin" "path" "/etc/perses/plugins" .Values.config }}
           {{- if .Values.tls.enabled }}
           {{- if .Values.tls.caCert.enabled }}
         - name: ca-cert
@@ -181,6 +183,8 @@ spec:
         - name: provisioning
           emptyDir: {}
       {{- end }}
+        - name: plugins
+          emptyDir: {}
         {{- if .Values.tls.enabled }}
         {{- if .Values.tls.caCert.enabled }}
         - name: ca-cert
