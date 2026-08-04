@@ -6,7 +6,7 @@ metadata:
         app.kubernetes.io/component: kube-rbac-proxy
         app.kubernetes.io/created-by: perses-operator
         app.kubernetes.io/instance: controller-manager-metrics-service
-        app.kubernetes.io/name: service
+        app.kubernetes.io/name: {{ include "perses-operator.name" . }}
         helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
         app.kubernetes.io/managed-by: {{ .Release.Service }}
         app.kubernetes.io/part-of: perses-operator
