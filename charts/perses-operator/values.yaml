@@ -128,6 +128,14 @@ webhook:
 prometheus:
   # -- Enable ServiceMonitor creation
   enable: false
+  # -- Extra labels on the ServiceMonitor (e.g. {release: kube-prometheus-stack} for Prometheus serviceMonitorSelector matching)
+  labels: {}
+  # -- ServiceAccount of the Prometheus instance that scrapes metrics (used for RBAC binding to metrics-reader ClusterRole)
+  serviceAccount:
+    # -- Prometheus ServiceAccount name. If empty, metrics-reader ClusterRoleBinding is not created.
+    name: ""
+    # -- Prometheus ServiceAccount namespace. Defaults to the release namespace if empty.
+    namespace: ""
   rules:
     # -- Enable PrometheusRule creation (alerting rules for the operator)
     enable: false
