@@ -9,8 +9,8 @@
 ##   make clean-tools    - Remove all installed tools
 
 ## Tool versions
-HELM_VERSION ?= v3.17.1
-HELM_UNITTEST_VERSION ?= v1.0.3
+HELM_VERSION ?= v3.21.3
+HELM_UNITTEST_VERSION ?= v1.1.2
 
 ## Location to install dependencies to
 LOCALBIN ?= $(shell pwd)/bin
