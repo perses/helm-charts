@@ -8,6 +8,9 @@ metadata:
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     control-plane: controller-manager
+    {{- with .Values.prometheus.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
   name: {{ include "perses-operator.resourceName" (dict "suffix" "controller-manager-metrics-monitor" "context" $) }}
   namespace: {{ .Release.Namespace }}
 spec:
@@ -24,13 +27,6 @@ spec:
           secret:
             name: {{ include "perses-operator.resourceName" (dict "suffix" "webhook-server-cert" "context" $) }}
             key: ca.crt
-        cert:
-          secret:
-            name: {{ include "perses-operator.resourceName" (dict "suffix" "webhook-server-cert" "context" $) }}
-            key: tls.crt
-        keySecret:
-          name: {{ include "perses-operator.resourceName" (dict "suffix" "webhook-server-cert" "context" $) }}
-          key: tls.key
         {{- else }}
         insecureSkipVerify: true
         {{- end }}
