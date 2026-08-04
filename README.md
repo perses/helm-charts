@@ -50,6 +50,12 @@ For detailed configuration options, see the [Perses Operator chart documentation
 
 See the [Developer Guide](./DEVELOPER_GUIDE.md) for local setup, testing, documentation generation, and adding new charts.
 
+## Maintainers
+
+<!-- Keep full URL links to repo files because this README syncs from main to gh-pages.  -->
+
+See [MAINTAINERS.md](https://github.com/perses/helm-charts/blob/main/MAINTAINERS.md) for the list of maintainers and chart ownership.
+
 ## Contributing
 
 <!-- Keep full URL links to repo files because this README syncs from main to gh-pages.  -->
