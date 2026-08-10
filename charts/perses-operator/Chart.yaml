@@ -3,8 +3,8 @@ name: perses-operator
 description: A Helm chart for the Perses Operator - manages Perses instances and dashboards on Kubernetes
 icon: https://raw.githubusercontent.com/perses/perses-operator/main/docs/logos/perses-operator-logo.png
 type: application
-version: 0.4.0
-appVersion: "0.4.0"
+version: 0.5.0
+appVersion: "0.5.0"
 home: https://github.com/perses/perses-operator
 sources:
   - https://github.com/perses/perses-operator
@@ -22,9 +22,44 @@ keywords:
 annotations:
   "artifacthub.io/changes": |
     - kind: changed
-      description: Bump appVersion to 0.4.0 (perses-operator v0.4.0)
+      description: Bump appVersion to 0.5.0 (perses-operator v0.5.0)
     - kind: changed
-      description: Bump kube-rbac-proxy from v0.21.0 to v0.21.2
+      description: Bump kube-rbac-proxy from v0.21.2 to v0.22.1 (security fixes)
+    - kind: added
+      description: Add Prometheus monitoring integration (ServiceMonitor, PrometheusRule with 6 alerting rules, metrics-reader ClusterRoleBinding)
+    - kind: fixed
+      description: Fix metrics service app.kubernetes.io/name label (was hardcoded to "service", now uses chart name for ServiceMonitor matching)
+    - kind: changed
+      description: kube-rbac-proxy now uses cert-manager issued TLS certificate when certManager.enable=true
+    - kind: changed
+      description: Add metrics service DNS names to the serving cert
+  "artifacthub.io/containsSecurityUpdates": "true"
+  "artifacthub.io/crds": |
+    - kind: Perses
+      version: v1alpha2
+      name: perses.perses.dev
+      displayName: Perses
+      description: Manages a Perses instance (deployment, service, configuration)
+    - kind: PersesDashboard
+      version: v1alpha2
+      name: persesdashboards.perses.dev
+      displayName: Perses Dashboard
+      description: Syncs a dashboard resource to a Perses instance
+    - kind: PersesDatasource
+      version: v1alpha2
+      name: persesdatasources.perses.dev
+      displayName: Perses Datasource
+      description: Syncs a project-scoped datasource to a Perses instance
+    - kind: PersesGlobalDatasource
+      version: v1alpha2
+      name: persesglobaldatasources.perses.dev
+      displayName: Perses Global Datasource
+      description: Syncs a global datasource to a Perses instance
+  "artifacthub.io/images": |
+    - name: manager
+      image: docker.io/persesdev/perses-operator:v0.5.0
+    - name: kube-rbac-proxy
+      image: quay.io/brancz/kube-rbac-proxy:v0.22.1
   "artifacthub.io/license": Apache-2.0
   "artifacthub.io/links": |
     - name: Chart Source
@@ -32,3 +67,4 @@ annotations:
     - name: Upstream Project
       url: https://github.com/perses/perses-operator
   "artifacthub.io/operator": "true"
+  "artifacthub.io/operatorCapabilities": Seamless Upgrades

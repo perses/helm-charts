@@ -14,7 +14,7 @@ jobs:
       pull-requests: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.head_ref }}
 
@@ -34,10 +34,10 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
 
-          if [[ $(git status --porcelain) ]]; then
-            git add charts/ '*.md'
+          git add charts/ '*.md'
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
             git commit -m "chore: update generated docs"
             git push origin "${{ github.event.pull_request.head.ref }}"
-          else
-            echo "No changes to commit"
           fi

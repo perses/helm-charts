@@ -18,13 +18,16 @@ To install the chart with the release name `perses-operator` (requires cert-mana
 ```bash
 helm repo add perses https://perses.github.io/helm-charts
 helm repo update
-helm install perses-operator perses/perses-operator
+helm install perses-operator perses/perses-operator \
+  --namespace perses --create-namespace
 ```
 
 To install without cert-manager (not recommended for production):
 
 ```bash
-helm install perses-operator perses/perses-operator --set certManager.enable=false
+helm install perses-operator perses/perses-operator \
+  --namespace perses --create-namespace \
+  --set certManager.enable=false
 ```
 
 > **Note:** When cert-manager is disabled, the chart generates a self-signed TLS certificate for the webhook server. CRD conversion webhooks (v1alpha1 <-> v1alpha2) are also disabled, so only `v1alpha2` resources can be used. This is suitable for development and testing but not recommended for production.
@@ -34,10 +37,67 @@ helm install perses-operator perses/perses-operator --set certManager.enable=fal
 To uninstall/delete the perses-operator deployment:
 
 ```bash
-helm delete perses-operator
+helm delete perses-operator --namespace perses
 ```
 
 > **Note:** CRDs are kept by default when uninstalling. To remove them, set `crd.keep=false` before uninstalling or delete them manually.
+
+## Integrating with kube-prometheus-stack
+
+### Prerequisites
+
+Install [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack) if not already present:
+
+```bash
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+helm install kube-prometheus-stack prometheus-community/kube-prometheus-stack \
+  --namespace monitoring --create-namespace
+```
+
+### Enabling monitoring for perses-operator
+
+If perses-operator is already installed, upgrade it to enable Prometheus monitoring:
+
+```bash
+helm upgrade perses-operator perses/perses-operator \
+  --namespace perses \
+  --set prometheus.enable=true \
+  --set prometheus.rules.enable=true \
+  --set prometheus.labels.release=kube-prometheus-stack \
+  --set prometheus.rules.labels.release=kube-prometheus-stack \
+  --set prometheus.serviceAccount.name=kube-prometheus-stack-prometheus \
+  --set prometheus.serviceAccount.namespace=monitoring
+```
+
+For a fresh install with monitoring enabled from the start:
+
+```bash
+helm install perses-operator perses/perses-operator \
+  --namespace perses --create-namespace \
+  --set prometheus.enable=true \
+  --set prometheus.rules.enable=true \
+  --set prometheus.labels.release=kube-prometheus-stack \
+  --set prometheus.rules.labels.release=kube-prometheus-stack \
+  --set prometheus.serviceAccount.name=kube-prometheus-stack-prometheus \
+  --set prometheus.serviceAccount.namespace=monitoring
+```
+
+- `prometheus.enable` creates a ServiceMonitor for scraping operator metrics via kube-rbac-proxy
+- `prometheus.rules.enable` creates a PrometheusRule with operator alerting rules
+- `prometheus.serviceAccount` configures RBAC so the Prometheus instance can access `/metrics` through kube-rbac-proxy
+
+### TLS configuration
+
+When `certManager.enable=true` (default), the metrics endpoint uses a cert-manager issued certificate for TLS. The ServiceMonitor is configured to verify the server certificate against the CA, providing secure scraping without `insecureSkipVerify`.
+
+When `certManager.enable=false`, the ServiceMonitor uses `insecureSkipVerify: true` since kube-rbac-proxy will use its own self-signed certificate.
+
+### Label selectors
+
+The example above uses `prometheus.labels.release=kube-prometheus-stack` which matches the default kube-prometheus-stack selector. If your kube-prometheus-stack release has a different name, replace it accordingly.
+
+If kube-prometheus-stack is configured with nil selectors (`serviceMonitorSelectorNilUsesHelmValues=false`, `ruleSelectorNilUsesHelmValues=false`), the `prometheus.labels` and `prometheus.rules.labels` values can be omitted.
 
 ## Upgrading
 

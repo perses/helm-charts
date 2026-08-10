@@ -45,3 +45,11 @@ tests:
       - equal:
           path: spec.selector.control-plane
           value: controller-manager
+
+  - it: should set app.kubernetes.io/name for ServiceMonitor matching
+    set:
+      metrics.enable: true
+    asserts:
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: perses-operator

@@ -92,6 +92,10 @@ spec:
                 - args:
                     - --secure-listen-address=0.0.0.0:8443
                     - --upstream=http://127.0.0.1:{{ .Values.metrics.port }}/
+                    {{- if .Values.certManager.enable }}
+                    - --tls-cert-file=/etc/tls/serving-certs/tls.crt
+                    - --tls-private-key-file=/etc/tls/serving-certs/tls.key
+                    {{- end }}
                     - --logtostderr=true
                     - --v=0
                   image: "{{ .Values.kubeRbacProxy.image.repository }}:{{ .Values.kubeRbacProxy.image.tag }}"
@@ -104,6 +108,12 @@ spec:
                     {{- toYaml .Values.kubeRbacProxy.resources | nindent 20 }}
                   securityContext:
                     {{- toYaml .Values.kubeRbacProxy.securityContext | nindent 20 }}
+                  {{- if .Values.certManager.enable }}
+                  volumeMounts:
+                    - mountPath: /etc/tls/serving-certs
+                      name: cert
+                      readOnly: true
+                  {{- end }}
             serviceAccountName: {{ include "perses-operator.resourceName" (dict "suffix" "controller-manager" "context" $) }}
             terminationGracePeriodSeconds: 10
             volumes:

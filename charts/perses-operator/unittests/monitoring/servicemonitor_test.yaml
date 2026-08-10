@@ -44,7 +44,7 @@ tests:
           path: spec.endpoints[0].tlsConfig.insecureSkipVerify
           value: true
 
-  - it: should configure TLS from cert-manager when enabled
+  - it: should configure TLS verification with CA cert when certManager is enabled
     set:
       prometheus.enable: true
       certManager.enable: true
@@ -53,8 +53,24 @@ tests:
           path: spec.endpoints[0].tlsConfig.insecureSkipVerify
           value: false
       - equal:
+          path: spec.endpoints[0].tlsConfig.serverName
+          value: test-release-perses-operator-controller-manager-metrics-service.test-ns.svc
+      - equal:
+          path: spec.endpoints[0].tlsConfig.ca.secret.name
+          value: test-release-perses-operator-webhook-server-cert
+      - equal:
           path: spec.endpoints[0].tlsConfig.ca.secret.key
           value: ca.crt
+
+  - it: should include extra labels when prometheus.labels is set
+    set:
+      prometheus.enable: true
+      prometheus.labels:
+        release: kube-prometheus-stack
+    asserts:
+      - equal:
+          path: metadata.labels.release
+          value: kube-prometheus-stack
 
   - it: should select by chart name and control-plane labels
     set:

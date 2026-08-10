@@ -78,6 +78,12 @@
         },
         "targetPort": {
           "type": "integer"
+        },
+        "nodePort": {
+          "type": [
+            "integer",
+            "null"
+          ]
         }
       },
       "required": [
