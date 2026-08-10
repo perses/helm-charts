@@ -58,6 +58,8 @@ service:
   port: 8080
   # -- Perses running port
   targetPort: 8080
+  # -- Service NodePort (only used when service type is NodePort)
+  nodePort: null
 
 serviceMonitor:
   # -- Create a serviceMonitor for Perses

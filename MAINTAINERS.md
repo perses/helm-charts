@@ -6,16 +6,16 @@ Chart ownership follows [.github/CODEOWNERS](.github/CODEOWNERS).
 
 ## Repository
 
-| Name                          | GitHub ID                                  | Affiliation |
-|-------------------------------|--------------------------------------------|-------------|
-| Akshay Iyyadurai Balasundaram | [@ibakshay](https://github.com/ibakshay)   | SAP         |
+| Name                          | GitHub ID                                | Affiliation |
+|-------------------------------|------------------------------------------|-------------|
+| Akshay Iyyadurai Balasundaram | [@ibakshay](https://github.com/ibakshay) | SAP         |
 
 ## charts/perses
 
-| Name                          | GitHub ID                                              | Affiliation |
-|-------------------------------|--------------------------------------------------------|-------------|
-| Akshay Iyyadurai Balasundaram | [@ibakshay](https://github.com/ibakshay)               | SAP         |
-| Nicolas Takashi               | [@nicolastakashi](https://github.com/nicolastakashi)   | Dash0       |
+| Name                          | GitHub ID                                            | Affiliation |
+|-------------------------------|------------------------------------------------------|-------------|
+| Akshay Iyyadurai Balasundaram | [@ibakshay](https://github.com/ibakshay)             | SAP         |
+| Nicolas Takashi               | [@nicolastakashi](https://github.com/nicolastakashi) | Dash0       |
 
 ## charts/perses-operator
 

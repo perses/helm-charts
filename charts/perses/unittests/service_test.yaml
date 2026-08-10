@@ -1,0 +1,37 @@
+suite: perses service
+templates:
+  - templates/service.yaml
+release:
+  name: test-release
+  namespace: test-ns
+tests:
+  - it: should default to ClusterIP without a nodePort
+    asserts:
+      - equal:
+          path: spec.type
+          value: ClusterIP
+      - isNull:
+          path: spec.ports[0].nodePort
+
+  - it: should render the nodePort when service type is NodePort
+    set:
+      service.type: NodePort
+      service.nodePort: 30100
+    asserts:
+      - equal:
+          path: spec.type
+          value: NodePort
+      - equal:
+          path: spec.ports[0].nodePort
+          value: 30100
+
+  - it: should omit nodePort when type is NodePort but nodePort is unset
+    set:
+      service.type: NodePort
+      service.nodePort: null
+    asserts:
+      - equal:
+          path: spec.type
+          value: NodePort
+      - isNull:
+          path: spec.ports[0].nodePort
