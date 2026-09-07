@@ -2,6 +2,9 @@ version: 1
 timeout: "1m"
 
 validators:
+  # Slack workspace links require authentication and return 403 in CI.
+  - regex: 'cloud-native\.slack\.com'
+    type: "ignore"
   # randomly it returns the error: status code 403: Forbidden
   - regex: 'groups\.google\.com'
     type: "ignore"
