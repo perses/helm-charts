@@ -126,6 +126,8 @@ logLevel: info
 # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 livenessProbe:
   enabled: true
+  # -- Scheme used for the liveness probe (HTTP or HTTPS)
+  scheme: HTTP
   initialDelaySeconds: 10
   periodSeconds: 60
   timeoutSeconds: 5
@@ -136,6 +138,8 @@ livenessProbe:
 # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 readinessProbe:
   enabled: true
+  # -- Scheme used for the readiness probe (HTTP or HTTPS)
+  scheme: HTTP
   initialDelaySeconds: 5
   periodSeconds: 10
   timeoutSeconds: 5
