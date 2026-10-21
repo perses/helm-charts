@@ -173,6 +173,14 @@
               "type": "boolean",
               "default": false
             },
+            "encryption_key": {
+              "description": "A 32 byte long encryption key.",
+              "type": "string"
+            },
+            "encryption_key_file": {
+              "description": "Path to the encryption key file.",
+              "type": "string"
+            },
             "authorization": {
               "type": "object",
               "additionalProperties": false,

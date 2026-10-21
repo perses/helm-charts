@@ -245,8 +245,12 @@ config:
   security:
     # -- Configure Perses instance as readonly
     readonly: false
-    # -- Enable Authentication
+    # -- Enable Authentication. An authentication provider must also be configured when enabled.
     enable_auth: false
+    # -- Path to a file containing the encryption key (e.g. mounted from a Secret). Mutually exclusive with encryption_key.
+    encryption_key_file: ""
+    # -- Encryption key (exactly 32 bytes). Stored in plain text in the ConfigMap; for production use encryption_key_file or envVars instead.
+    encryption_key: "" 
     # -- cookie config
     cookie:
       same_site: lax
