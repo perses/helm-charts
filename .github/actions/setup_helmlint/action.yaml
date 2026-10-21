@@ -18,7 +18,7 @@ runs:
       uses: azure/setup-helm@v5
 
     - name: Set up chart-testing
-      uses: helm/chart-testing-action@v2.8.0
+      uses: helm/chart-testing-action@v2.9.0
 
     - name: Create kind cluster
       uses: helm/kind-action@v1.15.1

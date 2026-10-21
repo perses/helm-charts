@@ -741,6 +741,11 @@
         "enabled": {
           "type": "boolean"
         },
+        "scheme": {
+          "type": "string",
+          "description": "Scheme used for the probe (HTTP or HTTPS)",
+          "enum": ["HTTP", "HTTPS"]
+        },
         "initialDelaySeconds": {
           "type": "integer"
         },
@@ -817,6 +822,11 @@
       "properties": {
         "enabled": {
           "type": "boolean"
+        },
+        "scheme": {
+          "type": "string",
+          "description": "Scheme used for the probe (HTTP or HTTPS)",
+          "enum": ["HTTP", "HTTPS"]
         },
         "initialDelaySeconds": {
           "type": "integer"

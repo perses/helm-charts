@@ -160,6 +160,39 @@ tests:
           path: spec.template.spec.containers[0].securityContext.runAsNonRoot
           value: false
 
+  - it: should allow overriding probe schemes on the StatefulSet
+    template: templates/statefulset.yaml
+    set:
+      livenessProbe.scheme: HTTPS
+      readinessProbe.scheme: HTTPS
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.scheme
+          value: HTTPS
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.scheme
+          value: HTTPS
+
+  - it: should allow overriding probe schemes on the Deployment
+    template: templates/deployment.yaml
+    set:
+      livenessProbe.scheme: HTTPS
+      readinessProbe.scheme: HTTPS
+      config.database.file: null
+      config.database.sql:
+        user: user
+        password: password
+        net: tcp
+        addr: localhost:3306
+        db_name: perses
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.scheme
+          value: HTTPS
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.scheme
+          value: HTTPS
+
   - it: should allow overriding sidecar securityContext
     template: templates/statefulset.yaml
     set:

@@ -163,7 +163,7 @@ spec:
           httpGet:
             path: {{ .Values.config.api_prefix }}/api/v1/health
             port: http
-            scheme: HTTP
+            scheme: {{ .Values.readinessProbe.scheme | default "HTTP" }}
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
@@ -173,7 +173,7 @@ spec:
           httpGet:
             path: {{ .Values.config.api_prefix }}/api/v1/health
             port: http
-            scheme: HTTP
+            scheme: {{ .Values.livenessProbe.scheme | default "HTTP" }}
           initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
