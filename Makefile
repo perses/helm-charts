@@ -38,14 +38,14 @@ fmt-docs: mdox ## Format and validate markdown docs.
 helm-lint: helm ## Run helm lint --strict on all charts.
 	@for chart in $(CHARTS); do \
 		echo ">> linting $$chart"; \
-		$(HELM) lint --strict $$chart; \
+		$(HELM) lint --strict $$chart || exit 1; \
 	done
 
 .PHONY: helm-template
 helm-template: helm ## Render all chart templates locally.
 	@for chart in $(CHARTS); do \
 		echo ">> rendering $$chart"; \
-		$(HELM) template test-release $$chart > /dev/null; \
+		$(HELM) template test-release $$chart > /dev/null || exit 1; \
 	done
 
 .PHONY: helm-validate
@@ -56,7 +56,7 @@ helm-unit-test: helm-unittest ## Run helm unit tests. Use CHART=charts/<name> to
 	@for chart in $(or $(CHART),$(CHARTS)); do \
 		if [ -d "$$chart/unittests" ]; then \
 			echo ">> unit testing $$chart"; \
-			$(HELM) unittest -f 'unittests/**/*_test.yaml' $$chart; \
+			$(HELM) unittest -f 'unittests/**/*_test.yaml' $$chart || exit 1; \
 		fi; \
 	done
 

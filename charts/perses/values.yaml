@@ -250,7 +250,7 @@ config:
     # -- Path to a file containing the encryption key (e.g. mounted from a Secret). Mutually exclusive with encryption_key.
     encryption_key_file: ""
     # -- Encryption key (exactly 32 bytes). Stored in plain text in the ConfigMap; for production use encryption_key_file or envVars instead.
-    encryption_key: "" 
+    encryption_key: ""
     # -- cookie config
     cookie:
       same_site: lax
@@ -300,7 +300,7 @@ config:
       - /etc/perses/provisioning
     interval: 10m
 
-# -- Persistence configuration for Perses provisioning. 
+# -- Persistence configuration for Perses provisioning.
 # For more information on provisioning feature, see: https://perses.dev/perses/docs/configuration/provisioning/
 # When enabled, a PersistentVolumeClaim (PVC) is created via StatefulSet volumeClaimTemplates.
 # The PVC will be named: provisioning-\<statefulset-name>-\<ordinal>
@@ -384,7 +384,15 @@ sidecar:
   # -- Enable secret access permissions in the cluster role. When enabled, the sidecar will have permissions to read secrets and use them.
   enableSecretAccess: false
   # -- dedicated sidecar container security in case elevated privileges are needed for writing to volumes.
-  securityContext: {}
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
   # -- Resource limits & requests for the sidecar container.
   # ref: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
   resources:
