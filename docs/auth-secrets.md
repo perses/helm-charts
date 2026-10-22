@@ -1,6 +1,6 @@
 # Managing authentication secrets
 
-This chart can automatically wire authentication provider `client_id` and `client_secret` values into the Perses pods as environment variables, so you can keep credentials in Kubernetes Secrets instead of the Helm values file.
+The official [Perses Helm chart](https://github.com/perses/helm-charts#perses) can automatically wire authentication provider `client_id` and `client_secret` values into the Perses pods as environment variables, so you can keep credentials in Kubernetes Secrets instead of the Helm values file.
 
 ## How it works
 
