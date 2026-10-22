@@ -10,6 +10,36 @@ release:
   name: test-release
   namespace: test-ns
 tests:
+  - it: should render the encryption key path when authentication is enabled
+    template: templates/config.yaml
+    set:
+      config.security.enable_auth: true
+      config.security.encryption_key_file: /etc/perses/custom-encryption-key
+    asserts:
+      - matchRegex:
+          path: data["config.yaml"]
+          pattern: "encryption_key_file: /etc/perses/custom-encryption-key"
+
+  - it: should render an inline encryption key
+    template: templates/config.yaml
+    set:
+      config.security.enable_auth: true
+      config.security.encryption_key: "0123456789abcdef0123456789abcdef"
+    asserts:
+      - matchRegex:
+          path: data["config.yaml"]
+          pattern: "encryption_key: 0123456789abcdef0123456789abcdef"
+
+  - it: should allow an empty encryption key path when authentication is disabled
+    template: templates/config.yaml
+    set:
+      config.security.enable_auth: false
+      config.security.encryption_key_file: ""
+    asserts:
+      - matchRegex:
+          path: data["config.yaml"]
+          pattern: 'encryption_key_file: ""'
+
   - it: should set Perses securityContext defaults on the StatefulSet
     template: templates/statefulset.yaml
     asserts:
