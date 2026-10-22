@@ -28,6 +28,9 @@ jobs:
           kind-version: ${{ env.kind-version }}
           kind-image: ${{ env.kind-image }}
 
+      - name: run chart-testing (lint)
+        run: ct lint --all --validate-maintainers=false --check-version-increment=false
+
       # Ensure perses-operator CRDs match upstream for the appVersion in Chart.yaml
       - name: verify CRDs are in sync with upstream
         run: |
