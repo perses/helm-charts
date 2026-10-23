@@ -22,6 +22,83 @@ For upgrades that introduce breaking changes, follow the version-specific migrat
 
 ## Breaking Changes by Version
 
+### Upgrading to 0.24.0
+
+This version targets Perses `v0.55.0`, which contains several breaking changes, mostly security fixes.
+Read the [Perses v0.55.0 upgrade guide](https://perses.dev/perses/docs/upgrade/v0.55.0/) before upgrading. The changes most relevant to the chart are listed below.
+
+#### Encryption key is required when authentication is enabled
+
+When `config.security.enable_auth` is `true`, Perses no longer starts without an encryption key.
+Provide exactly one of the following:
+
+- `config.security.encryption_key_file`: path to a file containing the key, e.g. mounted from a Kubernetes Secret (recommended).
+- `PERSES_SECURITY_ENCRYPTION_KEY` set through `envVars` or the `secret` block.
+- `config.security.encryption_key`: inline key. It is stored in plain text in the ConfigMap, so avoid it in production.
+
+The key must be exactly 32 bytes, without a trailing newline.
+
+```yaml
+config:
+  security:
+    enable_auth: true
+    encryption_key_file: /etc/perses/encryption/key
+volumes:
+  - name: encryption-key
+    secret:
+      secretName: perses-encryption-key
+volumeMounts:
+  - name: encryption-key
+    mountPath: /etc/perses/encryption
+    readOnly: true
+```
+
+#### Datasource proxy destinations are restricted
+
+The datasource proxy now refuses loopback, link-local, cloud metadata and Kubernetes API destinations.
+If a datasource runs on the same host as Perses (e.g. `http://localhost:9090`), allow it explicitly:
+
+```yaml
+config:
+  datasource:
+    proxy:
+      allowed_networks:
+        - "127.0.0.0/8"
+        - "::1/128"
+```
+
+#### Files referenced in secrets must be in an allowed directory
+
+File references in Perses Secrets and GlobalSecrets (e.g. `tlsConfig.caFile`, `basicAuth.passwordFile`) are now rejected by default.
+List the directories where these files are mounted:
+
+```yaml
+config:
+  security:
+    secret_file_allowed_directories:
+      - /etc/perses/secrets
+```
+
+#### Important dashboards are grouped
+
+`config.frontend.important_dashboards` is now a list of groups. The flat list is deprecated and will be removed in Perses `v0.57.0`.
+When set through environment variables, the old format is no longer accepted.
+
+```yaml
+config:
+  frontend:
+    important_dashboards:
+      - title: "Quick links" # optional
+        dashboards:
+          - project: "perses"
+            dashboard: "Demo"
+```
+
+#### Sidecar security context defaults
+
+`sidecar.securityContext` now defaults to a hardened security context (non-root, read-only root filesystem, all capabilities dropped).
+If your sidecar setup needs to write to the container filesystem, set `sidecar.securityContext.readOnlyRootFilesystem: false`.
+
 ### Upgrading to 0.20.0
 
 This version targets Perses `v0.53.0` and includes breaking changes for SQL TLS configuration.
