@@ -181,6 +181,53 @@
               "description": "Path to the encryption key file.",
               "type": "string"
             },
+            "secret_file_allowed_directories": {
+              "description": "Absolute directories from which Secrets and GlobalSecrets are allowed to read files. When empty, file references in secrets are rejected.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "cors": {
+              "description": "CORS middleware configuration.",
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "enable": {
+                  "type": "boolean"
+                },
+                "allow_origins": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "allow_methods": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "allow_headers": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "allow_credentials": {
+                  "type": "boolean"
+                },
+                "expose_headers": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "max_age": {
+                  "type": "integer"
+                }
+              }
+            },
             "authorization": {
               "type": "object",
               "additionalProperties": false,
