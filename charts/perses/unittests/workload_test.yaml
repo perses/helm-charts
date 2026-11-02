@@ -263,3 +263,19 @@ tests:
           path: spec.template.metadata.annotations["checksum/config"]
       - isNotNullOrEmpty:
           path: spec.template.metadata.annotations["checksum/datasources"]
+
+  - it: should preserve ConfigMap annotations when datasources and config.annotations are both set
+    template: templates/config.yaml
+    set:
+      config:
+        annotations:
+          example.com/managed-by: perses
+      datasources:
+        - kind: Datasource
+          metadata:
+            name: demo
+          spec: {}
+    asserts:
+      - equal:
+          path: metadata.annotations["example.com/managed-by"]
+          value: perses

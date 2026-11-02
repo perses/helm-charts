@@ -23,7 +23,7 @@ spec:
       labels:
         {{- include "perses.selectorLabels" . | nindent 8 }}
       annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
+        checksum/config: {{ include (print $.Template.BasePath "/config.yaml") (deepCopy .) | sha256sum }}
         {{- if .Values.datasources }}
         checksum/datasources: {{ include (print $.Template.BasePath "/datasources.yaml") . | sha256sum }}
         {{- end }}
