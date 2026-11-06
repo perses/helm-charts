@@ -4,7 +4,7 @@
 
 Perses helm chart
 
-![Version: 0.24.0](https://img.shields.io/badge/Version-0.24.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.55.0](https://img.shields.io/badge/AppVersion-v0.55.0-informational?style=flat-square)
+![Version: 0.24.1](https://img.shields.io/badge/Version-0.24.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.55.1](https://img.shields.io/badge/AppVersion-v0.55.1-informational?style=flat-square)
 
 ## Installing the Chart
 
