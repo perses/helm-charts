@@ -15,6 +15,16 @@ helm repo update
 helm install my-release perses/perses
 ```
 
+Please also refer to the [Perses installation documentation](https://perses.dev/helm-charts/docs/installation/) for additional configuration options and usage guidelines when using the Perses Helm chart.
+
+## Handling Sensitive Data
+
+The Helm chart supports security and authentication settings that may contain sensitive data, including encryption keys and OIDC credentials. Do not commit secrets to Git or store them directly in plain-text Helm values files. Instead, provide sensitive values through Kubernetes Secrets or another secure mechanism.
+
+### OIDC Provider Credentials
+
+For instructions on configuring OIDC provider credentials with a Kubernetes Secret, see the [OIDC provider guide](https://perses.dev/helm-charts/docs/auth-secrets/).
+
 ## Uninstalling the Chart
 
 To uninstall/delete the my-release deployment:
