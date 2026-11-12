@@ -3,8 +3,8 @@ name: perses-operator
 description: A Helm chart for the Perses Operator - manages Perses instances and dashboards on Kubernetes
 icon: https://raw.githubusercontent.com/perses/perses-operator/main/docs/logos/perses-operator-logo.png
 type: application
-version: 0.6.0
-appVersion: "0.6.0"
+version: 0.6.1
+appVersion: "0.6.1"
 home: https://github.com/perses/perses-operator
 sources:
   - https://github.com/perses/perses-operator
@@ -22,10 +22,10 @@ keywords:
 annotations:
   "artifacthub.io/changes": |
     - kind: changed
-      description: Bump appVersion to 0.6.0 (perses-operator v0.6.0) and sync CRDs
+      description: Bump appVersion to 0.6.1 (perses-operator v0.6.1)
     - kind: changed
-      description: Bump kube-rbac-proxy from v0.22.1 to v0.23.1
-  "artifacthub.io/containsSecurityUpdates": "true"
+      description: Sync CRDs from perses-operator v0.6.1
+  "artifacthub.io/containsSecurityUpdates": "false"
   "artifacthub.io/crds": |
     - kind: Perses
       version: v1alpha2
@@ -49,7 +49,7 @@ annotations:
       description: Syncs a global datasource to a Perses instance
   "artifacthub.io/images": |
     - name: manager
-      image: docker.io/persesdev/perses-operator:v0.6.0
+      image: docker.io/persesdev/perses-operator:v0.6.1
     - name: kube-rbac-proxy
       image: quay.io/brancz/kube-rbac-proxy:v0.23.1
   "artifacthub.io/license": Apache-2.0
