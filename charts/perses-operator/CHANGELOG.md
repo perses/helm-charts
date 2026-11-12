@@ -4,6 +4,13 @@ All notable changes to the perses-operator Helm chart will be documented in this
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.6.1]
+
+### Changed
+
+- Bump appVersion to `0.6.1` (perses-operator v0.6.1).
+- Sync CRDs from perses-operator v0.6.1.
+
 ## [0.6.0]
 
 ### Changed
