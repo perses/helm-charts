@@ -1580,6 +1580,73 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: Bump appVersion to 0.6.1 (perses-operator v0.6.1)
+        - kind: changed
+          description: Sync CRDs from perses-operator v0.6.1
+      artifacthub.io/containsSecurityUpdates: "false"
+      artifacthub.io/crds: |
+        - kind: Perses
+          version: v1alpha2
+          name: perses.perses.dev
+          displayName: Perses
+          description: Manages a Perses instance (deployment, service, configuration)
+        - kind: PersesDashboard
+          version: v1alpha2
+          name: persesdashboards.perses.dev
+          displayName: Perses Dashboard
+          description: Syncs a dashboard resource to a Perses instance
+        - kind: PersesDatasource
+          version: v1alpha2
+          name: persesdatasources.perses.dev
+          displayName: Perses Datasource
+          description: Syncs a project-scoped datasource to a Perses instance
+        - kind: PersesGlobalDatasource
+          version: v1alpha2
+          name: persesglobaldatasources.perses.dev
+          displayName: Perses Global Datasource
+          description: Syncs a global datasource to a Perses instance
+      artifacthub.io/images: |
+        - name: manager
+          image: docker.io/persesdev/perses-operator:v0.6.1
+        - name: kube-rbac-proxy
+          image: quay.io/brancz/kube-rbac-proxy:v0.23.1
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/perses/helm-charts
+        - name: Upstream Project
+          url: https://github.com/perses/perses-operator
+      artifacthub.io/operator: "true"
+      artifacthub.io/operatorCapabilities: Seamless Upgrades
+    apiVersion: v2
+    appVersion: 0.6.1
+    created: "2026-11-12T05:54:48.680299429Z"
+    description: A Helm chart for the Perses Operator - manages Perses instances and
+      dashboards on Kubernetes
+    digest: c3a18447a54ac29c468d09dfa0d34419209bc4b7d61f5b28d3da74e46b6f9a62
+    home: https://github.com/perses/perses-operator
+    icon: https://raw.githubusercontent.com/perses/perses-operator/main/docs/logos/perses-operator-logo.png
+    keywords:
+    - kubernetes
+    - operator
+    - perses
+    - monitoring
+    - dashboards
+    - observability
+    maintainers:
+    - name: perses
+      url: https://github.com/perses
+    name: perses-operator
+    sources:
+    - https://github.com/perses/perses-operator
+    - https://github.com/perses/helm-charts
+    type: application
+    urls:
+    - https://github.com/perses/helm-charts/releases/download/perses-operator-0.6.1/perses-operator-0.6.1.tgz
+    version: 0.6.1
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: Bump appVersion to 0.6.0 (perses-operator v0.6.0) and sync CRDs
         - kind: changed
           description: Bump kube-rbac-proxy from v0.22.1 to v0.23.1
@@ -1906,4 +1973,4 @@ entries:
     urls:
     - https://github.com/perses/helm-charts/releases/download/perses-operator-0.1.0/perses-operator-0.1.0.tgz
     version: 0.1.0
-generated: "2026-11-05T18:54:10.77153496Z"
+generated: "2026-11-12T05:54:48.680384866Z"
