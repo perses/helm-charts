@@ -1,0 +1,60 @@
+apiVersion: chainsaw.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: perses-sidecar-provisioning
+spec:
+  description: With the sidecar enabled, a labeled ConfigMap ends up as a resource in Perses.
+  catch:
+    - events: {}
+    - podLogs:
+        selector: app.kubernetes.io/name=perses
+        tail: 100
+  steps:
+    - name: install chart
+      try:
+        - script:
+            content: |
+              helm install perses ../../../../charts/perses --namespace "$NAMESPACE" \
+                --values values.yaml --wait --timeout 3m
+        - script:
+            content: helm test perses --namespace "$NAMESPACE" --timeout 3m
+      cleanup:
+        - script:
+            content: helm uninstall perses --namespace "$NAMESPACE" --wait --ignore-not-found
+
+    - name: sidecar runs next to perses with namespaced RBAC
+      try:
+        - assert:
+            resource:
+              apiVersion: apps/v1
+              kind: StatefulSet
+              metadata:
+                name: perses
+              spec:
+                template:
+                  spec:
+                    (containers[?name == 'perses-provisioning-sidecar']):
+                      - {}
+              status:
+                readyReplicas: 1
+        - assert:
+            resource:
+              apiVersion: rbac.authorization.k8s.io/v1
+              kind: RoleBinding
+              metadata:
+                name: perses-rolebinding
+
+    - name: labeled ConfigMap is provisioned into Perses
+      try:
+        - apply:
+            file: project-configmap.yaml
+        - script:
+            content: |
+              for attempt in $(seq 1 30); do
+                if kubectl get --raw "/api/v1/namespaces/$NAMESPACE/services/http:perses:http/proxy/api/v1/projects/oat-provisioned"; then
+                  exit 0
+                fi
+                sleep 5
+              done
+              echo "project oat-provisioned was not provisioned in time" >&2
+              exit 1

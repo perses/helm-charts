@@ -1,0 +1,9 @@
+# Sidecar loads labeled ConfigMaps into the provisioning folder.
+sidecar:
+  enabled: true
+  # keep the scenario namespaced so it does not pick up ConfigMaps from other scenarios
+  allNamespaces: false
+
+config:
+  provisioning:
+    interval: 10s

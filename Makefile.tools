@@ -6,11 +6,15 @@
 ##   make helm           - Install helm
 ##   make mdox           - Install mdox
 ##   make helm-unittest  - Install helm-unittest plugin
+##   make chainsaw       - Install chainsaw
+##   make kubeconform    - Install kubeconform
 ##   make clean-tools    - Remove all installed tools
 
 ## Tool versions
 HELM_VERSION ?= v3.21.3
 HELM_UNITTEST_VERSION ?= v1.1.2
+CHAINSAW_VERSION ?= v0.2.15
+KUBECONFORM_VERSION ?= v0.8.0
 
 ## Location to install dependencies to
 LOCALBIN ?= $(shell pwd)/bin
@@ -20,6 +24,8 @@ $(LOCALBIN):
 ## Tool binaries
 HELM ?= $(LOCALBIN)/helm
 MDOX ?= $(LOCALBIN)/mdox
+CHAINSAW ?= $(LOCALBIN)/chainsaw
+KUBECONFORM ?= $(LOCALBIN)/kubeconform
 
 .PHONY: helm
 $(HELM) helm: $(LOCALBIN) ## Install helm locally if necessary.
@@ -41,6 +47,24 @@ $(MDOX) mdox: $(LOCALBIN) ## Install mdox locally if necessary.
 .PHONY: helm-unittest
 helm-unittest: helm ## Install helm-unittest plugin if necessary.
 	@$(HELM) plugin list | grep -q unittest || $(HELM) plugin install https://github.com/helm-unittest/helm-unittest --version $(HELM_UNITTEST_VERSION)
+
+.PHONY: chainsaw
+$(CHAINSAW) chainsaw: $(LOCALBIN) ## Install chainsaw locally if necessary.
+	@{ \
+		set -e ;\
+		[ -f $(CHAINSAW) ] && exit 0 ;\
+		OS=$$(go env GOOS) && ARCH=$$(go env GOARCH) && \
+		curl -sSfL https://github.com/kyverno/chainsaw/releases/download/$(CHAINSAW_VERSION)/chainsaw_$${OS}_$${ARCH}.tar.gz | tar xz -C $(LOCALBIN) chainsaw ;\
+	}
+
+.PHONY: kubeconform
+$(KUBECONFORM) kubeconform: $(LOCALBIN) ## Install kubeconform locally if necessary.
+	@{ \
+		set -e ;\
+		[ -f $(KUBECONFORM) ] && exit 0 ;\
+		OS=$$(go env GOOS) && ARCH=$$(go env GOARCH) && \
+		curl -sSfL https://github.com/yannh/kubeconform/releases/download/$(KUBECONFORM_VERSION)/kubeconform-$${OS}-$${ARCH}.tar.gz | tar xz -C $(LOCALBIN) kubeconform ;\
+	}
 
 .PHONY: clean-tools
 clean-tools: ## Remove all installed tools.

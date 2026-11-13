@@ -1,0 +1,11 @@
+# SQL database: the chart renders a Deployment instead of a StatefulSet.
+config:
+  database:
+    file: null
+    sql:
+      user: perses
+      password: perses-oat
+      net: tcp
+      addr: mariadb:3306
+      db_name: perses
+      allow_native_passwords: true

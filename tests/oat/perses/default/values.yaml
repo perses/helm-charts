@@ -1,0 +1,2 @@
+# Chart defaults: file database on an emptyDir, served by a StatefulSet.
+{}

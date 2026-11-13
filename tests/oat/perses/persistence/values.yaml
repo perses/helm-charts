@@ -1,0 +1,4 @@
+# File database stored on a PersistentVolumeClaim instead of an emptyDir.
+persistence:
+  enabled: true
+  size: 1Gi

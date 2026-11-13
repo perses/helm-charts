@@ -1,0 +1,67 @@
+apiVersion: chainsaw.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: perses-persistence
+spec:
+  description: With persistence enabled, data written through the API survives a pod restart.
+  catch:
+    - events: {}
+    - podLogs:
+        selector: app.kubernetes.io/name=perses
+        tail: 100
+  steps:
+    - name: install chart
+      try:
+        - script:
+            content: |
+              helm install perses ../../../../charts/perses --namespace "$NAMESPACE" \
+                --values values.yaml --wait --timeout 3m
+        - script:
+            content: helm test perses --namespace "$NAMESPACE" --timeout 3m
+      cleanup:
+        - script:
+            content: helm uninstall perses --namespace "$NAMESPACE" --wait --ignore-not-found
+
+    - name: data volume is bound and mounted
+      try:
+        - assert:
+            resource:
+              apiVersion: v1
+              kind: PersistentVolumeClaim
+              metadata:
+                name: perses
+              status:
+                phase: Bound
+        - assert:
+            resource:
+              apiVersion: apps/v1
+              kind: StatefulSet
+              metadata:
+                name: perses
+              spec:
+                template:
+                  spec:
+                    (volumes[?name == 'data']):
+                      - persistentVolumeClaim:
+                          claimName: perses
+              status:
+                readyReplicas: 1
+
+    - name: project survives a pod restart
+      try:
+        - script:
+            content: |
+              kubectl run create-project --namespace "$NAMESPACE" --rm --stdin --restart=Never \
+                --image docker.io/curlimages/curl:8.11.1 -- \
+                curl --fail-with-body --silent --show-error --header 'Content-Type: application/json' \
+                --data '{"kind":"Project","metadata":{"name":"oat-persistence"}}' http://perses:8080/api/v1/projects
+        - script:
+            content: |
+              set -e
+              kubectl delete pod perses-0 --namespace "$NAMESPACE" --wait
+              kubectl rollout status statefulset/perses --namespace "$NAMESPACE" --timeout 3m
+        - script:
+            content: |
+              kubectl get --raw "/api/v1/namespaces/$NAMESPACE/services/http:perses:http/proxy/api/v1/projects/oat-persistence"
+            check:
+              (contains($stdout, 'oat-persistence')): true

@@ -32,3 +32,6 @@ jobs:
 
       - name: run helm unit tests
         run: make helm-unit-test
+
+      - name: validate rendered manifests against Kubernetes schemas
+        run: make helm-kubeconform

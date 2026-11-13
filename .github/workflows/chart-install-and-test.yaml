@@ -7,6 +7,7 @@ on:
   pull_request:
     paths:
       - "charts/**"
+      - "tests/oat/**"
   merge_group:
 
 jobs:
@@ -77,3 +78,23 @@ jobs:
               echo "Skipping $chart_name: no previous release found in repo"
             fi
           done
+
+  helm-oat:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v7
+
+      - name: load env
+        run: cat .github/env >> $GITHUB_ENV
+
+      - name: setup helm lint requirements
+        uses: ./.github/actions/setup_helmlint
+        with:
+          create-kind-cluster: "true"
+          kind-version: ${{ env.kind-version }}
+          kind-image: ${{ env.kind-image }}
+
+      # Installs every scenario under tests/oat/ and asserts the resulting behaviour
+      - name: run operational acceptance tests
+        run: make helm-oat

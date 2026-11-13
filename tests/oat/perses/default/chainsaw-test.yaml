@@ -1,0 +1,47 @@
+apiVersion: chainsaw.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: perses-default
+spec:
+  description: Default values install a single-replica StatefulSet that serves the Perses API.
+  catch:
+    - events: {}
+    - podLogs:
+        selector: app.kubernetes.io/name=perses
+        tail: 100
+  steps:
+    - name: install chart
+      try:
+        - script:
+            content: |
+              helm install perses ../../../../charts/perses --namespace "$NAMESPACE" \
+                --values values.yaml --wait --timeout 3m
+        - script:
+            content: helm test perses --namespace "$NAMESPACE" --timeout 3m
+      cleanup:
+        - script:
+            content: helm uninstall perses --namespace "$NAMESPACE" --wait --ignore-not-found
+
+    - name: workload is a ready StatefulSet
+      try:
+        - assert:
+            resource:
+              apiVersion: apps/v1
+              kind: StatefulSet
+              metadata:
+                name: perses
+              status:
+                readyReplicas: 1
+        - error:
+            resource:
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: perses
+
+    - name: API answers through the service
+      try:
+        - script:
+            content: |
+              kubectl get --raw "/api/v1/namespaces/$NAMESPACE/services/http:perses:http/proxy/api/v1/health"
+              kubectl get --raw "/api/v1/namespaces/$NAMESPACE/services/http:perses:http/proxy/api/v1/projects"
