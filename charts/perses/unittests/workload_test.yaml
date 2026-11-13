@@ -4,6 +4,7 @@ templates:
   - templates/config.yaml
   - templates/statefulset.yaml
   - templates/deployment.yaml
+  - templates/datasources.yaml
   - templates/helpers/_config.tpl
   - templates/helpers/_identity.tpl
 release:
@@ -240,3 +241,41 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].securityContext.runAsUser
           value: 65532
+
+  - it: should always set a config.yaml checksum annotation
+    template: templates/statefulset.yaml
+    asserts:
+      - isNotNullOrEmpty:
+          path: spec.template.metadata.annotations["checksum/config"]
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/datasources"]
+
+  - it: should track config.yaml and datasources checksums independently when datasources are set
+    template: templates/statefulset.yaml
+    set:
+      datasources:
+        - kind: Datasource
+          metadata:
+            name: demo
+          spec: {}
+    asserts:
+      - isNotNullOrEmpty:
+          path: spec.template.metadata.annotations["checksum/config"]
+      - isNotNullOrEmpty:
+          path: spec.template.metadata.annotations["checksum/datasources"]
+
+  - it: should preserve ConfigMap annotations when datasources and config.annotations are both set
+    template: templates/config.yaml
+    set:
+      config:
+        annotations:
+          example.com/managed-by: perses
+      datasources:
+        - kind: Datasource
+          metadata:
+            name: demo
+          spec: {}
+    asserts:
+      - equal:
+          path: metadata.annotations["example.com/managed-by"]
+          value: perses
