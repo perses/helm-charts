@@ -1,0 +1,21 @@
+# Native authentication, with the encryption key handed over through the chart-managed Secret
+# and a global admin bootstrapped by the sidecar.
+config:
+  security:
+    enable_auth: true
+    authentication:
+      providers:
+        enable_native: true
+  provisioning:
+    interval: 10s
+
+envVars:
+  - name: PERSES_SECURITY_ENCRYPTION_KEY
+    value: 0123456789abcdef0123456789abcdef
+
+sidecar:
+  enabled: true
+  # keep the scenario namespaced so it does not pick up ConfigMaps from other scenarios
+  allNamespaces: false
+  globalAdminUsers:
+    - oat-admin

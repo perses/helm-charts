@@ -1,0 +1,114 @@
+apiVersion: chainsaw.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: perses-operator-upgrade
+spec:
+  description: Upgrading from the latest published chart to this repository keeps existing Perses resources reconciled.
+  # CRDs and RBAC of the operator are cluster-scoped, so only one release can exist at a time
+  concurrent: false
+  catch:
+    - events: {}
+    - podLogs:
+        selector: control-plane=controller-manager
+        tail: 100
+  steps:
+    - name: install the latest published chart
+      try:
+        - script:
+            content: |
+              helm install perses-operator perses-operator --repo https://perses.github.io/helm-charts \
+                --namespace "$NAMESPACE" --values values.yaml --wait --timeout 3m
+      cleanup:
+        - script:
+            content: |
+              helm uninstall perses-operator --namespace "$NAMESPACE" --wait --ignore-not-found
+              # CRDs are kept on uninstall and would block an install into another namespace
+              kubectl delete customresourcedefinition --ignore-not-found \
+                perses.perses.dev persesdashboards.perses.dev persesdatasources.perses.dev persesglobaldatasources.perses.dev
+
+    - name: operator runs a Perses instance for a Perses resource
+      try:
+        - apply:
+            file: ../resources/perses.yaml
+        - assert:
+            resource:
+              apiVersion: apps/v1
+              kind: StatefulSet
+              metadata:
+                name: oat
+              status:
+                readyReplicas: 1
+        - assert:
+            resource:
+              apiVersion: perses.dev/v1alpha2
+              kind: Perses
+              metadata:
+                name: oat
+              status:
+                (conditions[?type == 'Available']):
+                  - status: "True"
+        - script:
+            content: |
+              # the pod is reported ready before Perses listens, so give it a moment
+              for attempt in $(seq 1 30); do
+                if kubectl get --raw "/api/v1/namespaces/$NAMESPACE/services/http:oat:http/proxy/api/v1/health"; then
+                  exit 0
+                fi
+                sleep 2
+              done
+              echo "Perses instance did not answer in time" >&2
+              exit 1
+
+    - name: upgrade to the chart from this repository
+      try:
+        - script:
+            content: |
+              helm upgrade perses-operator ../../../../charts/perses-operator --namespace "$NAMESPACE" \
+                --values values.yaml --wait --timeout 3m
+        - script:
+            content: helm test perses-operator --namespace "$NAMESPACE" --timeout 3m
+        - script:
+            content: |
+              expected="perses-operator-$(helm show chart ../../../../charts/perses-operator | sed -n 's/^version: //p')"
+              actual=$(helm list --namespace "$NAMESPACE" --filter '^perses-operator$' --output json | sed -n 's/.*"chart":"\([^"]*\)".*/\1/p')
+              echo "expected $expected, deployed $actual"
+              [ "$expected" = "$actual" ]
+
+    - name: Perses instance created before the upgrade is still served
+      try:
+        - assert:
+            resource:
+              apiVersion: perses.dev/v1alpha2
+              kind: Perses
+              metadata:
+                name: oat
+              status:
+                (conditions[?type == 'Available']):
+                  - status: "True"
+        - assert:
+            resource:
+              apiVersion: apps/v1
+              kind: StatefulSet
+              metadata:
+                name: oat
+              status:
+                readyReplicas: 1
+
+    - name: operator syncs a dashboard into the Perses instance
+      try:
+        - apply:
+            file: ../resources/dashboard.yaml
+        - assert:
+            resource:
+              apiVersion: perses.dev/v1alpha2
+              kind: PersesDashboard
+              metadata:
+                name: oat-dashboard
+              status:
+                (conditions[?type == 'Available']):
+                  - status: "True"
+        - script:
+            content: |
+              kubectl get --raw "/api/v1/namespaces/$NAMESPACE/services/http:oat:http/proxy/api/v1/projects/$NAMESPACE/dashboards/oat-dashboard"
+            check:
+              (contains($stdout, 'OAT dashboard')): true

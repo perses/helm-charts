@@ -1,0 +1,48 @@
+suite: perses values validation
+templates:
+  - templates/statefulset.yaml
+  - templates/deployment.yaml
+  - templates/config.yaml
+  - templates/gateway.yaml
+  - templates/httproute.yaml
+  - templates/helpers/_config.tpl
+  - templates/helpers/_identity.tpl
+  - templates/NOTES.txt
+release:
+  name: test-release
+  namespace: test-ns
+tests:
+  - it: should fail when both the file and the SQL database are configured
+    template: templates/statefulset.yaml
+    set:
+      config.database.sql.user: perses
+    asserts:
+      - failedTemplate:
+          errorPattern: "Both 'config.database.file' and 'config.database.sql' cannot be set at the same time"
+
+  - it: should accept camelCase SQL TLS keys
+    template: templates/deployment.yaml
+    set:
+      config.database.file: null
+      config.database.sql.user: perses
+      config.database.sql.tls_config.caFile: /ca/ca.crt
+    asserts:
+      - isKind:
+          of: Deployment
+
+  - it: should fail when a Gateway is created without a gatewayClassName
+    template: templates/gateway.yaml
+    set:
+      gateway.enabled: true
+    asserts:
+      - failedTemplate:
+          errorPattern: "gateway.gatewayClassName is required when creating a Gateway"
+
+  - it: should fail when an existing Gateway is used without parentRefs
+    template: templates/httproute.yaml
+    set:
+      gateway.enabled: true
+      gateway.createGateway: false
+    asserts:
+      - failedTemplate:
+          errorMessage: gateway.httpRoute.parentRefs must be set when gateway.enabled is true and gateway.createGateway is false

@@ -1,0 +1,145 @@
+suite: perses storage
+templates:
+  - templates/pvc.yaml
+  - templates/statefulset.yaml
+  - templates/config.yaml
+  - templates/datasources.yaml
+  - templates/helpers/_config.tpl
+  - templates/helpers/_identity.tpl
+  - templates/NOTES.txt
+release:
+  name: test-release
+  namespace: test-ns
+tests:
+  - it: should keep data on an emptyDir by default
+    asserts:
+      - template: templates/pvc.yaml
+        hasDocuments:
+          count: 0
+      - template: templates/statefulset.yaml
+        contains:
+          path: spec.template.spec.volumes
+          content:
+            name: data
+            emptyDir: {}
+      - template: templates/statefulset.yaml
+        notExists:
+          path: spec.volumeClaimTemplates
+
+  - it: should keep data on a PersistentVolumeClaim when persistence is enabled
+    set:
+      persistence.enabled: true
+      persistence.size: 2Gi
+      persistence.storageClass: fast
+      persistence.annotations:
+        example.com/backup: "true"
+    asserts:
+      - template: templates/pvc.yaml
+        equal:
+          path: metadata.name
+          value: test-release-perses
+      - template: templates/pvc.yaml
+        equal:
+          path: metadata.annotations["example.com/backup"]
+          value: "true"
+      - template: templates/pvc.yaml
+        equal:
+          path: spec
+          value:
+            storageClassName: fast
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 2Gi
+      - template: templates/statefulset.yaml
+        contains:
+          path: spec.template.spec.volumes
+          content:
+            name: data
+            persistentVolumeClaim:
+              claimName: test-release-perses
+
+  - it: should mount the data volume at the configured database folder
+    template: templates/statefulset.yaml
+    set:
+      config.database.file.folder: /var/lib/perses
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: data
+            mountPath: /var/lib/perses
+
+  - it: should use a volumeClaimTemplate for the provisioning folder
+    template: templates/statefulset.yaml
+    set:
+      provisioningPersistence.enabled: true
+      provisioningPersistence.size: 2Gi
+      provisioningPersistence.storageClass: fast
+      sidecar.enabled: true
+    asserts:
+      - equal:
+          path: spec.volumeClaimTemplates[0].metadata.name
+          value: provisioning
+      - equal:
+          path: spec.volumeClaimTemplates[0].spec
+          value:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 2Gi
+            storageClassName: fast
+      - notContains:
+          path: spec.template.spec.volumes
+          content:
+            name: provisioning
+            emptyDir: {}
+      - contains:
+          path: spec.template.spec.containers[1].volumeMounts
+          content:
+            name: provisioning
+            mountPath: /etc/perses/provisioning
+
+  - it: should share an emptyDir between sidecar and Perses without provisioning persistence
+    template: templates/statefulset.yaml
+    set:
+      sidecar.enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: provisioning
+            emptyDir: {}
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: provisioning
+            mountPath: /etc/perses/provisioning
+      - contains:
+          path: spec.template.spec.containers[1].volumeMounts
+          content:
+            name: provisioning
+            mountPath: /etc/perses/provisioning
+
+  - it: should mount extra volumes on the StatefulSet
+    template: templates/statefulset.yaml
+    set:
+      volumes:
+        - name: extra
+          emptyDir: {}
+      volumeMounts:
+        - name: extra
+          mountPath: /extra
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: extra
+            emptyDir: {}
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: extra
+            mountPath: /extra

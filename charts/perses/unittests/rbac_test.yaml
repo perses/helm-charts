@@ -1,0 +1,104 @@
+suite: perses sidecar RBAC
+templates:
+  - templates/cluster-role-and-binding.yaml
+  - templates/helpers/_identity.tpl
+release:
+  name: test-release
+  namespace: test-ns
+tests:
+  - it: should not render RBAC when the sidecar is disabled
+    template: templates/cluster-role-and-binding.yaml
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should render cluster-wide RBAC when the sidecar watches all namespaces
+    template: templates/cluster-role-and-binding.yaml
+    set:
+      sidecar.enabled: true
+    asserts:
+      - documentIndex: 0
+        isKind:
+          of: ClusterRole
+      - documentIndex: 0
+        equal:
+          path: metadata.name
+          value: test-release-perses-clusterrole
+      - documentIndex: 0
+        notExists:
+          path: metadata.namespace
+      - documentIndex: 0
+        equal:
+          path: rules
+          value:
+            - apiGroups: [""]
+              resources: ["configmaps"]
+              verbs: ["get", "watch", "list"]
+      - documentIndex: 1
+        isKind:
+          of: ClusterRoleBinding
+      - documentIndex: 1
+        equal:
+          path: roleRef.name
+          value: test-release-perses-clusterrole
+      - documentIndex: 1
+        equal:
+          path: subjects
+          value:
+            - kind: ServiceAccount
+              name: test-release-perses
+              namespace: test-ns
+
+  - it: should render namespaced RBAC when the sidecar watches its own namespace
+    template: templates/cluster-role-and-binding.yaml
+    set:
+      sidecar.enabled: true
+      sidecar.allNamespaces: false
+    asserts:
+      - documentIndex: 0
+        isKind:
+          of: Role
+      - documentIndex: 0
+        equal:
+          path: metadata.namespace
+          value: test-ns
+      - documentIndex: 1
+        isKind:
+          of: RoleBinding
+      - documentIndex: 1
+        equal:
+          path: roleRef
+          value:
+            kind: Role
+            name: test-release-perses-role
+            apiGroup: rbac.authorization.k8s.io
+
+  - it: should render cluster-wide RBAC when NAMESPACE is set through extraEnvVars
+    template: templates/cluster-role-and-binding.yaml
+    set:
+      sidecar.enabled: true
+      sidecar.allNamespaces: false
+      sidecar.extraEnvVars:
+        - name: NAMESPACE
+          value: team-a,team-b
+    asserts:
+      - documentIndex: 0
+        isKind:
+          of: ClusterRole
+      - documentIndex: 1
+        isKind:
+          of: ClusterRoleBinding
+
+  - it: should grant access to Secrets only when enabled
+    template: templates/cluster-role-and-binding.yaml
+    set:
+      sidecar.enabled: true
+      sidecar.enableSecretAccess: true
+    asserts:
+      - documentIndex: 0
+        contains:
+          path: rules
+          content:
+            apiGroups: [""]
+            resources: ["secrets"]
+            verbs: ["get", "watch", "list"]

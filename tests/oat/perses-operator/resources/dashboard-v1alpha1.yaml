@@ -1,0 +1,29 @@
+# Deprecated API version: the spec is not wrapped in "config" and has no instanceSelector.
+apiVersion: perses.dev/v1alpha1
+kind: PersesDashboard
+metadata:
+  name: oat-dashboard-v1alpha1
+spec:
+  display:
+    name: OAT dashboard v1alpha1
+  duration: 5m
+  panels:
+    welcome:
+      kind: Panel
+      spec:
+        display:
+          name: Welcome
+        plugin:
+          kind: Markdown
+          spec:
+            text: Created by the operational acceptance tests.
+  layouts:
+    - kind: Grid
+      spec:
+        items:
+          - x: 0
+            "y": 0
+            width: 12
+            height: 6
+            content:
+              $ref: "#/spec/panels/welcome"

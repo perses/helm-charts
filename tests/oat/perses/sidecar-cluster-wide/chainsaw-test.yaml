@@ -1,0 +1,68 @@
+apiVersion: chainsaw.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: perses-sidecar-cluster-wide
+spec:
+  description: With the sidecar watching all namespaces, a labeled ConfigMap from another namespace ends up in Perses.
+  catch:
+    - events: {}
+    - podLogs:
+        selector: app.kubernetes.io/name=perses
+        tail: 100
+  # the chart creates a ClusterRole and ClusterRoleBinding named after the release
+  concurrent: false
+  steps:
+    - name: install chart
+      try:
+        - script:
+            content: |
+              helm install perses ../../../../charts/perses --namespace "$NAMESPACE" \
+                --values values.yaml --wait --timeout 3m
+        - script:
+            content: helm test perses --namespace "$NAMESPACE" --timeout 3m
+      cleanup:
+        - script:
+            content: helm uninstall perses --namespace "$NAMESPACE" --wait --ignore-not-found
+
+    - name: sidecar has cluster-wide read access to ConfigMaps
+      try:
+        - assert:
+            resource:
+              apiVersion: rbac.authorization.k8s.io/v1
+              kind: ClusterRoleBinding
+              metadata:
+                name: perses-clusterrolebinding
+              roleRef:
+                kind: ClusterRole
+                name: perses-clusterrole
+              subjects:
+                - kind: ServiceAccount
+                  name: perses
+                  namespace: ($namespace)
+        - error:
+            resource:
+              apiVersion: rbac.authorization.k8s.io/v1
+              kind: RoleBinding
+              metadata:
+                name: perses-rolebinding
+
+    - name: labeled ConfigMap from another namespace is provisioned into Perses
+      try:
+        - script:
+            content: |
+              set -e
+              kubectl create namespace "$NAMESPACE-other"
+              kubectl apply --namespace "$NAMESPACE-other" --filename project-configmap.yaml
+        - script:
+            content: |
+              for attempt in $(seq 1 30); do
+                if kubectl get --raw "/api/v1/namespaces/$NAMESPACE/services/http:perses:http/proxy/api/v1/projects/oat-cluster-wide"; then
+                  exit 0
+                fi
+                sleep 5
+              done
+              echo "project oat-cluster-wide was not provisioned in time" >&2
+              exit 1
+      cleanup:
+        - script:
+            content: kubectl delete namespace "$NAMESPACE-other" --ignore-not-found

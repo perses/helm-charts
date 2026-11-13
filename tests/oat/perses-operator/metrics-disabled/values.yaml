@@ -1,0 +1,3 @@
+# Operator does not expose metrics.
+metrics:
+  enable: false

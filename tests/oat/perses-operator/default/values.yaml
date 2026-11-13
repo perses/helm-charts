@@ -1,0 +1,2 @@
+# Chart defaults: webhook and metrics certificates are issued by cert-manager.
+{}

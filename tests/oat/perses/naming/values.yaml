@@ -1,0 +1,9 @@
+# Resource names, labels and the service port differ from the defaults.
+fullnameOverride: oat-custom
+
+additionalLabels:
+  oat.perses.dev/scenario: naming
+
+service:
+  port: 9090
+  portName: web

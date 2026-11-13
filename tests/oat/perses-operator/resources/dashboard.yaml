@@ -1,0 +1,32 @@
+apiVersion: perses.dev/v1alpha2
+kind: PersesDashboard
+metadata:
+  name: oat-dashboard
+spec:
+  instanceSelector:
+    matchLabels:
+      app.kubernetes.io/instance: oat
+  config:
+    display:
+      name: OAT dashboard
+    duration: 5m
+    panels:
+      welcome:
+        kind: Panel
+        spec:
+          display:
+            name: Welcome
+          plugin:
+            kind: Markdown
+            spec:
+              text: Created by the operational acceptance tests.
+    layouts:
+      - kind: Grid
+        spec:
+          items:
+            - x: 0
+              "y": 0
+              width: 12
+              height: 6
+              content:
+                $ref: "#/spec/panels/welcome"

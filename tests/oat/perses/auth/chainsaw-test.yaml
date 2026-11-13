@@ -1,0 +1,67 @@
+apiVersion: chainsaw.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: perses-auth
+spec:
+  description: With authentication enabled, anonymous requests are rejected and the bootstrapped user is a global admin.
+  catch:
+    - events: {}
+    - podLogs:
+        selector: app.kubernetes.io/name=perses
+        tail: 100
+  steps:
+    - name: install chart
+      try:
+        - script:
+            content: |
+              helm install perses ../../../../charts/perses --namespace "$NAMESPACE" \
+                --values values.yaml --wait --timeout 3m
+        - script:
+            content: helm test perses --namespace "$NAMESPACE" --timeout 3m
+      cleanup:
+        - script:
+            content: helm uninstall perses --namespace "$NAMESPACE" --wait --ignore-not-found
+
+    - name: encryption key comes from the chart-managed Secret
+      try:
+        - assert:
+            resource:
+              apiVersion: v1
+              kind: Secret
+              metadata:
+                name: perses
+              data:
+                perses-security-encryption-key: MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=
+        - assert:
+            resource:
+              apiVersion: apps/v1
+              kind: StatefulSet
+              metadata:
+                name: perses
+              spec:
+                template:
+                  spec:
+                    (containers[?name == 'perses']):
+                      - env:
+                          - name: PERSES_SECURITY_ENCRYPTION_KEY
+                            valueFrom:
+                              secretKeyRef:
+                                name: perses
+                                key: perses-security-encryption-key
+              status:
+                readyReplicas: 1
+        - assert:
+            resource:
+              apiVersion: v1
+              kind: ConfigMap
+              metadata:
+                name: perses-admin-bootstrap
+                labels:
+                  perses.dev/resource: "true"
+
+    - name: authentication and the admin bootstrap are enforced
+      try:
+        - script:
+            content: |
+              kubectl run check-auth --namespace "$NAMESPACE" --rm --stdin --restart=Never --quiet \
+                --image docker.io/curlimages/curl:8.11.1 --command -- sh -s < check-auth.sh

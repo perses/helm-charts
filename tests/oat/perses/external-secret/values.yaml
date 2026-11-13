@@ -1,0 +1,14 @@
+# Environment variables are read from a Secret that is managed outside of the chart.
+config:
+  security:
+    enable_auth: true
+    authentication:
+      providers:
+        enable_native: true
+
+envVars:
+  - name: PERSES_SECURITY_ENCRYPTION_KEY
+
+secret:
+  create: false
+  name: perses-external

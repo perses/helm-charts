@@ -1,0 +1,14 @@
+apiVersion: perses.dev/v1alpha2
+kind: Perses
+metadata:
+  name: oat
+  labels:
+    # matched by the instanceSelector of the dashboard and datasource resources
+    app.kubernetes.io/instance: oat
+spec:
+  config:
+    database:
+      file:
+        folder: /perses
+        extension: yaml
+  containerPort: 8080

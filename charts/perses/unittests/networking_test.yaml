@@ -1,0 +1,151 @@
+suite: perses networking
+templates:
+  - templates/ingress.yaml
+  - templates/gateway.yaml
+  - templates/httproute.yaml
+  - templates/helpers/_identity.tpl
+release:
+  name: test-release
+  namespace: test-ns
+tests:
+  - it: should not render any networking resource by default
+    asserts:
+      - template: templates/ingress.yaml
+        hasDocuments:
+          count: 0
+      - template: templates/gateway.yaml
+        hasDocuments:
+          count: 0
+      - template: templates/httproute.yaml
+        hasDocuments:
+          count: 0
+
+  - it: should route the ingress to the service port
+    template: templates/ingress.yaml
+    set:
+      ingress.enabled: true
+      ingress.ingressClassName: nginx
+      service.port: 9090
+    asserts:
+      - equal:
+          path: metadata.name
+          value: test-release-perses
+      - equal:
+          path: spec.ingressClassName
+          value: nginx
+      - equal:
+          path: spec.rules[0].host
+          value: perses.local
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.service
+          value:
+            name: test-release-perses
+            port:
+              number: 9090
+
+  - it: should render ingress TLS
+    template: templates/ingress.yaml
+    set:
+      ingress.enabled: true
+      ingress.tls:
+        - secretName: perses-tls
+          hosts:
+            - perses.local
+    asserts:
+      - equal:
+          path: spec.tls
+          value:
+            - secretName: perses-tls
+              hosts:
+                - perses.local
+
+  - it: should omit ingressClassName when it is not set
+    template: templates/ingress.yaml
+    set:
+      ingress.enabled: true
+    asserts:
+      - notExists:
+          path: spec.ingressClassName
+      - notExists:
+          path: spec.tls
+
+  - it: should create a Gateway and attach the HTTPRoute to it
+    set:
+      gateway.enabled: true
+      gateway.gatewayClassName: istio
+    asserts:
+      - template: templates/gateway.yaml
+        equal:
+          path: metadata.name
+          value: test-release-perses-gateway
+      - template: templates/gateway.yaml
+        equal:
+          path: spec.gatewayClassName
+          value: istio
+      - template: templates/gateway.yaml
+        equal:
+          path: spec.listeners[0]
+          value:
+            name: http
+            port: 80
+            protocol: HTTP
+            allowedRoutes:
+              namespaces:
+                from: Same
+      - template: templates/httproute.yaml
+        equal:
+          path: spec.parentRefs
+          value:
+            - name: test-release-perses-gateway
+      - template: templates/httproute.yaml
+        equal:
+          path: spec.hostnames
+          value:
+            - perses.local
+      - template: templates/httproute.yaml
+        equal:
+          path: spec.rules[0].backendRefs
+          value:
+            - name: test-release-perses
+              port: 8080
+
+  - it: should attach the HTTPRoute to an existing Gateway
+    set:
+      gateway.enabled: true
+      gateway.createGateway: false
+      gateway.httpRoute.parentRefs:
+        - name: shared-gateway
+          namespace: gateway-system
+          sectionName: https
+    asserts:
+      - template: templates/gateway.yaml
+        hasDocuments:
+          count: 0
+      - template: templates/httproute.yaml
+        equal:
+          path: spec.parentRefs
+          value:
+            - name: shared-gateway
+              namespace: gateway-system
+              sectionName: https
+
+  - it: should default the backend of custom HTTPRoute rules to the Perses service
+    template: templates/httproute.yaml
+    set:
+      gateway.enabled: true
+      gateway.gatewayClassName: istio
+      service.port: 9090
+      gateway.httpRoute.rules:
+        - matches:
+            - path:
+                type: PathPrefix
+                value: /perses
+    asserts:
+      - equal:
+          path: spec.rules[0].matches[0].path.value
+          value: /perses
+      - equal:
+          path: spec.rules[0].backendRefs
+          value:
+            - name: test-release-perses
+              port: 9090

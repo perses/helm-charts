@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: oat-provisioning-persistence-project
+  labels:
+    perses.dev/resource: "true"
+data:
+  oat-provisioning-persistence.json: |-
+    {
+      "kind": "Project",
+      "metadata": {
+        "name": "oat-provisioning-persistence"
+      }
+    }
