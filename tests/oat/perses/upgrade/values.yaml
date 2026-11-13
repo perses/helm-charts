@@ -1,0 +1,4 @@
+# Used for both the published chart and the chart from this repository.
+persistence:
+  enabled: true
+  size: 1Gi

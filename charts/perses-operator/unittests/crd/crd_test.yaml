@@ -1,0 +1,93 @@
+suite: perses-operator CRDs
+templates:
+  - crd/perses.perses.dev.yaml
+  - crd/persesdashboards.perses.dev.yaml
+  - crd/persesdatasources.perses.dev.yaml
+  - crd/persesglobaldatasources.perses.dev.yaml
+release:
+  name: test-release
+  namespace: test-ns
+tests:
+  - it: should render every CRD by default
+    asserts:
+      - isKind:
+          of: CustomResourceDefinition
+      - hasDocuments:
+          count: 1
+
+  - it: should not render CRDs when disabled
+    set:
+      crd.enable: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should keep CRDs on uninstall by default
+    asserts:
+      - equal:
+          path: metadata.annotations["helm.sh/resource-policy"]
+          value: keep
+
+  - it: should drop the keep policy when disabled
+    set:
+      crd.keep: false
+    asserts:
+      - notExists:
+          path: metadata.annotations["helm.sh/resource-policy"]
+
+  - it: should let cert-manager inject the CA into every CRD
+    asserts:
+      - equal:
+          path: metadata.annotations["cert-manager.io/inject-ca-from"]
+          value: test-ns/test-release-perses-operator-serving-cert
+
+  - it: should not reference cert-manager when it is disabled
+    set:
+      certManager.enable: false
+    asserts:
+      - notExists:
+          path: metadata.annotations["cert-manager.io/inject-ca-from"]
+      - notExists:
+          path: spec.conversion
+
+  - it: should convert Perses resources through the webhook service
+    template: crd/perses.perses.dev.yaml
+    asserts:
+      - equal:
+          path: spec.conversion
+          value:
+            strategy: Webhook
+            webhook:
+              clientConfig:
+                service:
+                  name: test-release-perses-operator-webhook-service
+                  namespace: test-ns
+                  path: /convert
+              conversionReviewVersions:
+                - v1
+
+  - it: should convert PersesDashboard resources through the webhook service
+    template: crd/persesdashboards.perses.dev.yaml
+    asserts:
+      - equal:
+          path: spec.conversion.webhook.clientConfig.service.name
+          value: test-release-perses-operator-webhook-service
+
+  - it: should serve both API versions of PersesDashboard and store v1alpha2
+    template: crd/persesdashboards.perses.dev.yaml
+    asserts:
+      - equal:
+          path: spec.versions[0].name
+          value: v1alpha1
+      - equal:
+          path: spec.versions[0].served
+          value: true
+      - equal:
+          path: spec.versions[0].storage
+          value: false
+      - equal:
+          path: spec.versions[1].name
+          value: v1alpha2
+      - equal:
+          path: spec.versions[1].storage
+          value: true

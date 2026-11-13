@@ -1,0 +1,3 @@
+# Chart defaults: CRDs carry the "helm.sh/resource-policy: keep" annotation.
+crd:
+  keep: true

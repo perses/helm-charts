@@ -1,0 +1,73 @@
+apiVersion: chainsaw.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: perses-naming
+spec:
+  description: With a full name override and a custom service port, every resource is renamed and Perses stays reachable.
+  catch:
+    - events: {}
+    - podLogs:
+        selector: app.kubernetes.io/name=perses
+        tail: 100
+  steps:
+    - name: install chart
+      try:
+        - script:
+            content: |
+              helm install perses ../../../../charts/perses --namespace "$NAMESPACE" \
+                --values values.yaml --wait --timeout 3m
+        - script:
+            content: helm test perses --namespace "$NAMESPACE" --timeout 3m
+      cleanup:
+        - script:
+            content: helm uninstall perses --namespace "$NAMESPACE" --wait --ignore-not-found
+
+    - name: resources carry the overridden name and the extra label
+      try:
+        - assert:
+            resource:
+              apiVersion: apps/v1
+              kind: StatefulSet
+              metadata:
+                name: oat-custom
+                labels:
+                  oat.perses.dev/scenario: naming
+              spec:
+                template:
+                  spec:
+                    serviceAccountName: oat-custom
+              status:
+                readyReplicas: 1
+        - assert:
+            resource:
+              apiVersion: v1
+              kind: ConfigMap
+              metadata:
+                name: oat-custom
+                labels:
+                  oat.perses.dev/scenario: naming
+        - assert:
+            resource:
+              apiVersion: v1
+              kind: Service
+              metadata:
+                name: oat-custom
+                labels:
+                  oat.perses.dev/scenario: naming
+              spec:
+                ports:
+                  - name: web
+                    port: 9090
+                    targetPort: 8080
+        - error:
+            resource:
+              apiVersion: v1
+              kind: Service
+              metadata:
+                name: perses
+
+    - name: API answers through the renamed service port
+      try:
+        - script:
+            content: |
+              kubectl get --raw "/api/v1/namespaces/$NAMESPACE/services/http:oat-custom:web/proxy/api/v1/health"

@@ -1,0 +1,8 @@
+# Sidecar watches labeled ConfigMaps in every namespace, which is the chart default.
+sidecar:
+  enabled: true
+  allNamespaces: true
+
+config:
+  provisioning:
+    interval: 10s

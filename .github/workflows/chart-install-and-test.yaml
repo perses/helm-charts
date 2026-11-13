@@ -7,6 +7,7 @@ on:
   pull_request:
     paths:
       - "charts/**"
+      - "tests/oat/**"
   merge_group:
 
 jobs:
@@ -77,3 +78,36 @@ jobs:
               echo "Skipping $chart_name: no previous release found in repo"
             fi
           done
+
+  helm-oat:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        chart:
+          - perses
+          - perses-operator
+    steps:
+      - name: checkout
+        uses: actions/checkout@v7
+
+      - name: load env
+        run: cat .github/env >> $GITHUB_ENV
+
+      - name: setup helm lint requirements
+        uses: ./.github/actions/setup_helmlint
+        with:
+          create-kind-cluster: "true"
+          kind-version: ${{ env.kind-version }}
+          kind-image: ${{ env.kind-image }}
+
+      # perses-operator chart requires cert-manager for webhook and metrics TLS certificates
+      - name: install cert-manager
+        if: matrix.chart == 'perses-operator'
+        run: |
+          kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/${{ env.cert-manager-version }}/cert-manager.yaml
+          kubectl wait --for=condition=Available deployment --all -n cert-manager --timeout=120s
+
+      # Installs every scenario under tests/oat/<chart>/ and asserts the resulting behaviour
+      - name: run operational acceptance tests
+        run: make helm-oat CHART=charts/${{ matrix.chart }}

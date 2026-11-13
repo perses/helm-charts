@@ -1,0 +1,64 @@
+apiVersion: chainsaw.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: perses-upgrade
+spec:
+  description: Upgrading from the latest published chart to this repository keeps Perses running and its data intact.
+  catch:
+    - events: {}
+    - podLogs:
+        selector: app.kubernetes.io/name=perses
+        tail: 100
+  steps:
+    - name: install the latest published chart
+      try:
+        - script:
+            content: |
+              helm install perses perses --repo https://perses.github.io/helm-charts --namespace "$NAMESPACE" \
+                --values values.yaml --wait --timeout 3m
+        - script:
+            content: |
+              kubectl run create-project --namespace "$NAMESPACE" --rm --stdin --restart=Never \
+                --image docker.io/curlimages/curl:8.11.1 -- \
+                curl --fail-with-body --silent --show-error --header 'Content-Type: application/json' \
+                --data '{"kind":"Project","metadata":{"name":"oat-upgrade"}}' http://perses:8080/api/v1/projects
+      cleanup:
+        - script:
+            content: helm uninstall perses --namespace "$NAMESPACE" --wait --ignore-not-found
+
+    - name: upgrade to the chart from this repository
+      try:
+        - script:
+            content: |
+              helm upgrade perses ../../../../charts/perses --namespace "$NAMESPACE" \
+                --values values.yaml --wait --timeout 3m
+        - script:
+            content: helm test perses --namespace "$NAMESPACE" --timeout 3m
+        - script:
+            content: kubectl rollout status statefulset/perses --namespace "$NAMESPACE" --timeout 3m
+
+    - name: release runs the chart from this repository
+      try:
+        - script:
+            content: |
+              expected="perses-$(helm show chart ../../../../charts/perses | sed -n 's/^version: //p')"
+              actual=$(helm list --namespace "$NAMESPACE" --filter '^perses$' --output json | sed -n 's/.*"chart":"\([^"]*\)".*/\1/p')
+              echo "expected $expected, deployed $actual"
+              [ "$expected" = "$actual" ]
+        - assert:
+            resource:
+              apiVersion: apps/v1
+              kind: StatefulSet
+              metadata:
+                name: perses
+              status:
+                readyReplicas: 1
+                updatedReplicas: 1
+
+    - name: project created before the upgrade is still there
+      try:
+        - script:
+            content: |
+              kubectl get --raw "/api/v1/namespaces/$NAMESPACE/services/http:perses:http/proxy/api/v1/projects/oat-upgrade"
+            check:
+              (contains($stdout, 'oat-upgrade')): true

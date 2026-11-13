@@ -1,0 +1,69 @@
+suite: perses monitoring
+templates:
+  - templates/servicemonitor.yaml
+  - templates/statefulset.yaml
+  - templates/config.yaml
+  - templates/datasources.yaml
+  - templates/helpers/_config.tpl
+  - templates/helpers/_identity.tpl
+  - templates/NOTES.txt
+release:
+  name: test-release
+  namespace: test-ns
+tests:
+  - it: should not render a ServiceMonitor by default
+    template: templates/servicemonitor.yaml
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should scrape the service port in the release namespace
+    template: templates/servicemonitor.yaml
+    set:
+      serviceMonitor.selfMonitor: true
+      serviceMonitor.interval: 15s
+      serviceMonitor.labels:
+        release: prometheus
+      serviceMonitor.selector.matchLabels:
+        app.kubernetes.io/name: perses
+      service.portName: web
+    asserts:
+      - equal:
+          path: metadata.labels.release
+          value: prometheus
+      - equal:
+          path: spec.selector.matchLabels
+          value:
+            app.kubernetes.io/name: perses
+      - equal:
+          path: spec.namespaceSelector.matchNames
+          value:
+            - test-ns
+      - equal:
+          path: spec.endpoints
+          value:
+            - port: web
+              interval: 15s
+              path: /metrics
+
+  - it: should serve and scrape metrics below the API prefix
+    set:
+      serviceMonitor.selfMonitor: true
+      config.api_prefix: /perses
+    asserts:
+      - template: templates/servicemonitor.yaml
+        equal:
+          path: spec.endpoints[0].path
+          value: /perses/metrics
+      - template: templates/statefulset.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: --web.telemetry-path=/perses/metrics
+      - template: templates/statefulset.yaml
+        equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.path
+          value: /perses/api/v1/health
+      - template: templates/statefulset.yaml
+        equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.path
+          value: /perses/api/v1/health

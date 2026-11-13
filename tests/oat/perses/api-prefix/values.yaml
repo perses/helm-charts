@@ -1,0 +1,3 @@
+# Perses is served below a path prefix, as it would be behind a shared ingress.
+config:
+  api_prefix: /perses

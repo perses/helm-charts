@@ -1,0 +1,199 @@
+apiVersion: chainsaw.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: perses-operator-default
+spec:
+  description: Default values install an operator that reconciles Perses resources, converts deprecated API versions and protects its metrics.
+  # CRDs and RBAC of the operator are cluster-scoped, so only one release can exist at a time
+  concurrent: false
+  catch:
+    - events: {}
+    - podLogs:
+        selector: control-plane=controller-manager
+        tail: 100
+  steps:
+    - name: install chart
+      try:
+        - script:
+            content: |
+              helm install perses-operator ../../../../charts/perses-operator --namespace "$NAMESPACE" \
+                --values values.yaml --wait --timeout 3m
+        - script:
+            content: helm test perses-operator --namespace "$NAMESPACE" --timeout 3m
+      cleanup:
+        - script:
+            content: |
+              helm uninstall perses-operator --namespace "$NAMESPACE" --wait --ignore-not-found
+              # CRDs are kept on uninstall and would block an install into another namespace
+              kubectl delete customresourcedefinition --ignore-not-found \
+                perses.perses.dev persesdashboards.perses.dev persesdatasources.perses.dev persesglobaldatasources.perses.dev
+
+    - name: certificates are issued by cert-manager
+      try:
+        - assert:
+            resource:
+              apiVersion: cert-manager.io/v1
+              kind: Certificate
+              metadata:
+                name: perses-operator-serving-cert
+              status:
+                (conditions[?type == 'Ready']):
+                  - status: "True"
+        - assert:
+            resource:
+              apiVersion: apiextensions.k8s.io/v1
+              kind: CustomResourceDefinition
+              metadata:
+                name: persesdashboards.perses.dev
+              spec:
+                conversion:
+                  strategy: Webhook
+                  webhook:
+                    clientConfig:
+                      # injected by cert-manager, without it the API server cannot call the webhook
+                      (caBundle != null): true
+                      service:
+                        name: perses-operator-webhook-service
+                        namespace: ($namespace)
+
+    - name: operator runs a Perses instance for a Perses resource
+      try:
+        - apply:
+            file: ../resources/perses.yaml
+        - assert:
+            resource:
+              apiVersion: apps/v1
+              kind: StatefulSet
+              metadata:
+                name: oat
+              status:
+                readyReplicas: 1
+        - assert:
+            resource:
+              apiVersion: perses.dev/v1alpha2
+              kind: Perses
+              metadata:
+                name: oat
+              status:
+                (conditions[?type == 'Available']):
+                  - status: "True"
+        - script:
+            content: |
+              # the pod is reported ready before Perses listens, so give it a moment
+              for attempt in $(seq 1 30); do
+                if kubectl get --raw "/api/v1/namespaces/$NAMESPACE/services/http:oat:http/proxy/api/v1/health"; then
+                  exit 0
+                fi
+                sleep 2
+              done
+              echo "Perses instance did not answer in time" >&2
+              exit 1
+
+    - name: operator syncs a dashboard into the Perses instance
+      try:
+        - apply:
+            file: ../resources/dashboard.yaml
+        - assert:
+            resource:
+              apiVersion: perses.dev/v1alpha2
+              kind: PersesDashboard
+              metadata:
+                name: oat-dashboard
+              status:
+                (conditions[?type == 'Available']):
+                  - status: "True"
+        - script:
+            content: |
+              kubectl get --raw "/api/v1/namespaces/$NAMESPACE/services/http:oat:http/proxy/api/v1/projects/$NAMESPACE/dashboards/oat-dashboard"
+            check:
+              (contains($stdout, 'OAT dashboard')): true
+
+    - name: operator syncs datasources into the Perses instance
+      try:
+        - apply:
+            file: ../resources/datasource.yaml
+        - apply:
+            file: ../resources/global-datasource.yaml
+        - assert:
+            resource:
+              apiVersion: perses.dev/v1alpha2
+              kind: PersesDatasource
+              metadata:
+                name: oat-datasource
+              status:
+                (conditions[?type == 'Available']):
+                  - status: "True"
+        - assert:
+            resource:
+              apiVersion: perses.dev/v1alpha2
+              kind: PersesGlobalDatasource
+              metadata:
+                name: oat-global-datasource
+              status:
+                (conditions[?type == 'Available']):
+                  - status: "True"
+        - script:
+            content: |
+              kubectl get --raw "/api/v1/namespaces/$NAMESPACE/services/http:oat:http/proxy/api/v1/projects/$NAMESPACE/datasources/oat-datasource"
+              kubectl get --raw "/api/v1/namespaces/$NAMESPACE/services/http:oat:http/proxy/api/v1/globaldatasources/oat-global-datasource"
+
+    - name: deprecated v1alpha1 resources are converted by the webhook
+      try:
+        - apply:
+            file: ../resources/dashboard-v1alpha1.yaml
+        - assert:
+            resource:
+              apiVersion: perses.dev/v1alpha2
+              kind: PersesDashboard
+              metadata:
+                name: oat-dashboard-v1alpha1
+              spec:
+                config:
+                  display:
+                    name: OAT dashboard v1alpha1
+              status:
+                (conditions[?type == 'Available']):
+                  - status: "True"
+        - assert:
+            resource:
+              apiVersion: perses.dev/v1alpha1
+              kind: PersesDashboard
+              metadata:
+                name: oat-dashboard
+              spec:
+                display:
+                  name: OAT dashboard
+
+    - name: invalid resources are rejected
+      try:
+        - script:
+            content: |
+              kubectl apply --namespace "$NAMESPACE" --filename - <<'RESOURCE'
+              apiVersion: perses.dev/v1alpha2
+              kind: PersesDatasource
+              metadata:
+                name: oat-invalid
+              spec:
+                config:
+                  default: not-a-boolean
+              RESOURCE
+            check:
+              ($error != null): true
+              (contains($stderr, 'spec.config.default')): true
+
+    - name: metrics are only served to authorized clients
+      try:
+        - apply:
+            file: metrics-reader.yaml
+        - script:
+            content: |
+              kubectl create clusterrolebinding "$NAMESPACE-metrics-reader" \
+                --clusterrole perses-operator-metrics-reader --serviceaccount "$NAMESPACE:oat-metrics-reader"
+        - script:
+            content: |
+              token=$(kubectl create token oat-metrics-reader --namespace "$NAMESPACE")
+              kubectl run check-metrics --namespace "$NAMESPACE" --rm --stdin --restart=Never --quiet \
+                --image docker.io/curlimages/curl:8.11.1 --command -- sh -s "$token" < check-metrics.sh
+      cleanup:
+        - script:
+            content: kubectl delete clusterrolebinding "$NAMESPACE-metrics-reader" --ignore-not-found

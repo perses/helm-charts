@@ -1,0 +1,72 @@
+apiVersion: chainsaw.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: perses-sql-database
+spec:
+  description: With an SQL database configured, Perses runs as a Deployment and stores data in the database.
+  catch:
+    - events: {}
+    - podLogs:
+        selector: app.kubernetes.io/name=perses
+        tail: 100
+  steps:
+    - name: start MariaDB
+      try:
+        - apply:
+            file: mariadb.yaml
+        - assert:
+            resource:
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: mariadb
+              status:
+                availableReplicas: 1
+
+    - name: install chart
+      try:
+        - script:
+            content: |
+              helm install perses ../../../../charts/perses --namespace "$NAMESPACE" \
+                --values values.yaml --wait --timeout 3m
+        - script:
+            content: helm test perses --namespace "$NAMESPACE" --timeout 3m
+      cleanup:
+        - script:
+            content: helm uninstall perses --namespace "$NAMESPACE" --wait --ignore-not-found
+
+    - name: workload is a ready Deployment
+      try:
+        - assert:
+            resource:
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: perses
+              status:
+                availableReplicas: 1
+        - error:
+            resource:
+              apiVersion: apps/v1
+              kind: StatefulSet
+              metadata:
+                name: perses
+
+    - name: project survives a pod restart
+      try:
+        - script:
+            content: |
+              kubectl run create-project --namespace "$NAMESPACE" --rm --stdin --restart=Never \
+                --image docker.io/curlimages/curl:8.11.1 -- \
+                curl --fail-with-body --silent --show-error --header 'Content-Type: application/json' \
+                --data '{"kind":"Project","metadata":{"name":"oat-sql"}}' http://perses:8080/api/v1/projects
+        - script:
+            content: |
+              set -e
+              kubectl rollout restart deployment/perses --namespace "$NAMESPACE"
+              kubectl rollout status deployment/perses --namespace "$NAMESPACE" --timeout 3m
+        - script:
+            content: |
+              kubectl get --raw "/api/v1/namespaces/$NAMESPACE/services/http:perses:http/proxy/api/v1/projects/oat-sql"
+            check:
+              (contains($stdout, 'oat-sql')): true

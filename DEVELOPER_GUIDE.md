@@ -21,6 +21,8 @@ Tools are managed via `Makefile.tools`. They are installed to the local `bin/` d
 ```bash
 make helm         # Install Helm
 make mdox         # Install mdox (markdown formatter)
+make chainsaw     # Install chainsaw (acceptance tests)
+make kubeconform  # Install kubeconform (manifest schema validation)
 make clean-tools  # Remove all installed tools
 ```
 
@@ -99,6 +101,42 @@ make helm-test                                 # All charts
 make helm-test CHART=charts/perses-operator    # Single chart
 ```
 
+### Operational Acceptance Tests
+
+Acceptance tests use [chainsaw](https://kyverno.github.io/chainsaw/). They install a chart on a Kind cluster with a specific set of values and assert that the feature behind those values really works (for example that data survives a pod restart when persistence is enabled). Use them to make sure a chart change does not break an existing feature.
+
+Each scenario is a directory under `tests/oat/<chart>/<scenario>/`:
+
+- `values.yaml` holds the values under test
+- `chainsaw-test.yaml` installs the chart with those values, runs `helm test` and asserts the behaviour
+- any extra manifests the scenario needs (for example a database)
+
+Resources shared by several scenarios of one chart live in `tests/oat/<chart>/resources/`.
+
+Run them against a Kind cluster:
+
+```bash
+make kind-create
+make helm-oat                                              # All charts, all scenarios
+make helm-oat CHART=charts/perses                          # Single chart
+make helm-oat CHART=charts/perses SCENARIO=persistence     # Single scenario
+make kind-delete
+```
+
+`helm-oat` refuses to run when the current kube context is not a Kind cluster. Set `OAT_ALLOW_ANY_CONTEXT=1` to override.
+
+The `values.yaml` of every scenario is also rendered and validated against the Kubernetes schemas, without a cluster:
+
+```bash
+make helm-kubeconform
+```
+
+To cover a new feature, copy an existing scenario directory, change `values.yaml` and adjust the assertions. Scenarios run in parallel, each in its own namespace. A scenario that creates cluster-scoped resources with fixed names must set `concurrent: false` so it runs on its own.
+
+Every `perses-operator` scenario runs that way, because the CRDs and the RBAC of the operator are cluster-scoped. These scenarios need cert-manager (installed by `make kind-create`) and delete the Perses CRDs when they finish, so do not run them on a cluster that holds Perses resources you want to keep.
+
+Values that only change what is rendered, or that must make rendering fail, are cheaper to cover with a helm unit test under `charts/<chart>/unittests/`.
+
 ### CI Testing
 
 The `chart-install-and-test` workflow runs on every pull request that modifies files under `charts/`. It:
@@ -107,6 +145,7 @@ The `chart-install-and-test` workflow runs on every pull request that modifies f
 2. Installs cert-manager
 3. Runs `ct install --all` (chart-testing: installs each chart and runs `helm test`)
 4. Validates chart READMEs are up to date
+5. Runs `make helm-oat` in a separate job per chart (operational acceptance tests)
 
 ## Bumping perses-operator Version
 

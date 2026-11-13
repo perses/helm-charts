@@ -1,0 +1,69 @@
+apiVersion: chainsaw.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: perses-provisioning-persistence
+spec:
+  description: With provisioning persistence enabled, the sidecar writes provisioned resources to a bound PersistentVolumeClaim.
+  catch:
+    - events: {}
+    - podLogs:
+        selector: app.kubernetes.io/name=perses
+        tail: 100
+  steps:
+    - name: install chart
+      try:
+        - script:
+            content: |
+              helm install perses ../../../../charts/perses --namespace "$NAMESPACE" \
+                --values values.yaml --wait --timeout 3m
+        - script:
+            content: helm test perses --namespace "$NAMESPACE" --timeout 3m
+      cleanup:
+        - script:
+            content: helm uninstall perses --namespace "$NAMESPACE" --wait --ignore-not-found
+
+    - name: provisioning folder is backed by a bound PersistentVolumeClaim
+      try:
+        - assert:
+            resource:
+              apiVersion: v1
+              kind: PersistentVolumeClaim
+              metadata:
+                name: provisioning-perses-0
+              status:
+                phase: Bound
+        - assert:
+            resource:
+              apiVersion: apps/v1
+              kind: StatefulSet
+              metadata:
+                name: perses
+              spec:
+                template:
+                  spec:
+                    # the claim template replaces the emptyDir that the sidecar uses otherwise
+                    (length(volumes[?name == 'provisioning'])): 0
+                volumeClaimTemplates:
+                  - metadata:
+                      name: provisioning
+              status:
+                readyReplicas: 1
+
+    - name: sidecar can write to the volume and Perses provisions from it
+      try:
+        - apply:
+            file: project-configmap.yaml
+        - script:
+            content: |
+              for attempt in $(seq 1 30); do
+                if kubectl get --raw "/api/v1/namespaces/$NAMESPACE/services/http:perses:http/proxy/api/v1/projects/oat-provisioning-persistence"; then
+                  exit 0
+                fi
+                sleep 5
+              done
+              echo "project oat-provisioning-persistence was not provisioned in time" >&2
+              exit 1
+      cleanup:
+        # the claim is created from a volumeClaimTemplate, so helm uninstall leaves it behind
+        - script:
+            content: kubectl delete persistentvolumeclaim provisioning-perses-0 --namespace "$NAMESPACE" --ignore-not-found --wait=false

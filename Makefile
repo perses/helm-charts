@@ -60,6 +60,35 @@ helm-unit-test: helm-unittest ## Run helm unit tests. Use CHART=charts/<name> to
 		fi; \
 	done
 
+OAT_DIR ?= tests/oat
+KUBECONFORM_CRD_SCHEMAS ?= https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json
+
+.PHONY: helm-kubeconform
+helm-kubeconform: helm kubeconform ## Validate rendered manifests against Kubernetes schemas for default values and every OAT scenario.
+	@for chart in $(or $(CHART),$(CHARTS)); do \
+		for values in $$chart/values.yaml $$(find $(OAT_DIR)/$$(basename $$chart) -name values.yaml 2>/dev/null | sort); do \
+			echo ">> validating $$chart with $$values"; \
+			rendered=$$($(HELM) template test-release $$chart --values $$values) || exit 1; \
+			printf '%s\n' "$$rendered" | $(KUBECONFORM) -strict -summary -ignore-missing-schemas \
+				-schema-location default -schema-location '$(KUBECONFORM_CRD_SCHEMAS)' || exit 1; \
+		done; \
+	done
+
+.PHONY: helm-oat
+helm-oat: helm chainsaw ## Run operational acceptance tests on the current kind cluster. Use CHART=charts/<name> and SCENARIO=<name> to narrow down.
+	@context=$$(kubectl config current-context); \
+	case "$$context" in \
+		kind-*) ;; \
+		*) [ -n "$(OAT_ALLOW_ANY_CONTEXT)" ] || { echo ">> refusing to run against non-kind context '$$context' (set OAT_ALLOW_ANY_CONTEXT=1 to override)"; exit 1; } ;; \
+	esac
+	@for chart in $(or $(CHART),$(CHARTS)); do \
+		dir=$(OAT_DIR)/$$(basename $$chart)$(if $(SCENARIO),/$(SCENARIO)); \
+		if [ -d "$$dir" ]; then \
+			echo ">> acceptance testing $$chart"; \
+			PATH="$(LOCALBIN):$$PATH" $(CHAINSAW) test --config $(OAT_DIR)/.chainsaw.yaml $$dir || exit 1; \
+		fi; \
+	done
+
 KIND_CLUSTER_NAME    ?= helm-charts-test
 CERT_MANAGER_VERSION ?= $(shell grep cert-manager-version .github/env | cut -d= -f2)
 KIND_VERSION         ?= $(shell grep kind-version .github/env | cut -d= -f2)

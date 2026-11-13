@@ -1,0 +1,17 @@
+apiVersion: chainsaw.kyverno.io/v1alpha2
+kind: Configuration
+metadata:
+  name: oat
+spec:
+  timeouts:
+    apply: 30s
+    assert: 3m
+    error: 30s
+    delete: 2m
+    cleanup: 3m
+    # helm install --wait and helm test run inside script steps
+    exec: 6m
+  execution:
+    # every scenario runs in its own ephemeral namespace, so they are safe to run side by side
+    parallel: 4
+    failFast: false
