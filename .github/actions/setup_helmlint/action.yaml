@@ -21,7 +21,7 @@ runs:
       uses: helm/chart-testing-action@v2.9.0
 
     - name: Create kind cluster
-      uses: helm/kind-action@v1.15.1
+      uses: helm/kind-action@v1.15.2
       if: ${{ inputs.create-kind-cluster == 'true' }}
       with:
         version: ${{ inputs.kind-version }}
